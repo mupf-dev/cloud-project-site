@@ -334,7 +334,7 @@ def layout(*, title: str, body: str, prefix: str, active: str, description: str,
     <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
     <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
     Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
-    <p><a href="{prefix}mitmachen.html#lizenz">Lizenz</a> · <a href="{prefix}mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="{prefix}suche.html">Suche</a></p>
+    <p><a href="{prefix}mitmachen.html#lizenz">Lizenz</a> · <a href="{prefix}mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="{prefix}suche.html">Suche</a> · <a href="{prefix}impressum.html">Impressum</a> · <a href="{prefix}datenschutz.html">Datenschutz</a></p>
   </div>
 </footer>
 <script src="{prefix}assets/site.js" defer></script>
@@ -438,6 +438,8 @@ def build(out: Path) -> int:
         (out / fname).write_text(
             layout(title=title, body=body, prefix="", active=fname, description=d["summary"],
                    toc=toc, wide=hero), encoding="utf-8")
+        if d.get("noindex") == "ja":  # Impressum/Datenschutz: nicht in die Suche
+            continue
         index_entries.append({"t": d["title"], "u": fname, "s": d["summary"],
                               "h": [t for _, t in (toc or [])], "x": plain_text(body_html)[:12000]})
 
