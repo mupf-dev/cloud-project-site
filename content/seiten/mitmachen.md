@@ -1,10 +1,10 @@
 title: Mitmachen und Lizenz
-summary: Wie man zu DCP beitragen kann, unter welchen Lizenzen Code und Dokumentation stehen und wie Sicherheitslücken gemeldet werden.
+summary: Wie man zu BYOC beitragen kann, unter welchen Lizenzen Code und Dokumentation stehen und wie Sicherheitslücken gemeldet werden.
 toc: ja
 ---
 ## Mitmachen
 
-„Das Cloud Projekt“ (DCP) ist als Gemeinschaftsprojekt angelegt. Das Quellcode-Repository wird geöffnet,
+BYOC (Build Your Own Cloud) ist als Gemeinschaftsprojekt angelegt. Das Quellcode-Repository wird geöffnet,
 sobald Lizenzdateien, Sicherheitsrichtlinie und REUSE-Konformität vollständig sind. Bis dahin
 freuen wir uns über Rückmeldungen zu Konzepten und Architektur.
 

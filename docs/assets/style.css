@@ -1,6 +1,6 @@
 /* SPDX-FileCopyrightText: 2026 cloud-project contributors
    SPDX-License-Identifier: AGPL-3.0-or-later
-   Stylesheet der Website von „Das Cloud Projekt“ (DCP). Farben, Radien, Schatten und Typografie-Charakter
+   Stylesheet der Website von BYOC (Build Your Own Cloud). Farben, Radien, Schatten und Typografie-Charakter
    folgen den Design-Tokens des Portals (Variante C „Technisch“: Petrol-Akzent, Monospace-Akzente,
    dunkle Flächen auch im Hellmodus). Nur Systemschriften, keine externen Ressourcen.
    Hell/dunkel per prefers-color-scheme; Bewegung entfällt bei prefers-reduced-motion. */

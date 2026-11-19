@@ -1,5 +1,5 @@
 title: Compliance requirements
-summary: Which regulatory frameworks apply to DCP, how the requirements catalog is structured, how obligations are split between platform, operator and tenant, and which precedence rules apply in case of conflicts.
+summary: Which regulatory frameworks apply to BYOC, how the requirements catalog is structured, how obligations are split between platform, operator and tenant, and which precedence rules apply in case of conflicts.
 group: konzept
 order: 160
 quelle: Concept 65 (analysis of regulatory frameworks and requirements catalog)

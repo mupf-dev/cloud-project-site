@@ -8,7 +8,7 @@ de: dns
 
 ## Goal
 
-A DCP cluster manages its DNS records **itself**. Portal and API, nodes, boot service and release holders change with the cluster state – nodes join, roles move, holders fail. Maintaining these names by hand in the operator's DNS would be error-prone. Instead, the rule is:
+A BYOC cluster manages its DNS records **itself**. Portal and API, nodes, boot service and release holders change with the cluster state – nodes join, roles move, holders fail. Maintaining these names by hand in the operator's DNS would be error-prone. Instead, the rule is:
 
 > The operator's central DNS only points to the cluster; everything below that is answered by the cluster itself.
 

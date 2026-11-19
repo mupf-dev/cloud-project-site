@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Release-Signatur · Das Cloud Projekt</title>
+<title>Release-Signatur · BYOC</title>
 <meta name="description" content="Zwei Signaturwege für Releases, das Format der Update-Metadaten nach dem TUF-Prinzip, die Abläufe und die Reproduzierbarkeit der Builds.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0e1115">
@@ -11,15 +11,15 @@
 <link rel="alternate" hreflang="de" href="../doku/release-signatur.html">
 <link rel="alternate" hreflang="en" href="../en/docs/release-signing.html">
 <link rel="alternate" hreflang="x-default" href="../doku/release-signatur.html">
-<link rel="stylesheet" href="../assets/style.css?v=844e1e5230">
+<link rel="stylesheet" href="../assets/style.css?v=302a2236f7">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="k-doc">
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="../index.html" aria-label="Das Cloud Projekt (DCP) – Startseite">
-      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
+    <a class="brand" href="../index.html" aria-label="BYOC (Build Your Own Cloud) – Startseite">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">BYOC</span><span class="brand-sub">Build Your Own Cloud · alpha</span></span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
     <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="../index.html">Start</a></li><li><a href="../funktionen.html">Funktionen</a></li><li><a href="../architektur.html">Architektur</a></li><li><a href="../doku/index.html" aria-current="page">Dokumentation</a></li><li><a href="../roadmap.html">Status & Roadmap</a></li><li><a href="../mitmachen.html">Mitmachen</a></li></ul></nav>
@@ -34,7 +34,7 @@
 </header>
 <main id="inhalt" tabindex="-1">
 <header class="page-head"><div class="wrap"><nav class="crumbs" aria-label="Brotkrumen"><ol><li><a href="../index.html">Start</a></li><li><a href="index.html">Dokumentation</a></li><li><span aria-current="page">Release-Signatur</span></li></ol></nav><p class="eyebrow">Prozesse</p><h1>Release-Signatur</h1><p class="lead">Zwei Signaturwege für Releases, das Format der Update-Metadaten nach dem TUF-Prinzip, die Abläufe und die Reproduzierbarkeit der Builds.</p><p class="meta">Aufbereitet aus: Prozessbeschreibung Release-Signatur, Update-Metadaten und Reproduzierbarkeit</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#ueberblick-zwei-signaturwege">Überblick: zwei Signaturwege</a></li><li><a href="#update-metadaten-nach-dem-tuf-prinzip">Update-Metadaten nach dem TUF-Prinzip</a></li><li><a href="#ablaeufe">Abläufe</a></li><li><a href="#reproduzierbarkeit">Reproduzierbarkeit</a></li><li><a href="#sbom">SBOM</a></li><li><a href="#sicherheit-und-compliance">Sicherheit und Compliance</a></li></ol></nav><div class="content"><article class="doc"><h2 id="ueberblick-zwei-signaturwege">Überblick: zwei Signaturwege<a class="anchor" href="#ueberblick-zwei-signaturwege" aria-label="Link zu diesem Abschnitt">#</a></h2>
-<p>DCP signiert Releases auf zwei voneinander unabhängigen Wegen. Sie beantworten unterschiedliche Fragen für unterschiedliche Prüfer.</p>
+<p>BYOC signiert Releases auf zwei voneinander unabhängigen Wegen. Sie beantworten unterschiedliche Fragen für unterschiedliche Prüfer.</p>
 <div class="table-wrap"><table><thead><tr><th scope="col">Weg</th><th scope="col">Zweck</th><th scope="col">Schlüssel</th><th scope="col">Prüfer</th></tr></thead><tbody><tr><td><strong>Sigstore/cosign keyless</strong></td><td>öffentliche Releases; Nachweis „gebaut von genau diesem CI-Workflow“</td><td>kurzlebiges Zertifikat aus der OIDC-Identität des Workflows, Eintrag im öffentlichen Transparenzlog; zusätzlich SLSA-Provenienz</td><td>Menschen, Paketierer, Betreiber vor der Installation</td></tr><tr><td><strong>Offline-Schlüssel ECDSA P-384</strong> (TUF-Muster)</td><td>Update-Kette der Knoten</td><td>Root und Targets offline, Snapshot und Timestamp kurzlebig</td><td>Agent und Installer auf jedem Knoten – <strong>offline</strong>, ohne Netz und ohne Sigstore</td></tr></tbody></table></div>
 <p>Die Knoten vertrauen <strong>ausschließlich</strong> dem im OS-Image eingebetteten Root der Update-Kette. Sigstore ist eine zusätzliche, öffentliche Transparenzschicht, aber keine Laufzeitabhängigkeit: Ein Cluster ohne Internetzugang prüft Updates genauso streng wie ein vernetzter. In einer späteren Phase kommt ML-DSA-87 als zweite, post-quantensichere Signatur je Umschlag hinzu (siehe <a href="kryptografie.html">Kryptografie</a>).</p>
 <h2 id="update-metadaten-nach-dem-tuf-prinzip">Update-Metadaten nach dem TUF-Prinzip<a class="anchor" href="#update-metadaten-nach-dem-tuf-prinzip" aria-label="Link zu diesem Abschnitt">#</a></h2>
@@ -69,7 +69,7 @@
 </main>
 <footer class="site-footer">
   <div class="bar">
-    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Quelloffene, dezentrale Cloud-Plattform – vom Homelab bis zum Rechenzentrum. Komponenten tragen das Präfix <code>cp</code>.</p></div>
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>BYOC</strong> (Build Your Own Cloud) – Quelloffene, dezentrale Cloud-Plattform – vom Homelab bis zum Rechenzentrum. Komponenten tragen das Präfix <code>cp</code>.</p></div>
     <p>Dokumentation unter <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>, Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
     <nav aria-label="Rechtliches und Service"><p><a href="../mitmachen.html#lizenz">Lizenz</a> · <a href="../mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="../suche.html">Suche</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></p></nav>
   </div>

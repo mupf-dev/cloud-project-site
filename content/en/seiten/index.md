@@ -1,5 +1,5 @@
 title: Home
-summary: Das Cloud Projekt (DCP) – an open-source, decentralized, multi-tenant cloud platform written in Rust. From a two-node homelab to a data center with thousands of nodes.
+summary: BYOC (Build Your Own Cloud) – an open-source, decentralized, multi-tenant cloud platform written in Rust. From a two-node homelab to a data center with thousands of nodes.
 hero: ja
 de: index
 ---
@@ -9,9 +9,9 @@ de: index
     <div>
       <p class="eyebrow">Open Source · Rust · AGPL-3.0 · Alpha</p>
       <h1 id="hero-title">Your cloud.<br><span class="hl">On your hardware.</span></h1>
-      <p class="lead"><strong>Das Cloud Projekt (DCP)</strong> turns Raspberry Pis, laptops, mini PCs and rack servers into a cloud with the core services of a hyperscaler – VMs, containers, Kubernetes, storage, networks, identity and AI. From a two-node homelab to a data center with thousands of nodes, with no central controller.</p>
+      <p class="lead"><strong>BYOC (Build Your Own Cloud)</strong> turns Raspberry Pis, laptops, mini PCs and rack servers into a cloud with the core services of a hyperscaler – VMs, containers, Kubernetes, storage, networks, identity and AI. From a two-node homelab to a data center with thousands of nodes, with no central controller.</p>
       <div class="buttons">
-        <a class="btn primary" href="features.html">See what DCP does</a>
+        <a class="btn primary" href="features.html">See what BYOC does</a>
         <a class="btn" href="docs/index.html">Read the docs</a>
       </div>
       <ol class="flow" aria-label="The flow in short">
@@ -25,7 +25,7 @@ de: index
         <circle class="ring" cx="266" cy="108" r="120"/>
         <g class="float">
           <path class="cloud" d="M170 160 C138 160 130 118 162 108 C160 74 202 62 224 80 C238 44 302 44 314 82 C342 70 378 92 366 120 C394 126 390 160 360 160 Z"/>
-          <text class="t-strong" x="266" y="112" text-anchor="middle">Das Cloud Projekt</text>
+          <text class="t-strong" x="266" y="112" text-anchor="middle">BYOC</text>
           <text x="266" y="132" text-anchor="middle">VM · K8s · S3 · DNS · AI</text>
         </g>
         <path class="wire" d="M75 300 C75 235 205 222 222 160"/>
@@ -88,7 +88,7 @@ de: index
     <div class="section-head">
       <p class="eyebrow">Principles</p>
       <h2 id="principles">Hyperscaler comfort, without the hyperscaler.</h2>
-      <p>Public clouds hand out machines, storage and networks at the click of a button. If you want to keep control of your data, costs and dependencies, today you have to assemble that comfort from many separate products. DCP bundles it into one platform that runs on the very hardware it manages.</p>
+      <p>Public clouds hand out machines, storage and networks at the click of a button. If you want to keep control of your data, costs and dependencies, today you have to assemble that comfort from many separate products. BYOC bundles it into one platform that runs on the very hardware it manages.</p>
     </div>
     <ul class="features">
       <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M11 7l-5 9M13 7l5 9M7 18h10"/></svg></span><h3>Decentralized</h3><p>No central controller. State via Raft per cell, membership via gossip. If the control plane fails, workloads keep running.</p></li>
@@ -98,7 +98,7 @@ de: index
       <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><h3>Immutable nodes</h3><p>Purpose-built image OS cpOS with dm-verity, A/B updates, Secure Boot and TPM-bound encryption.</p></li>
       <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><h3>Secure &amp; Compliant by Design</h3><p>mTLS everywhere, tenant isolation at every layer, a complete audit trail, evidence for ISO 27001 and BSI IT-Grundschutz.</p></li>
       <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="8" r="2"/><path d="M6 8v8M18 10c0 4-6 3-10 6"/></svg></span><h3>Open source throughout</h3><p>Open-source dependencies only, own components in Rust, signed releases with an SBOM.</p></li>
-      <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 7h4a2 2 0 0 1 2 2v4M13 17H9a2 2 0 0 1-2-2v-4"/></svg></span><h3>Integrate what works</h3><p>No homegrown hypervisor, no file system from scratch: DCP builds the control, the automation and the unified interface.</p></li>
+      <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 7h4a2 2 0 0 1 2 2v4M13 17H9a2 2 0 0 1-2-2v-4"/></svg></span><h3>Integrate what works</h3><p>No homegrown hypervisor, no file system from scratch: BYOC builds the control, the automation and the unified interface.</p></li>
     </ul>
   </div>
 </section>
@@ -153,7 +153,7 @@ de: index
         </ul>
       </div>
       <div class="col us">
-        <h3>DCP <span class="tag acc">yours</span></h3>
+        <h3>BYOC <span class="tag acc">yours</span></h3>
         <ul>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>runs on your own hardware – from Raspberry Pi to rack, ARM and x86 mixed</span></li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>data, keys and audit log stay with the operator</span></li>
@@ -164,8 +164,8 @@ de: index
     </div>
     <div class="svc">
       <div class="table-wrap"><table>
-        <caption class="sr-only">DCP services and their hyperscaler counterparts</caption>
-        <thead><tr><th scope="col">DCP service</th><th scope="col">Roughly equivalent to</th></tr></thead>
+        <caption class="sr-only">BYOC services and their hyperscaler counterparts</caption>
+        <thead><tr><th scope="col">BYOC service</th><th scope="col">Roughly equivalent to</th></tr></thead>
         <tbody>
           <tr><td>Virtual machines</td><td>AWS EC2 · Azure VMs · Compute Engine</td></tr>
           <tr><td>Container Instances</td><td>Fargate · Azure Container Instances · Cloud Run</td></tr>
@@ -197,7 +197,7 @@ de: index
       <div class="badges" aria-label="Frameworks covered">
         <span class="tag acc">ISO/IEC 27001</span><span class="tag acc">BSI IT-Grundschutz</span><span class="tag">BSI C5</span><span class="tag">NIS2</span><span class="tag">CRA</span><span class="tag">GDPR</span>
       </div>
-      <p class="note">DCP provides building blocks and evidence for the operator's certification – the platform itself is not certified. More: <a href="docs/security-model.html">Security model</a>.</p>
+      <p class="note">BYOC provides building blocks and evidence for the operator's certification – the platform itself is not certified. More: <a href="docs/security-model.html">Security model</a>.</p>
     </div>
     <figure class="art-card">
       <svg class="g" viewBox="0 0 440 360" role="img" aria-labelledby="vk-t vk-d">
@@ -235,7 +235,7 @@ de: index
           <circle class="dot-r" cx="14" cy="13.5" r="4"/><circle class="dot-y" cx="27" cy="13.5" r="4"/><circle class="dot-g" cx="40" cy="13.5" r="4"/>
           <text class="m mu" x="280" y="17" text-anchor="middle">portal.example.org</text>
           <rect class="side" x="1" y="26" width="120" height="323"/>
-          <rect class="acc" x="12" y="38" width="18" height="18" rx="3"/><text class="side-t" x="38" y="51" style="font-weight: 650">DCP</text>
+          <rect class="acc" x="12" y="38" width="18" height="18" rx="3"/><text class="side-t" x="38" y="51" style="font-weight: 650">BYOC</text>
           <text class="side-mu m" x="14" y="80" style="font-size: 9px">PLATFORM</text>
           <text class="side-t" x="14" y="100">Overview</text>
           <rect class="side-act" x="8" y="108" width="106" height="20" rx="3"/><text class="side-act-t" x="14" y="122">Nodes</text>

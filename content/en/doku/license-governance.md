@@ -1,5 +1,5 @@
 title: License and governance
-summary: Why the DCP core is licensed under AGPL-3.0-or-later, which licenses apply to SDKs and documentation, how contributions work via DCO, and where the project stands under the Cyber Resilience Act.
+summary: Why the BYOC core is licensed under AGPL-3.0-or-later, which licenses apply to SDKs and documentation, how contributions work via DCO, and where the project stands under the Cyber Resilience Act.
 group: konzept
 order: 150
 quelle: Concept 63 (ADR license and governance)
@@ -11,7 +11,7 @@ de: lizenz-governance
 
 ## Starting point
 
-DCP is written mostly in Rust and integrates numerous third-party components under different licenses.
+BYOC is written mostly in Rust and integrates numerous third-party components under different licenses.
 The goals:
 
 - **Everything open source** – no mandatory "open core" components either (see [Vision](vision.html)).
@@ -129,7 +129,7 @@ counterweight to skepticism about the AGPL.
 Licenses govern copyright, not trademarks. The product name is the most important means against confusing forks with
 proprietary add-ons. A trademark policy is planned: unmodified builds and distributions may use the name,
 modified forks only as "based on …", and compatibility claims require passing **conformance tests** (comparable
-to Kubernetes Conformance). The alpha name is *Das Cloud Projekt* (short *DCP*); components carry the prefix `cp` (e.g. `cpctl`, `cpOS`, `cp-agent`). Technical identifiers such as API groups keep the spelling `cloud-project` for now.
+to Kubernetes Conformance). The alpha name is *BYOC* (Build Your Own Cloud); components carry the prefix `cp` (e.g. `cpctl`, `cpOS`, `cp-agent`). Technical identifiers such as API groups keep the spelling `cloud-project` for now.
 
 ### Governance model
 

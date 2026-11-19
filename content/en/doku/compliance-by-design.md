@@ -1,5 +1,5 @@
 title: Compliance by Design
-summary: DCP's 36 verifiable architecture guidelines, the CI checks and review checklist that go with them, and the "Security & Compliance" template that every architecture decision must contain.
+summary: BYOC's 36 verifiable architecture guidelines, the CI checks and review checklist that go with them, and the "Security & Compliance" template that every architecture decision must contain.
 group: konzept
 order: 180
 quelle: Concept 68 (Compliance by Design)

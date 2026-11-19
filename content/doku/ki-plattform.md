@@ -1,5 +1,5 @@
 title: KI-native Plattform
-summary: Wie DCP Modelle verwaltet, Inferenz-Endpunkte betreibt, Beschleuniger einplant und KI-Dienste über ein eigenes AI-Gateway mandantensicher und regelkonform bereitstellt.
+summary: Wie BYOC Modelle verwaltet, Inferenz-Endpunkte betreibt, Beschleuniger einplant und KI-Dienste über ein eigenes AI-Gateway mandantensicher und regelkonform bereitstellt.
 group: konzept
 order: 130
 quelle: Konzept 113 (KI-native Plattform)
@@ -7,7 +7,7 @@ quelle: Konzept 113 (KI-native Plattform)
 
 ## Was „KI-nativ“ bedeutet
 
-Für DCP heißt „KI-nativ“ dreierlei:
+Für BYOC heißt „KI-nativ“ dreierlei:
 
 1. **KI-Dienste für Mandanten** – Modelle registrieren, als OpenAI-kompatible Endpunkte betreiben, über ein Gateway mit
    Schlüsseln, Budgets und Guardrails nutzen und Wissensbasen (RAG) aufbauen. Das reicht vom Homelab (CPU, Raspberry Pi,
@@ -21,7 +21,7 @@ Nicht Gegenstand dieses Konzepts sind KI-gestützter Plattformbetrieb, das Train
 Copiloten, Gesichtserkennung und eigene GPU-Kernel.
 
 Das Vorbild sind die KI-Angebote der Hyperscaler (Katalog, serverlose und dedizierte Endpunkte, Gateway, Guardrails,
-Wissensbasen, Agenten-Laufzeit). Ihr gemeinsames Muster übernimmt DCP: **Steuerung, Abrechnung und Policy liegen bei
+Wissensbasen, Agenten-Laufzeit). Ihr gemeinsames Muster übernimmt BYOC: **Steuerung, Abrechnung und Policy liegen bei
 der Plattform, die Inferenz-Engines sind austauschbar.**
 
 ## Kernentscheidungen im Überblick
@@ -249,7 +249,7 @@ Sub-Millisekunden-Bereich.
 |---|---|---|
 | **V1 Prozess** | Gateway als Plattformdienst-Image; ein Controller übersetzt Plattform-Ressourcen in die deklarative Gateway-Konfiguration | erster Schritt |
 | **V2 Bibliothek** | Kernbausteine des Gateways als Bibliothek eines Plattformdienstes; Konfiguration direkt aus den Plattformressourcen, UI im Portal | Ziel für ein späteres 1.x-Release |
-| V3 Neubau | eigener Gateway innerhalb von DCP | verworfen (Doppelarbeit) |
+| V3 Neubau | eigener Gateway innerhalb von BYOC | verworfen (Doppelarbeit) |
 
 Im Plattformbetrieb ist die **Plattform die einzige Wahrheit**: Die eigene Verwaltungsoberfläche des Gateways ist abgeschaltet,
 lokale Datenhaltung dient nur als Cache. Mandanten werden auf Organisationen, Projekte auf Teams, Routen auf Modellgruppen,
@@ -304,7 +304,7 @@ projekteigenes Gateway im Mandanten-VPC. Weil Prompts im Klartext durchlaufen, g
 
 ## EU AI Act und BSI AIC4
 
-**Rollen.** Wer DCP betreibt, stellt im Regelfall Infrastruktur bereit und ist weder Anbieter eines KI-Systems noch
+**Rollen.** Wer BYOC betreibt, stellt im Regelfall Infrastruktur bereit und ist weder Anbieter eines KI-Systems noch
 eines KI-Modells mit allgemeinem Verwendungszweck (GPAI). Anbieter wird er erst, wenn er ein Modell oder System unter eigenem
 Namen bereitstellt. Mandanten sind Betreiber oder Anbieter ihrer KI-Systeme; die Plattform muss ihnen die Pflichterfüllung
 **ermöglichen**. Die juristische Einordnung ist im Einzelfall zu prüfen.

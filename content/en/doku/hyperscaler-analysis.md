@@ -1,5 +1,5 @@
 title: Hyperscaler feature analysis
-summary: Which service categories from AWS, Azure and Google Cloud DCP covers, how they are implemented (in-house development or external component) and in which phase.
+summary: Which service categories from AWS, Azure and Google Cloud BYOC covers, how they are implemented (in-house development or external component) and in which phase.
 group: konzept
 order: 140
 quelle: Concept 121 (Hyperscaler Feature Analysis)
@@ -8,7 +8,7 @@ de: funktionsanalyse
 
 ## Purpose
 
-The analysis compares the service offerings of AWS, Microsoft Azure and Google Cloud with DCP's plan. It
+The analysis compares the service offerings of AWS, Microsoft Azure and Google Cloud with BYOC's plan. It
 answers three questions: Which features should the platform eventually offer? How will they be implemented? And when? In total,
 around 230 features were examined across three areas: infrastructure; data, AI and integration; and identity, security,
 operations and developer tools. The analysis was accepted on 2026-11-12.
@@ -152,7 +152,7 @@ is our own.
 | API management | API Gateway / API Management / Apigee | Own+Lib | P3 |
 | IoT hub with device twin | IoT Core / IoT Hub / – | Own+Lib | P3 |
 
-Notably, all three hyperscalers introduced dedicated agent services in 2025 – which fits DCP's MCP-first approach.
+Notably, all three hyperscalers introduced dedicated agent services in 2025 – which fits BYOC's MCP-first approach.
 Prebuilt AI services are built as thin, stable APIs over model templates on the inference endpoints, not as a
 separate service per model. An IoT hub is highly relevant for homelabs and offers differentiation, since Google has discontinued its service.
 

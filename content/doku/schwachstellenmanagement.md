@@ -1,5 +1,5 @@
 title: Schwachstellenmanagement
-summary: Wie DCP Sicherheitsmeldungen annimmt, bewertet, behebt und veröffentlicht – einschließlich Fristen, CRA-Meldepflichten, VEX und SBOM.
+summary: Wie BYOC Sicherheitsmeldungen annimmt, bewertet, behebt und veröffentlicht – einschließlich Fristen, CRA-Meldepflichten, VEX und SBOM.
 group: prozess
 order: 230
 quelle: Prozessbeschreibung Schwachstellenmanagement und Sicherheitsrichtlinie
@@ -7,7 +7,7 @@ quelle: Prozessbeschreibung Schwachstellenmanagement und Sicherheitsrichtlinie
 
 ## Grundsatz
 
-DCP behandelt Sicherheitsmeldungen nach dem Prinzip der **koordinierten Offenlegung** (Coordinated
+BYOC behandelt Sicherheitsmeldungen nach dem Prinzip der **koordinierten Offenlegung** (Coordinated
 Vulnerability Disclosure, CVD): Eine Schwachstelle wird vertraulich gemeldet, im Embargo behoben und dann gemeinsam
 mit der Korrektur veröffentlicht.
 

@@ -1,5 +1,5 @@
 title: Features
-summary: Which services, roles and platform capabilities DCP provides – from the node lifecycle through networking, storage and identity to AI inference.
+summary: Which services, roles and platform capabilities BYOC provides – from the node lifecycle through networking, storage and identity to AI inference.
 toc: ja
 de: funktionen
 ---

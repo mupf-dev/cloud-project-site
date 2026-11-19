@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Platform DNS · Das Cloud Projekt</title>
+<title>Platform DNS · BYOC</title>
 <meta name="description" content="The DNS role cp-dnsd – authoritative zones of the cluster, DNSSEC, floating service addresses (VIPs) with Raft leases, and integration with the operator&#x27;s DNS.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0e1115">
@@ -11,15 +11,15 @@
 <link rel="alternate" hreflang="de" href="../../doku/dns.html">
 <link rel="alternate" hreflang="en" href="../../en/docs/dns.html">
 <link rel="alternate" hreflang="x-default" href="../../doku/dns.html">
-<link rel="stylesheet" href="../../assets/style.css?v=844e1e5230">
+<link rel="stylesheet" href="../../assets/style.css?v=302a2236f7">
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="k-doc">
 <a class="skip" href="#inhalt">Skip to content</a>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="../../en/index.html" aria-label="Das Cloud Projekt (DCP) – Home">
-      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
+    <a class="brand" href="../../en/index.html" aria-label="BYOC (Build Your Own Cloud) – Home">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">BYOC</span><span class="brand-sub">Build Your Own Cloud · alpha</span></span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menu</button>
     <nav id="hauptnav" class="mainnav" aria-label="Main navigation"><ul><li><a href="../../en/index.html">Home</a></li><li><a href="../../en/features.html">Features</a></li><li><a href="../../en/architecture.html">Architecture</a></li><li><a href="../../en/docs/index.html" aria-current="page">Docs</a></li><li><a href="../../en/roadmap.html">Status & roadmap</a></li><li><a href="../../en/contribute.html">Contribute</a></li></ul></nav>
@@ -34,7 +34,7 @@
 </header>
 <main id="inhalt" tabindex="-1">
 <header class="page-head"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../index.html">Home</a></li><li><a href="index.html">Docs</a></li><li><span aria-current="page">Platform DNS</span></li></ol></nav><p class="eyebrow">Concepts and architecture decisions</p><h1>Platform DNS</h1><p class="lead">The DNS role cp-dnsd – authoritative zones of the cluster, DNSSEC, floating service addresses (VIPs) with Raft leases, and integration with the operator's DNS.</p><p class="meta">Adapted from: Platform DNS role</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Contents of this page"><p class="toc-title">On this page</p><ol><li><a href="#goal">Goal</a></li><li><a href="#decisions">Decisions</a></li><li><a href="#zones-and-records">Zones and records</a></li><li><a href="#the-cp-dnsd-service">The cp-dnsd service</a></li><li><a href="#dnssec">DNSSEC</a></li><li><a href="#floating-service-addresses-vips">Floating service addresses (VIPs)</a></li><li><a href="#rate-limiting">Rate limiting</a></li><li><a href="#integration-with-the-operator-s-dns">Integration with the operator's DNS</a></li><li><a href="#status-and-operation">Status and operation</a></li></ol></nav><div class="content"><article class="doc"><h2 id="goal">Goal<a class="anchor" href="#goal" aria-label="Link to this section">#</a></h2>
-<p>A DCP cluster manages its DNS records <strong>itself</strong>. Portal and API, nodes, boot service and release holders change with the cluster state – nodes join, roles move, holders fail. Maintaining these names by hand in the operator's DNS would be error-prone. Instead, the rule is:</p>
+<p>A BYOC cluster manages its DNS records <strong>itself</strong>. Portal and API, nodes, boot service and release holders change with the cluster state – nodes join, roles move, holders fail. Maintaining these names by hand in the operator's DNS would be error-prone. Instead, the rule is:</p>
 <blockquote><p>The operator's central DNS only points to the cluster; everything below that is answered by the cluster itself.</p></blockquote>
 <p>For this purpose there is the node role <code>dns</code> with the service <code>cp-dnsd</code>. It is distinct from the VPC-internal name resolution for tenant workloads, which is answered locally on every host (see <a href="network.html">Network</a>). Tenant zones in public DNS are a later expansion stage.</p>
 <h2 id="decisions">Decisions<a class="anchor" href="#decisions" aria-label="Link to this section">#</a></h2>
@@ -79,7 +79,7 @@
 </main>
 <footer class="site-footer">
   <div class="bar">
-    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>BYOC</strong> (Build Your Own Cloud) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
     <p>Documentation under <a href="https://creativecommons.org/licenses/by/4.0/deed.en" rel="license noopener">CC BY 4.0</a>, code under AGPL-3.0-or-later. No cookies, no tracking, no third-party resources.</p>
     <nav aria-label="Legal and service"><p><a href="../../en/contribute.html#license">License</a> · <a href="../../en/contribute.html#security">Report a vulnerability</a> · <a href="../../en/search.html">Search</a> · <a href="../../en/legal-notice.html">Legal notice</a> · <a href="../../en/privacy.html">Privacy policy</a></p></nav>
   </div>

@@ -8,7 +8,7 @@ de: release-signatur
 
 ## Overview: two signing paths
 
-DCP signs releases along two independent paths. They answer different questions for different verifiers.
+BYOC signs releases along two independent paths. They answer different questions for different verifiers.
 
 | Path | Purpose | Keys | Verifier |
 |---|---|---|---|

@@ -1,11 +1,11 @@
 title: Architecture
-summary: How DCP is built – an agent on every node, a control plane with Raft and gossip, cells and regions, networking, the OS image and the update chain.
+summary: How BYOC is built – an agent on every node, a control plane with Raft and gossip, cells and regions, networking, the OS image and the update chain.
 toc: ja
 de: architektur
 ---
 ## Layered overview
 
-DCP has no central controller. **Every node** runs the same agent, `cp-agent`, which serves the
+BYOC has no central controller. **Every node** runs the same agent, `cp-agent`, which serves the
 API, the portal and MCP, forwards requests to the responsible place and enforces the desired state
 of its node. The desired state is held in a **Raft group per cell**; membership and reachability
 spread via **gossip**. Underneath sits the immutable operating system **cpOS**.
@@ -13,7 +13,7 @@ spread via **gossip**. Underneath sits the immutable operating system **cpOS**.
 ::: html
 <figure class="diagram" role="group" aria-labelledby="sch-cap">
 <svg viewBox="0 0 860 420" role="img" aria-labelledby="sch-t sch-d">
-<title id="sch-t">Layer model of DCP</title>
+<title id="sch-t">Layer model of BYOC</title>
 <desc id="sch-d">At the top, the access paths: portal, REST API and cpctl, MCP. Below that, the cp-agent on every node with API ingress, router, reconcilers, roles and audit. Below that, the control core with Raft per cell and gossip. External components such as the hypervisor and storage run as separate systemd units. At the bottom, cpOS and hardware.</desc>
 <rect class="box2" x="20" y="15" width="820" height="60" rx="10"/>
 <text x="40" y="38" class="b">Access paths – equal</text>

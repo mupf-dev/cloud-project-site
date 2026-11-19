@@ -1,5 +1,5 @@
 title: Vision, Terminology and Scope
-summary: Target picture, guiding principles, target audiences, glossary, node lifecycle, roles, scaling tiers and scope of "Das Cloud Projekt" (DCP).
+summary: Target picture, guiding principles, target audiences, glossary, node lifecycle, roles, scaling tiers and scope of BYOC (Build Your Own Cloud).
 group: konzept
 order: 10
 quelle: Concept 01 (Vision, Terminology & Scope)
@@ -8,7 +8,7 @@ de: vision
 
 ## Target picture
 
-**Das Cloud Projekt** (**DCP** for short) is an **open-source, decentralized cloud platform**. It takes in arbitrary hardware – from a Raspberry Pi to laptops to rack servers – over a network cable and turns it into a **multi-tenant cloud with the core services of a hyperscaler**. It covers everything from a two-node homelab to a data center with thousands of nodes.
+**BYOC** (**BYOC** for short) is an **open-source, decentralized cloud platform**. It takes in arbitrary hardware – from a Raspberry Pi to laptops to rack servers – over a network cable and turns it into a **multi-tenant cloud with the core services of a hyperscaler**. It covers everything from a two-node homelab to a data center with thousands of nodes.
 
 The short version for outsiders:
 

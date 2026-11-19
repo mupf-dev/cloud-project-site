@@ -1,5 +1,5 @@
 title: Hyperscaler-Funktionsanalyse
-summary: Welche Dienstkategorien von AWS, Azure und Google Cloud DCP abbildet, wie sie umgesetzt werden (Eigenentwicklung oder externer Baustein) und in welcher Phase.
+summary: Welche Dienstkategorien von AWS, Azure und Google Cloud BYOC abbildet, wie sie umgesetzt werden (Eigenentwicklung oder externer Baustein) und in welcher Phase.
 group: konzept
 order: 140
 quelle: Konzept 121 (Hyperscaler-Funktionsanalyse)
@@ -7,7 +7,7 @@ quelle: Konzept 121 (Hyperscaler-Funktionsanalyse)
 
 ## Zweck
 
-Die Analyse vergleicht das Dienstangebot von AWS, Microsoft Azure und Google Cloud mit dem Plan von DCP. Sie
+Die Analyse vergleicht das Dienstangebot von AWS, Microsoft Azure und Google Cloud mit dem Plan von BYOC. Sie
 beantwortet drei Fragen: Welche Funktionen soll die Plattform irgendwann bieten? Wie werden sie umgesetzt? Und wann? Insgesamt
 wurden rund 230 Funktionen in drei Bereichen betrachtet: Infrastruktur, Daten/KI/Integration sowie Identität, Sicherheit,
 Betrieb und Entwicklerwerkzeuge. Die Analyse wurde am 2026-11-12 angenommen.
@@ -152,7 +152,7 @@ ist eigen.
 | IoT-Hub mit Gerätezwilling | IoT Core / IoT Hub / – | Eigen+Bib | P3 |
 
 Bemerkenswert: Alle drei Hyperscaler haben 2025 dedizierte Agenten-Dienste eingeführt – das passt zum MCP-first-Ansatz von
-DCP. KI-Fertigdienste entstehen als dünne, stabile APIs über Modellvorlagen auf den Inferenz-Endpunkten, nicht als
+BYOC. KI-Fertigdienste entstehen als dünne, stabile APIs über Modellvorlagen auf den Inferenz-Endpunkten, nicht als
 eigener Dienst je Modell. Ein IoT-Hub hat hohe Homelab-Relevanz und bietet Differenzierung, da Google seinen Dienst eingestellt hat.
 
 ## Teil C – Identität, Sicherheit, Betrieb, Entwickler

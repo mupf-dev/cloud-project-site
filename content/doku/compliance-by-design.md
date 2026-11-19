@@ -1,5 +1,5 @@
 title: Compliance by Design
-summary: Die 36 prüfbaren Architekturleitlinien von DCP, die CI-Prüfungen und die Review-Checkliste dazu sowie die Vorlage „Sicherheit & Compliance“, die jede Architekturentscheidung enthalten muss.
+summary: Die 36 prüfbaren Architekturleitlinien von BYOC, die CI-Prüfungen und die Review-Checkliste dazu sowie die Vorlage „Sicherheit & Compliance“, die jede Architekturentscheidung enthalten muss.
 group: konzept
 order: 180
 quelle: Konzept 68 (Compliance by Design)

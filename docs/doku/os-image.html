@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OS-Image (cpOS) · Das Cloud Projekt</title>
+<title>OS-Image (cpOS) · BYOC</title>
 <meta name="description" content="Das unveränderliche Knoten-Betriebssystem – Debian-Basis mit mkosi, erofs und dm-verity, Unified Kernel Images, Secure und Measured Boot je Plattform, TPM-gebundene Verschlüsselung, A/B-Updates mit Health-Gate sowie Härtung und SBOM.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0e1115">
@@ -11,15 +11,15 @@
 <link rel="alternate" hreflang="de" href="../doku/os-image.html">
 <link rel="alternate" hreflang="en" href="../en/docs/os-image.html">
 <link rel="alternate" hreflang="x-default" href="../doku/os-image.html">
-<link rel="stylesheet" href="../assets/style.css?v=844e1e5230">
+<link rel="stylesheet" href="../assets/style.css?v=302a2236f7">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="k-doc">
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="../index.html" aria-label="Das Cloud Projekt (DCP) – Startseite">
-      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
+    <a class="brand" href="../index.html" aria-label="BYOC (Build Your Own Cloud) – Startseite">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">BYOC</span><span class="brand-sub">Build Your Own Cloud · alpha</span></span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
     <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="../index.html">Start</a></li><li><a href="../funktionen.html">Funktionen</a></li><li><a href="../architektur.html">Architektur</a></li><li><a href="../doku/index.html" aria-current="page">Dokumentation</a></li><li><a href="../roadmap.html">Status & Roadmap</a></li><li><a href="../mitmachen.html">Mitmachen</a></li></ul></nav>
@@ -109,7 +109,7 @@
 </main>
 <footer class="site-footer">
   <div class="bar">
-    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Quelloffene, dezentrale Cloud-Plattform – vom Homelab bis zum Rechenzentrum. Komponenten tragen das Präfix <code>cp</code>.</p></div>
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>BYOC</strong> (Build Your Own Cloud) – Quelloffene, dezentrale Cloud-Plattform – vom Homelab bis zum Rechenzentrum. Komponenten tragen das Präfix <code>cp</code>.</p></div>
     <p>Dokumentation unter <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>, Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
     <nav aria-label="Rechtliches und Service"><p><a href="../mitmachen.html#lizenz">Lizenz</a> · <a href="../mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="../suche.html">Suche</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></p></nav>
   </div>

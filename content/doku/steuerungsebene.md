@@ -5,7 +5,7 @@ order: 40
 quelle: Konzept 05 (Architektur der Steuerungsebene)
 ---
 
-Die Steuerungsebene ist das Herz von DCP: Sie hält den gewünschten Zustand aller Ressourcen, entscheidet über Platzierung und Mitgliedschaft und setzt beides auf den Knoten um – **ohne zentralen Controller**. Begriffe wie Knoten, Zelle, Steuerungsgruppe und Zeuge sind in der [Vision](vision.html) erklärt; die gewählten Bibliotheken im [Rust-Stack](rust-stack.html).
+Die Steuerungsebene ist das Herz von BYOC: Sie hält den gewünschten Zustand aller Ressourcen, entscheidet über Platzierung und Mitgliedschaft und setzt beides auf den Knoten um – **ohne zentralen Controller**. Begriffe wie Knoten, Zelle, Steuerungsgruppe und Zeuge sind in der [Vision](vision.html) erklärt; die gewählten Bibliotheken im [Rust-Stack](rust-stack.html).
 
 ## Kernentscheidungen
 

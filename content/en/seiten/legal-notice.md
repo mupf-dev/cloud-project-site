@@ -25,7 +25,7 @@ Marc André Leunig, address as above.
 
 ## Notes
 
-"Das Cloud Projekt" (DCP) is a non-commercial open-source project. The content of this website has been
+BYOC (Build Your Own Cloud) is a non-commercial open-source project. The content of this website has been
 prepared with care; however, no guarantee is given for its completeness, accuracy or timeliness.
 The operators of linked external pages are solely responsible for their content.
 

@@ -32,7 +32,7 @@ Danach Markdown-Teilmenge:
   (z. B. `netzwerk.md` → `network.md`), Kopffeld `de: netzwerk` zusätzlich.
 - `group`, `order`, `toc`, `noindex`, `hero` unverändert übernehmen; Links auf englische Slugs
   (Hauptseiten verlinken Doku als `docs/<slug>.html`).
-- Projektname: „Das Cloud Projekt“ bzw. „DCP“ wird nicht übersetzt.
+- Projektname: BYOC bzw. „BYOC“ wird nicht übersetzt.
 
 ## Inhalt
 

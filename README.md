@@ -1,6 +1,6 @@
-# Das Cloud Projekt (DCP) – Projekt-Website
+# BYOC (Build Your Own Cloud) – Projekt-Website
 
-Quellen und Generator der öffentlichen Website von **„Das Cloud Projekt“** (kurz **DCP**, Alpha-Name),
+Quellen und Generator der öffentlichen Website von **BYOC** (Build Your Own Cloud, Alpha-Name),
 einer quelloffenen, dezentralen und mandantenfähigen Cloud-Plattform in Rust. Komponenten tragen
 das Präfix `cp` (`cpctl`, `cpOS`, `cp-agent` …); der Name dieses Repositorys bleibt unverändert.
 

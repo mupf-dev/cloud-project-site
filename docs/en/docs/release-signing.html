@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Release signing · Das Cloud Projekt</title>
+<title>Release signing · BYOC</title>
 <meta name="description" content="Two signing paths for releases, the format of the update metadata following the TUF approach, the processes and the reproducibility of builds.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0e1115">
@@ -11,15 +11,15 @@
 <link rel="alternate" hreflang="de" href="../../doku/release-signatur.html">
 <link rel="alternate" hreflang="en" href="../../en/docs/release-signing.html">
 <link rel="alternate" hreflang="x-default" href="../../doku/release-signatur.html">
-<link rel="stylesheet" href="../../assets/style.css?v=844e1e5230">
+<link rel="stylesheet" href="../../assets/style.css?v=302a2236f7">
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="k-doc">
 <a class="skip" href="#inhalt">Skip to content</a>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="../../en/index.html" aria-label="Das Cloud Projekt (DCP) – Home">
-      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
+    <a class="brand" href="../../en/index.html" aria-label="BYOC (Build Your Own Cloud) – Home">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">BYOC</span><span class="brand-sub">Build Your Own Cloud · alpha</span></span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menu</button>
     <nav id="hauptnav" class="mainnav" aria-label="Main navigation"><ul><li><a href="../../en/index.html">Home</a></li><li><a href="../../en/features.html">Features</a></li><li><a href="../../en/architecture.html">Architecture</a></li><li><a href="../../en/docs/index.html" aria-current="page">Docs</a></li><li><a href="../../en/roadmap.html">Status & roadmap</a></li><li><a href="../../en/contribute.html">Contribute</a></li></ul></nav>
@@ -34,7 +34,7 @@
 </header>
 <main id="inhalt" tabindex="-1">
 <header class="page-head"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../index.html">Home</a></li><li><a href="index.html">Docs</a></li><li><span aria-current="page">Release signing</span></li></ol></nav><p class="eyebrow">Processes</p><h1>Release signing</h1><p class="lead">Two signing paths for releases, the format of the update metadata following the TUF approach, the processes and the reproducibility of builds.</p><p class="meta">Adapted from: Process description release signing, update metadata and reproducibility</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Contents of this page"><p class="toc-title">On this page</p><ol><li><a href="#overview-two-signing-paths">Overview: two signing paths</a></li><li><a href="#update-metadata-following-the-tuf-approach">Update metadata following the TUF approach</a></li><li><a href="#processes">Processes</a></li><li><a href="#reproducibility">Reproducibility</a></li><li><a href="#sbom">SBOM</a></li><li><a href="#security-and-compliance">Security and compliance</a></li></ol></nav><div class="content"><article class="doc"><h2 id="overview-two-signing-paths">Overview: two signing paths<a class="anchor" href="#overview-two-signing-paths" aria-label="Link to this section">#</a></h2>
-<p>DCP signs releases along two independent paths. They answer different questions for different verifiers.</p>
+<p>BYOC signs releases along two independent paths. They answer different questions for different verifiers.</p>
 <div class="table-wrap"><table><thead><tr><th scope="col">Path</th><th scope="col">Purpose</th><th scope="col">Keys</th><th scope="col">Verifier</th></tr></thead><tbody><tr><td><strong>Sigstore/cosign keyless</strong></td><td>public releases; evidence of "built by exactly this CI workflow"</td><td>short-lived certificate from the workflow's OIDC identity, entry in the public transparency log; plus SLSA provenance</td><td>people, packagers, operators before installation</td></tr><tr><td><strong>Offline keys ECDSA P-384</strong> (TUF pattern)</td><td>update chain of the nodes</td><td>root and targets offline, snapshot and timestamp short-lived</td><td>agent and installer on every node – <strong>offline</strong>, without network and without Sigstore</td></tr></tbody></table></div>
 <p>The nodes trust <strong>only</strong> the update-chain root embedded in the OS image. Sigstore is an additional, public transparency layer, but not a runtime dependency: a cluster without internet access verifies updates just as strictly as a connected one. In a later phase, ML-DSA-87 will be added as a second, post-quantum signature per envelope (see <a href="cryptography.html">Cryptography</a>).</p>
 <h2 id="update-metadata-following-the-tuf-approach">Update metadata following the TUF approach<a class="anchor" href="#update-metadata-following-the-tuf-approach" aria-label="Link to this section">#</a></h2>
@@ -69,7 +69,7 @@
 </main>
 <footer class="site-footer">
   <div class="bar">
-    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>BYOC</strong> (Build Your Own Cloud) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
     <p>Documentation under <a href="https://creativecommons.org/licenses/by/4.0/deed.en" rel="license noopener">CC BY 4.0</a>, code under AGPL-3.0-or-later. No cookies, no tracking, no third-party resources.</p>
     <nav aria-label="Legal and service"><p><a href="../../en/contribute.html#license">License</a> · <a href="../../en/contribute.html#security">Report a vulnerability</a> · <a href="../../en/search.html">Search</a> · <a href="../../en/legal-notice.html">Legal notice</a> · <a href="../../en/privacy.html">Privacy policy</a></p></nav>
   </div>

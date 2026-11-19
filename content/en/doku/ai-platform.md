@@ -1,5 +1,5 @@
 title: AI-native platform
-summary: How DCP manages models, operates inference endpoints, schedules accelerators and delivers AI services through its own AI gateway in a tenant-safe and compliant way.
+summary: How BYOC manages models, operates inference endpoints, schedules accelerators and delivers AI services through its own AI gateway in a tenant-safe and compliant way.
 group: konzept
 order: 130
 quelle: Concept 113 (AI-Native Platform)
@@ -8,7 +8,7 @@ de: ki-plattform
 
 ## What "AI-native" means
 
-For DCP, "AI-native" means three things:
+For BYOC, "AI-native" means three things:
 
 1. **AI services for tenants** – register models, run them as OpenAI-compatible endpoints, consume them through a gateway with
    keys, budgets and guardrails, and build knowledge bases (RAG). This ranges from the homelab (CPU, Raspberry Pi,
@@ -22,7 +22,7 @@ Out of scope for this concept are AI-assisted platform operations, training larg
 copilots, facial recognition and custom GPU kernels.
 
 The model is the AI offerings of the hyperscalers (catalog, serverless and dedicated endpoints, gateway, guardrails,
-knowledge bases, agent runtime). DCP adopts their common pattern: **control, billing and policy belong to the
+knowledge bases, agent runtime). BYOC adopts their common pattern: **control, billing and policy belong to the
 platform; the inference engines are interchangeable.**
 
 ## Key decisions at a glance
@@ -250,7 +250,7 @@ sub-millisecond range.
 |---|---|---|
 | **V1 process** | Gateway as a platform service image; a controller translates platform resources into the declarative gateway configuration | first step |
 | **V2 library** | Core gateway building blocks as a library within a platform service; configuration directly from platform resources, UI in the portal | target for a later 1.x release |
-| V3 rebuild | own gateway inside DCP | rejected (duplicate work) |
+| V3 rebuild | own gateway inside BYOC | rejected (duplicate work) |
 
 In platform operation the **platform is the single source of truth**: the gateway's own management UI is disabled,
 local data storage serves only as a cache. Tenants map to organizations, projects to teams, routes to model groups,
@@ -305,7 +305,7 @@ public ingresses.
 
 ## EU AI Act and BSI AIC4
 
-**Roles.** Whoever operates DCP normally provides infrastructure and is neither a provider of an AI system nor
+**Roles.** Whoever operates BYOC normally provides infrastructure and is neither a provider of an AI system nor
 of a general-purpose AI model (GPAI). They become a provider only when they make a model or system available under their own
 name. Tenants are deployers or providers of their AI systems; the platform must **enable** them to fulfill their obligations.
 The legal classification must be assessed case by case.

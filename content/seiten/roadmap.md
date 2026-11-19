@@ -1,11 +1,11 @@
 title: Status und Roadmap
-summary: Wo DCP steht, in welcher Reihenfolge die Funktionen entstehen und woran der MVP gemessen wird.
+summary: Wo BYOC steht, in welcher Reihenfolge die Funktionen entstehen und woran der MVP gemessen wird.
 toc: ja
 ---
 ## Aktueller Stand
 
 > **Vor dem ersten Release.** Version 0.x, alle API-Gruppen in `v1alpha1`. Noch nicht für den
-> Produktiveinsatz geeignet. „Das Cloud Projekt“ (DCP) ist ein Alpha-Name.
+> Produktiveinsatz geeignet. BYOC (Build Your Own Cloud) ist ein Alpha-Name.
 
 - <span class="status-ok">Abgeschlossen:</span> Architektur und Konzepte – Meilenstein
   „Architektur steht“ am 2026-11-12. Lizenzentscheidung (AGPL-3.0-or-later für den Kern) am
@@ -64,7 +64,7 @@ Racks sowie Erasure Coding für Objekt- und Archivklassen. Die API-Gruppen gehen
 
 ## Nicht-Ziele
 
-DCP baut **keinen eigenen Hypervisor**, **kein verteiltes Dateisystem von Null** und
+BYOC baut **keinen eigenen Hypervisor**, **kein verteiltes Dateisystem von Null** und
 setzt **nicht auf Kubernetes als Fundament** der Plattform. Bewährte, quelloffene Komponenten
 werden hinter klaren Prozessgrenzen integriert. Mehr dazu in
 [Vision, Begriffe und Abgrenzung](doku/vision.html).

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 cloud-project contributors
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Statischer Generator für die Website von „Das Cloud Projekt“ (DCP), zweisprachig.
+"""Statischer Generator für die Website von BYOC (Build Your Own Cloud), zweisprachig.
 
 Nur Python-Standardbibliothek. Deutsch liegt an der Wurzel, Englisch unter en/:
 
@@ -31,8 +31,8 @@ ROOT = Path(__file__).resolve().parent
 CONTENT = ROOT / "content"
 STATIC = ROOT / "static"
 
-SITE_NAME = "Das Cloud Projekt"
-SITE_SHORT = "DCP"
+SITE_NAME = "BYOC"
+SITE_SHORT = "Build Your Own Cloud"
 # Pfad der Website auf dem Server (nur für die 404-Seite, die GitHub Pages unter beliebigen Pfaden ausliefert).
 # hreflang-/canonical-Links sind relativ, damit die Website ohne festen Host funktioniert.
 BASE_PATH = "/cloud-project-site/"
@@ -66,8 +66,8 @@ LANGS = {
                            ("suche.html", "Suche"), ("impressum.html", "Impressum"), ("datenschutz.html", "Datenschutz")],
             "foot_nav": "Rechtliches und Service",
             "prefix_note": "Komponenten tragen das Präfix <code>cp</code>.",
-            "docs_lead": "Aufbereitete Fassungen der Konzepte, Architekturentscheidungen (ADRs) und Prozesse von DCP. Die Seiten fassen die Projektdokumente für ein öffentliches Publikum zusammen.",
-            "docs_desc": "Konzepte, Architekturentscheidungen und Prozesse von „Das Cloud Projekt“ (DCP).",
+            "docs_lead": "Aufbereitete Fassungen der Konzepte, Architekturentscheidungen (ADRs) und Prozesse von BYOC. Die Seiten fassen die Projektdokumente für ein öffentliches Publikum zusammen.",
+            "docs_desc": "Konzepte, Architekturentscheidungen und Prozesse von BYOC (Build Your Own Cloud).",
             "docs_index_s": "Übersicht aller Konzepte und Prozesse",
             "pages": "Seiten",
             "search_label": "Suchbegriff", "search_btn": "Suchen", "search_desc": "Volltextsuche",
@@ -103,8 +103,8 @@ LANGS = {
                            ("search.html", "Search"), ("legal-notice.html", "Legal notice"), ("privacy.html", "Privacy policy")],
             "foot_nav": "Legal and service",
             "prefix_note": "Components carry the prefix <code>cp</code>.",
-            "docs_lead": "Public editions of DCP's concepts, architecture decision records (ADRs) and processes, condensed from the project documents for a general audience.",
-            "docs_desc": "Concepts, architecture decisions and processes of Das Cloud Projekt (DCP).",
+            "docs_lead": "Public editions of BYOC's concepts, architecture decision records (ADRs) and processes, condensed from the project documents for a general audience.",
+            "docs_desc": "Concepts, architecture decisions and processes of BYOC (Build Your Own Cloud).",
             "docs_index_s": "Overview of all concepts and processes",
             "pages": "Pages",
             "search_label": "Search term", "search_btn": "Search", "search_desc": "Full-text search",

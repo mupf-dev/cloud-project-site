@@ -6,7 +6,7 @@ quelle: Concept 05 (Control plane architecture)
 de: steuerungsebene
 ---
 
-The control plane is the heart of DCP: it holds the desired state of all resources, decides on placement and membership, and enforces both on the nodes – **without a central controller**. Terms such as node, cell, control group and witness are explained in the [Vision](vision.html); the chosen libraries in the [Rust stack](rust-stack.html).
+The control plane is the heart of BYOC: it holds the desired state of all resources, decides on placement and membership, and enforces both on the nodes – **without a central controller**. Terms such as node, cell, control group and witness are explained in the [Vision](vision.html); the chosen libraries in the [Rust stack](rust-stack.html).
 
 ## Core decisions
 

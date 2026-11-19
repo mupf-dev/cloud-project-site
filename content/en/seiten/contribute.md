@@ -1,11 +1,11 @@
 title: Contributing and license
-summary: How to contribute to DCP, which licenses cover code and documentation, and how to report vulnerabilities.
+summary: How to contribute to BYOC, which licenses cover code and documentation, and how to report vulnerabilities.
 toc: ja
 de: mitmachen
 ---
 ## Contributing
 
-"Das Cloud Projekt" (DCP) is set up as a community project. The source code repository will be opened
+BYOC (Build Your Own Cloud) is set up as a community project. The source code repository will be opened
 as soon as the license files, security policy and REUSE compliance are complete. Until then,
 we welcome feedback on concepts and architecture.
 

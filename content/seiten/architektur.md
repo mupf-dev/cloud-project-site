@@ -1,10 +1,10 @@
 title: Architektur
-summary: Wie DCP aufgebaut ist – Agent auf jedem Knoten, Steuerungsebene mit Raft und Gossip, Zellen und Regionen, Netz, OS-Image und Update-Kette.
+summary: Wie BYOC aufgebaut ist – Agent auf jedem Knoten, Steuerungsebene mit Raft und Gossip, Zellen und Regionen, Netz, OS-Image und Update-Kette.
 toc: ja
 ---
 ## Überblick in Schichten
 
-DCP hat keinen zentralen Controller. Auf **jedem Knoten** läuft derselbe Agent
+BYOC hat keinen zentralen Controller. Auf **jedem Knoten** läuft derselbe Agent
 `cp-agent`, der API, Portal und MCP ausliefert, Anfragen an die zuständige Stelle weiterleitet und
 den Sollzustand seines Knotens umsetzt. Der gewünschte Zustand liegt in einer **Raft-Gruppe je
 Zelle**; Mitgliedschaft und Erreichbarkeit verbreiten sich per **Gossip**. Darunter liegt das
@@ -13,7 +13,7 @@ unveränderliche Betriebssystem **cpOS**.
 ::: html
 <figure class="diagram" role="group" aria-labelledby="sch-cap">
 <svg viewBox="0 0 860 420" role="img" aria-labelledby="sch-t sch-d">
-<title id="sch-t">Schichtenmodell von DCP</title>
+<title id="sch-t">Schichtenmodell von BYOC</title>
 <desc id="sch-d">Oben die Zugänge Portal, REST-API und cpctl, MCP. Darunter der cp-agent auf jedem Knoten mit API-Eingang, Router, Reconcilern, Rollen und Audit. Darunter Steuerungskern mit Raft je Zelle und Gossip. Externe Komponenten wie Hypervisor und Speicher als eigene systemd-Units. Ganz unten cpOS und Hardware.</desc>
 <rect class="box2" x="20" y="15" width="820" height="60" rx="10"/>
 <text x="40" y="38" class="b">Zugänge – gleichwertig</text>

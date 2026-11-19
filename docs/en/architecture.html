@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Architecture · Das Cloud Projekt</title>
-<meta name="description" content="How DCP is built – an agent on every node, a control plane with Raft and gossip, cells and regions, networking, the OS image and the update chain.">
+<title>Architecture · BYOC</title>
+<meta name="description" content="How BYOC is built – an agent on every node, a control plane with Raft and gossip, cells and regions, networking, the OS image and the update chain.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0e1115">
 <link rel="canonical" href="../en/architecture.html">
 <link rel="alternate" hreflang="de" href="../architektur.html">
 <link rel="alternate" hreflang="en" href="../en/architecture.html">
 <link rel="alternate" hreflang="x-default" href="../architektur.html">
-<link rel="stylesheet" href="../assets/style.css?v=844e1e5230">
+<link rel="stylesheet" href="../assets/style.css?v=302a2236f7">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="k-page">
 <a class="skip" href="#inhalt">Skip to content</a>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="../en/index.html" aria-label="Das Cloud Projekt (DCP) – Home">
-      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
+    <a class="brand" href="../en/index.html" aria-label="BYOC (Build Your Own Cloud) – Home">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">BYOC</span><span class="brand-sub">Build Your Own Cloud · alpha</span></span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menu</button>
     <nav id="hauptnav" class="mainnav" aria-label="Main navigation"><ul><li><a href="../en/index.html">Home</a></li><li><a href="../en/features.html">Features</a></li><li><a href="../en/architecture.html" aria-current="page">Architecture</a></li><li><a href="../en/docs/index.html">Docs</a></li><li><a href="../en/roadmap.html">Status & roadmap</a></li><li><a href="../en/contribute.html">Contribute</a></li></ul></nav>
@@ -33,11 +33,11 @@
   </div>
 </header>
 <main id="inhalt" tabindex="-1">
-<header class="page-head"><div class="wrap"><p class="eyebrow">DCP</p><h1>Architecture</h1><p class="lead">How DCP is built – an agent on every node, a control plane with Raft and gossip, cells and regions, networking, the OS image and the update chain.</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Contents of this page"><p class="toc-title">On this page</p><ol><li><a href="#layered-overview">Layered overview</a></li><li><a href="#cells-and-regions">Cells and regions</a></li><li><a href="#two-nodes-with-a-witness">Two nodes with a witness</a></li><li><a href="#network">Network</a></li><li><a href="#boot-and-trust-chain">Boot and trust chain</a></li><li><a href="#release-and-update-chain">Release and update chain</a></li><li><a href="#technology-decisions">Technology decisions</a></li></ol></nav><div class="content"><article class="doc"><h2 id="layered-overview">Layered overview<a class="anchor" href="#layered-overview" aria-label="Link to this section">#</a></h2>
-<p>DCP has no central controller. <strong>Every node</strong> runs the same agent, <code>cp-agent</code>, which serves the API, the portal and MCP, forwards requests to the responsible place and enforces the desired state of its node. The desired state is held in a <strong>Raft group per cell</strong>; membership and reachability spread via <strong>gossip</strong>. Underneath sits the immutable operating system <strong>cpOS</strong>.</p>
+<header class="page-head"><div class="wrap"><p class="eyebrow">Build Your Own Cloud</p><h1>Architecture</h1><p class="lead">How BYOC is built – an agent on every node, a control plane with Raft and gossip, cells and regions, networking, the OS image and the update chain.</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Contents of this page"><p class="toc-title">On this page</p><ol><li><a href="#layered-overview">Layered overview</a></li><li><a href="#cells-and-regions">Cells and regions</a></li><li><a href="#two-nodes-with-a-witness">Two nodes with a witness</a></li><li><a href="#network">Network</a></li><li><a href="#boot-and-trust-chain">Boot and trust chain</a></li><li><a href="#release-and-update-chain">Release and update chain</a></li><li><a href="#technology-decisions">Technology decisions</a></li></ol></nav><div class="content"><article class="doc"><h2 id="layered-overview">Layered overview<a class="anchor" href="#layered-overview" aria-label="Link to this section">#</a></h2>
+<p>BYOC has no central controller. <strong>Every node</strong> runs the same agent, <code>cp-agent</code>, which serves the API, the portal and MCP, forwards requests to the responsible place and enforces the desired state of its node. The desired state is held in a <strong>Raft group per cell</strong>; membership and reachability spread via <strong>gossip</strong>. Underneath sits the immutable operating system <strong>cpOS</strong>.</p>
 <figure class="diagram" role="group" aria-labelledby="sch-cap">
 <svg viewBox="0 0 860 420" role="img" aria-labelledby="sch-t sch-d">
-<title id="sch-t">Layer model of DCP</title>
+<title id="sch-t">Layer model of BYOC</title>
 <desc id="sch-d">At the top, the access paths: portal, REST API and cpctl, MCP. Below that, the cp-agent on every node with API ingress, router, reconcilers, roles and audit. Below that, the control core with Raft per cell and gossip. External components such as the hypervisor and storage run as separate systemd units. At the bottom, cpOS and hardware.</desc>
 <rect class="box2" x="20" y="15" width="820" height="60" rx="10"/>
 <text x="40" y="38" class="b">Access paths – equal</text>
@@ -174,7 +174,7 @@
 </main>
 <footer class="site-footer">
   <div class="bar">
-    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>BYOC</strong> (Build Your Own Cloud) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
     <p>Documentation under <a href="https://creativecommons.org/licenses/by/4.0/deed.en" rel="license noopener">CC BY 4.0</a>, code under AGPL-3.0-or-later. No cookies, no tracking, no third-party resources.</p>
     <nav aria-label="Legal and service"><p><a href="../en/contribute.html#license">License</a> · <a href="../en/contribute.html#security">Report a vulnerability</a> · <a href="../en/search.html">Search</a> · <a href="../en/legal-notice.html">Legal notice</a> · <a href="../en/privacy.html">Privacy policy</a></p></nav>
   </div>

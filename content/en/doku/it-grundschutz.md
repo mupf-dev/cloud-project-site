@@ -1,5 +1,5 @@
 title: BSI IT-Grundschutz modeling
-summary: How DCP models the "platform" sub-domain of the information domain from the manufacturer's perspective according to Grundschutz++, maps requirements to components and evidence, and provides operators with a protection requirements template.
+summary: How BYOC models the "platform" sub-domain of the information domain from the manufacturer's perspective according to Grundschutz++, maps requirements to components and evidence, and provides operators with a protection requirements template.
 group: konzept
 order: 170
 quelle: Concept 66 (BSI IT-Grundschutz modeling)
@@ -43,7 +43,7 @@ The user catalog comprises around **1,000 requirements** in 20 practices – for
 configuration, architecture, development and business continuity management. Each requirement carries a security level (`normal-SdT`, i.e.
 normal/state of the art, or `erhöht`, i.e. elevated), its effect on the protection goals, associated threats, target object categories and in some cases parameters that the
 operator defines. Around 140 requirements carry the tag **"product description" (Produktbeschreibung)** – exactly the requirements that a
-manufacturer can provide as an OSCAL component definition. They form the mandatory scope of DCP's component
+manufacturer can provide as an OSCAL component definition. They form the mandatory scope of BYOC's component
 definition.
 
 About a third of the requirements have no target object category; these are mostly ISMS and organizational requirements
