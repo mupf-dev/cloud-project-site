@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Das Portal · BYOC</title>
+<meta name="description" content="Echte Aufnahmen des Web-Portals von BYOC mit fiktiven Demodaten – Übersicht, Knoten, wartende Hardware, Zellen, DNS, Releases, Operationen und Einrichtungsassistent.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e1115">
+<link rel="canonical" href="portal.html">
+<link rel="alternate" hreflang="de" href="portal.html">
+<link rel="alternate" hreflang="en" href="en/portal.html">
+<link rel="alternate" hreflang="x-default" href="portal.html">
+<link rel="stylesheet" href="assets/style.css?v=bc45a58a4b">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="k-wide">
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="index.html" aria-label="BYOC (Build Your Own Cloud) – Startseite">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">BYOC</span><span class="brand-sub">Build Your Own Cloud · alpha</span></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="index.html">Start</a></li><li><a href="funktionen.html">Funktionen</a></li><li><a href="portal.html" aria-current="page">Portal</a></li><li><a href="architektur.html">Architektur</a></li><li><a href="doku/index.html">Dokumentation</a></li><li><a href="roadmap.html">Status & Roadmap</a></li><li><a href="mitmachen.html">Mitmachen</a></li></ul></nav>
+    <div class="tools">
+      <form class="search" role="search" action="suche.html" method="get">
+        <label for="q" class="sr-only">Suche</label>
+        <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+      </form>
+      <a class="lang-switch" href="en/portal.html" hreflang="en" lang="en" aria-label="English version of this page"><span aria-hidden="true">EN</span><span class="lang-long" aria-hidden="true">English</span></a>
+    </div>
+  </div>
+</header>
+<main id="inhalt" tabindex="-1">
+<header class="page-head"><div class="wrap"><p class="eyebrow">Build Your Own Cloud</p><h1>Das Portal</h1><p class="lead">Echte Aufnahmen des Web-Portals von BYOC mit fiktiven Demodaten – Übersicht, Knoten, wartende Hardware, Zellen, DNS, Releases, Operationen und Einrichtungsassistent.</p></div></header><div class="page"><div class="content"><article class="doc"><p class="shot-intro">Das Web-Portal ist einer von drei gleichwertigen Zugängen zur Plattform – neben REST-API (mit <code>cpctl</code>) und MCP. Es wird von jedem Knoten selbst ausgeliefert, braucht keinen separaten Server und folgt hell/dunkel der Systemeinstellung, genau wie diese Seite. Die Aufnahmen stammen aus einem echten Mehrknoten-Lab: vier Knoten in Containern, Region <code>eu-demo-1</code>, Portal-Adresse <code>portal.byoc.example</code>. Alle Namen, Adressen und Geräte sind fiktiv.</p>
+<blockquote><p><strong>Alpha – die Oberfläche kann sich ändern.</strong> Die Aufnahmen zeigen den Entwicklungsstand vom November 2026. Bereiche mit dem Hinweis „bald“ (Mandanten, Projekte, VMs, Volumes, Netze) folgen in späteren Phasen.</p></blockquote>
+<h2 id="uebersicht">Übersicht<a class="anchor" href="#uebersicht" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Der Zustand einer Region auf einen Blick: aktive Knoten, wartende Hardware, laufende Operationen und die Gesundheit der Zellen. Werte aktualisieren sich live über Watch-Ströme der API.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/img/portal/overview-de-dark.webp" width="1600" height="1000">
+    <img src="assets/img/portal/overview-de-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Portal-Übersicht der Region eu-demo-1: 4 von 4 Knoten aktiv, 2 Geräte warten auf Adoption, Zelle c1 gesund, Zelle c2 im Aufbau, Liste der letzten Operationen.">
+  </picture>
+  <figcaption>Übersicht der Region – echtes Portal, fiktive Demodaten.</figcaption>
+</figure>
+<h2 id="wartende-hardware">Wartende Hardware<a class="anchor" href="#wartende-hardware" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Neu entdeckte Geräte warten in Quarantäne. Ihre Angaben sind Fremdinhalt („ext“) und werden nur als Text angezeigt; adoptiert wird erst nach Bestätigung der Geräteidentität per Code oder automatisch über eine Adoptionsregel.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/img/portal/discoveries-de-dark.webp" width="1600" height="1000">
+    <img src="assets/img/portal/discoveries-de-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Liste wartender Hardware mit zwei Geräten vom Modell EdgeBox E2, Architektur x86_64, Vertrauensstufe T1, Phase Wartend, mit Schaltflächen Prüfen und adoptieren sowie Ablehnen.">
+  </picture>
+  <figcaption>Wartende Hardware in Quarantäne, Herstellerangaben als „ext“ markiert.</figcaption>
+</figure>
+<h2 id="knoten">Knoten<a class="anchor" href="#knoten" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Alle adoptierten Knoten der Region mit Modell, Zelle, Standort, Rollen, Vertrauensstufe und Phase – filter- und sortierbar.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/img/portal/nodes-de-dark.webp" width="1600" height="1000">
+    <img src="assets/img/portal/nodes-de-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Knotenliste mit n1 und node-01 bis node-03, alle in Zelle c1, Rolle dns, Vertrauensstufe T1 und Phase Aktiv.">
+  </picture>
+  <figcaption>Knotenliste – drei Knoten wurden per Adoptionsregel automatisch aufgenommen.</figcaption>
+</figure>
+<h2 id="knotendetail">Knotendetail<a class="anchor" href="#knotendetail" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Identität, Betriebssystem-Stand (A/B-Updates), Standort im Rechenzentrum sowie Rollen und Mitgliedschaft in der Steuerungsgruppe. Neu installieren, Ersetzen und Stilllegen sind privilegierte Aktionen mit Bestätigung.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/img/portal/node-de-dark.webp" width="1600" height="1000">
+    <img src="assets/img/portal/node-de-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Detailansicht von node-01: Identität mit URN, Zelle c1, Rolle dns, OS-Version 0.9.0, Betriebssystem läuft, Standort nicht angegeben, Rollen control, identity und dns, Voter der Steuerungsgruppe.">
+  </picture>
+  <figcaption>Knotendetail mit Betriebssystem-Stand und Steuerungsgruppe.</figcaption>
+</figure>
+<h2 id="zellen">Zellen und Steuerungsgruppe<a class="anchor" href="#zellen" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Eine Zelle bündelt Knoten mit eigener Raft-Steuerungsgruppe. Die Ansicht zeigt Voter, Leader und Term und prüft, ob die Voter so über Ausfallzonen verteilt sind, dass der Ausfall eines Racks die Steuerung nicht lahmlegt.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/img/portal/cell-de-dark.webp" width="1600" height="1000">
+    <img src="assets/img/portal/cell-de-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Detailansicht der Zelle c1 (Rack A): 4 Knoten, 3 Voter, Leader n1, Term 2, Hinweis Gut verteilt, Liste der Knoten der Zelle.">
+  </picture>
+  <figcaption>Zelle c1 mit Steuerungsgruppe und Prüfung der Ausfallzonen.</figcaption>
+</figure>
+<h2 id="dns">Plattform-DNS<a class="anchor" href="#dns" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Zonen der Region, beantwortet von &lt;code&gt;cp-dnsd&lt;/code&gt; auf den Knoten mit Rolle dns, mit festen VIPs, DNSSEC und automatisch erzeugten Plattform-Einträgen für Portal und Knoten.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/img/portal/dns-de-dark.webp" width="1600" height="1000">
+    <img src="assets/img/portal/dns-de-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="DNS-Ansicht der Region: zwei feste VIPs aus dem Dokumentationsnetz mit ihren Trägerknoten, darunter die Zone byoc.example mit 5 eigenen und 20 Plattform-Einträgen, DNSSEC an, ausgeliefert von allen vier Knoten.">
+  </picture>
+  <figcaption>Plattform-DNS: Zone byoc.example mit DNSSEC.</figcaption>
+</figure>
+<h2 id="releases">Plattform-Releases<a class="anchor" href="#releases" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Signierte Release-Bündel werden geprüft (Signaturkette, Sicherheitsepoche, Mindestversion) und inhaltsadressiert auf mehreren Haltern abgelegt; von dort beziehen die Knoten ihre Updates.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/img/portal/releases-de-dark.webp" width="1600" height="1000">
+    <img src="assets/img/portal/releases-de-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Liste der Plattform-Releases 1.0.0 und 0.9.0 im Kanal stable, Phase Verfügbar, mit Haltern, darüber das Formular zum Import eines Release-Bündels.">
+  </picture>
+  <figcaption>Plattform-Releases – im Lab simulierte Releases ohne Artefakte (daher 0 B).</figcaption>
+</figure>
+<h2 id="operationen">Operationen<a class="anchor" href="#operationen" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Jede Änderung ist eine nachvollziehbare Operation mit Kanal (API, Portal, MCP, System), Auslöser, Fortschritt und Ergebnis.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/img/portal/operations-de-dark.webp" width="1600" height="1000">
+    <img src="assets/img/portal/operations-de-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Liste der Operationen der Region mit Aktion, Ziel, Kanal, Auslöser, Fortschritt und Status Erfolgreich.">
+  </picture>
+  <figcaption>Operationen mit Kanal und Auslöser.</figcaption>
+</figure>
+<h2 id="einrichtung">Einrichtungsassistent<a class="anchor" href="#einrichtung" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Die Ersteinrichtung läuft im Browser: Setup-Token und Bestätigungscode von der Konsole des ersten Knotens, Hardware- und Netzprüfung, dann Plattform, Region, Portal-Adresse und DNS festlegen. Vor der Ausführung zeigt der Assistent den vollständigen Plan.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/img/portal/setup-de-dark.webp" width="1600" height="644">
+    <img src="assets/img/portal/setup-de-light.webp" width="1600" height="644" loading="lazy" decoding="async" alt="Auszug aus dem Einrichtungsassistenten: Liste der Auswirkungen des Plans – Plattform demo mit Trust Domain byoc.example, Region eu-demo-1 mit Zelle c1, Zertifizierungsstellen, Wiederherstellungsanteile, erster Administrator, DNS-Zone byoc.example mit zwei VIPs.">
+  </picture>
+  <figcaption>Einrichtungsassistent, Auszug: Auswirkungen des Plans vor der Ausführung.</figcaption>
+</figure>
+<p>Mehr zu den Konzepten hinter den Ansichten: <a href="doku/portal.html">Portal-Konzept</a>, <a href="funktionen.html">Funktionsumfang</a>, <a href="architektur.html">Architektur</a> und die <a href="doku/index.html">Dokumentation</a>.</p></article></div></div>
+</main>
+<footer class="site-footer">
+  <div class="bar">
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>BYOC</strong> (Build Your Own Cloud) – Quelloffene, dezentrale Cloud-Plattform – vom Homelab bis zum Rechenzentrum. Komponenten tragen das Präfix <code>cp</code>.</p></div>
+    <p>Dokumentation unter <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>, Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <nav aria-label="Rechtliches und Service"><p><a href="mitmachen.html#lizenz">Lizenz</a> · <a href="mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="suche.html">Suche</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p></nav>
+  </div>
+</footer>
+<script src="assets/site.js?v=e58bdc34a6" defer></script>
+</body>
+</html>

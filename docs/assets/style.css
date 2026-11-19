@@ -139,11 +139,19 @@ code, kbd, .mono { font-family: var(--mono); }
 .lang-switch .lang-long { font-family: var(--font); font-weight: 500; letter-spacing: 0; }
 .nav-toggle { display: none; font: inherit; font-weight: 500; background: var(--surface); color: var(--fg); border: 1px solid var(--line-strong);
   border-radius: var(--radius-md); min-height: 2.25rem; padding: 0 .8rem; margin-left: auto; cursor: pointer; }
-@media (max-width: 1080px) {
+/* Kopfzeile bleibt einzeilig: Suchfeld schmal, Sprachschalter kurz, Navigation enger (sieben Einträge) */
+.search input { width: 8rem; }
+.mainnav a { padding: .4rem .55rem; }
+@media (max-width: 1180px) {
   .lang-switch .lang-long { display: none; }
-  .search input { width: 9rem; }
+  .mainnav a { padding: .4rem .45rem; font-size: .9rem; }
+  .search input { width: 7rem; }
 }
-@media (max-width: 920px) {
+@media (max-width: 1060px) {
+  .mainnav a { padding: .35rem .32rem; font-size: .86rem; }
+  .search input { width: 5.5rem; }
+}
+@media (max-width: 1000px) {
   .site-header { position: static; }
   html { scroll-padding-top: 1rem; }
   .js .nav-toggle { display: inline-block; }
@@ -455,24 +463,6 @@ figure.art-card { margin: 0; }
 @keyframes march { to { stroke-dashoffset: -20; } }
 
 /* Portal-Mockup (stilisiert, fiktive Daten) */
-.mock text { font-family: var(--font); font-size: 11px; fill: var(--fg); }
-.mock .m { font-family: var(--mono); }
-.mock .mu { fill: var(--fg-muted); }
-.mock .frame { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1; }
-.mock .chrome { fill: var(--surface-2); }
-.mock .side { fill: #0e1115; }
-.mock .side-t { fill: #d9dee5; }
-.mock .side-mu { fill: #959fab; }
-.mock .side-act { fill: #10302d; }
-.mock .side-act-t { fill: #7cefdc; font-weight: 650; }
-.mock .card { fill: var(--surface); stroke: var(--line); }
-.mock .row { fill: var(--surface-2); }
-.mock .line { stroke: var(--line); stroke-width: 1; }
-.mock .ok-bg { fill: var(--ok-bg); } .mock .ok-t { fill: var(--ok-fg); font-weight: 650; }
-.mock .warn-bg { fill: var(--warn-bg); } .mock .warn-t { fill: var(--warn-fg); font-weight: 650; }
-.mock .acc { fill: var(--accent); } .mock .on-acc { fill: var(--on-accent); font-weight: 650; }
-.mock .bar-track { fill: var(--surface-2); } .mock .bar-fill { fill: var(--accent); }
-.mock .dot-r { fill: #f28b82; } .mock .dot-y { fill: #f3c56f; } .mock .dot-g { fill: #86dba0; }
 
 /* Konsole */
 .console { background: var(--h-surface); border: 1px solid var(--h-line); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
@@ -571,3 +561,15 @@ figure.art-card { margin: 0; }
 .rm-plan .with { font-size: .84rem; color: var(--fg); }
 .rm-plan .with b { font-weight: 600; }
 .rm-plan .kind { align-self: flex-start; }
+
+/* Portal-Screenshots (echte Aufnahmen, fiktive Demodaten); hell/dunkel per <picture> */
+.k-wide .page > .content { max-width: none; }
+.shot { margin: 1.2rem 0 2.4rem; }
+.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); background: var(--surface-2); }
+.shot figcaption { font-size: .86rem; color: var(--fg-muted); margin-top: .65rem; }
+.shot-intro { max-width: 52rem; }
+.shot-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.6rem 2rem; }
+.shot-grid .shot { margin: 0; }
+@media (max-width: 900px) { .shot-grid { grid-template-columns: minmax(0, 1fr); } }
+.art-card.real img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius-md); }
+.art-card.real figcaption a { color: inherit; }

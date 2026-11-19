@@ -131,6 +131,52 @@ def scan_file(path: Path) -> list[str]:
     return findings
 
 
+# Bilder (static/img/, docs/assets/img/): nur Formate der Whitelist, Inhalt passend zur Endung, keine Metadaten
+# (EXIF, XMP, ICC-Profil, Text-/Zeit-Chunks) – Metadaten werden beim Optimieren entfernt.
+IMG_FORMATS = {".webp", ".png", ".svg"}
+WEBP_META = {b"EXIF", b"XMP ", b"ICCP"}
+PNG_META = {b"eXIf", b"tEXt", b"zTXt", b"iTXt", b"tIME", b"iCCP"}
+
+
+def check_image(path: Path) -> list[str]:
+    suf = path.suffix.lower()
+    if suf not in IMG_FORMATS:
+        return [f"{path}: Bildformat nicht erlaubt (nur {', '.join(sorted(IMG_FORMATS))})"]
+    data = path.read_bytes()
+    if suf == ".svg":
+        return [] if b"<svg" in data[:2048] else [f"{path}: kein SVG"]
+    found = []
+    if suf == ".webp":
+        if data[:4] != b"RIFF" or data[8:12] != b"WEBP":
+            return [f"{path}: Inhalt ist kein WebP"]
+        i = 12
+        while i + 8 <= len(data):
+            cid, size = data[i:i + 4], int.from_bytes(data[i + 4:i + 8], "little")
+            if cid in WEBP_META:
+                found.append(f"{path}: Metadaten-Chunk {cid.decode().strip()!r}")
+            if cid == b"VP8X" and data[i + 8] & 0x2C:  # ICC/EXIF/XMP-Flag
+                found.append(f"{path}: VP8X kündigt Metadaten an")
+            i += 8 + size + (size & 1)
+    elif suf == ".png":
+        if data[:8] != b"\x89PNG\r\n\x1a\n":
+            return [f"{path}: Inhalt ist kein PNG"]
+        i = 8
+        while i + 8 <= len(data):
+            size, cid = int.from_bytes(data[i:i + 4], "big"), data[i + 4:i + 8]
+            if cid in PNG_META:
+                found.append(f"{path}: Metadaten-Chunk {cid.decode()!r}")
+            i += 12 + size
+    return found
+
+
+def image_files(targets: list[Path]) -> list[Path]:
+    out = []
+    for t in targets:
+        if t.is_dir():
+            out += [p for p in sorted(t.rglob("*")) if p.is_file() and "img" in p.relative_to(t).parts[:-1]]
+    return out
+
+
 def main(argv: list[str]) -> int:
     targets = [Path(a) for a in argv] or [ROOT / "docs", ROOT / "content"]
     files: list[Path] = []
@@ -142,12 +188,15 @@ def main(argv: list[str]) -> int:
     findings = []
     for f in files:
         findings += scan_file(f)
+    imgs = image_files(targets)
+    for f in imgs:
+        findings += check_image(f)
     if findings:
         for f in findings:
             print(f)
         print(f"\nLEAK-CHECK FEHLGESCHLAGEN: {len(findings)} Fund(e) in {len(files)} Dateien.", file=sys.stderr)
         return 1
-    print(f"LEAK-CHECK OK: {len(files)} Dateien geprüft, keine verbotenen Muster.")
+    print(f"LEAK-CHECK OK: {len(files)} Dateien und {len(imgs)} Bilder geprüft, keine verbotenen Muster/Metadaten.")
     return 0
 
 

@@ -47,6 +47,7 @@ LANGS = {
         "nav": [
             ("index.html", "Start"),
             ("funktionen.html", "Funktionen"),
+            ("portal.html", "Portal"),
             ("architektur.html", "Architektur"),
             ("doku/index.html", "Dokumentation"),
             ("roadmap.html", "Status & Roadmap"),
@@ -84,6 +85,7 @@ LANGS = {
         "nav": [
             ("index.html", "Home"),
             ("features.html", "Features"),
+            ("portal.html", "Portal"),
             ("architecture.html", "Architecture"),
             ("docs/index.html", "Docs"),
             ("roadmap.html", "Status & roadmap"),
@@ -485,6 +487,8 @@ def build(out: Path) -> int:
     for f in STATIC.iterdir():
         if f.is_file():
             shutil.copy2(f, out / "assets" / f.name)
+        elif f.is_dir():  # z. B. static/img/ -> assets/img/ (Bilder, siehe check-leaks.py: Formate, Metadaten)
+            shutil.copytree(f, out / "assets" / f.name)
     (out / ".nojekyll").write_text("")
     problems: list[str] = []
 
@@ -584,7 +588,8 @@ def build(out: Path) -> int:
             else:
                 head = page_head(eyebrow=SITE_SHORT, title=d["title"], lead=inline(d["summary"]))
                 html_page = layout(lang=lg, path=path, title=d["title"], body=f'<article class="doc">{body_html}</article>',
-                                   head=head, description=d["summary"], toc=toc, active=fname, alt=alt.get(path))
+                                   head=head, description=d["summary"], toc=toc, active=fname, alt=alt.get(path),
+                                   kind="wide" if flag(d, "wide") else "page")
             (out / path).write_text(html_page, encoding="utf-8")
             if flag(d, "noindex"):  # Impressum/Datenschutz bzw. Legal notice/Privacy: nicht in die Suche
                 continue
@@ -650,6 +655,8 @@ class _Collector(HTMLParser):
             self.refs.append(a["href"])
         if tag in ("link", "script", "img") and (a.get("href") or a.get("src")):
             self.refs.append(a.get("href") or a.get("src"))
+        if tag in ("img", "source") and a.get("srcset"):
+            self.refs += [c.strip().split()[0] for c in a["srcset"].split(",") if c.strip()]
         if tag == "form" and a.get("action"):
             self.refs.append(a["action"])
 

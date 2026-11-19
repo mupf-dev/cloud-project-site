@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The portal · BYOC</title>
+<meta name="description" content="Real screenshots of the BYOC web portal with fictitious demo data – overview, nodes, waiting hardware, cells, DNS, releases, operations and the setup wizard.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e1115">
+<link rel="canonical" href="../en/portal.html">
+<link rel="alternate" hreflang="de" href="../portal.html">
+<link rel="alternate" hreflang="en" href="../en/portal.html">
+<link rel="alternate" hreflang="x-default" href="../portal.html">
+<link rel="stylesheet" href="../assets/style.css?v=bc45a58a4b">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="k-wide">
+<a class="skip" href="#inhalt">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../en/index.html" aria-label="BYOC (Build Your Own Cloud) – Home">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">BYOC</span><span class="brand-sub">Build Your Own Cloud · alpha</span></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menu</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Main navigation"><ul><li><a href="../en/index.html">Home</a></li><li><a href="../en/features.html">Features</a></li><li><a href="../en/portal.html" aria-current="page">Portal</a></li><li><a href="../en/architecture.html">Architecture</a></li><li><a href="../en/docs/index.html">Docs</a></li><li><a href="../en/roadmap.html">Status & roadmap</a></li><li><a href="../en/contribute.html">Contribute</a></li></ul></nav>
+    <div class="tools">
+      <form class="search" role="search" action="../en/search.html" method="get">
+        <label for="q" class="sr-only">Search</label>
+        <input id="q" name="q" type="search" placeholder="Search …" autocomplete="off">
+      </form>
+      <a class="lang-switch" href="../portal.html" hreflang="de" lang="de" aria-label="Deutsche Fassung dieser Seite"><span aria-hidden="true">DE</span><span class="lang-long" aria-hidden="true">Deutsch</span></a>
+    </div>
+  </div>
+</header>
+<main id="inhalt" tabindex="-1">
+<header class="page-head"><div class="wrap"><p class="eyebrow">Build Your Own Cloud</p><h1>The portal</h1><p class="lead">Real screenshots of the BYOC web portal with fictitious demo data – overview, nodes, waiting hardware, cells, DNS, releases, operations and the setup wizard.</p></div></header><div class="page"><div class="content"><article class="doc"><p class="shot-intro">The web portal is one of three equivalent ways into the platform – alongside the REST API (with <code>cpctl</code>) and MCP. Every node serves it itself, no separate server is needed, and it follows the system's light/dark setting, just like this site. The screenshots come from a real multi-node lab: four nodes in containers, region <code>eu-demo-1</code>, portal address <code>portal.byoc.example</code>. All names, addresses and devices are fictitious.</p>
+<blockquote><p><strong>Alpha – the interface may change.</strong> The screenshots show the state of development as of November 2026. Areas marked “soon” (tenants, projects, VMs, volumes, networks) follow in later phases.</p></blockquote>
+<h2 id="overview">Overview<a class="anchor" href="#overview" aria-label="Link to this section">#</a></h2>
+<p>A region's state at a glance: active nodes, waiting hardware, running operations and the health of the cells. Values update live via the API's watch streams.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/img/portal/overview-en-dark.webp" width="1600" height="1000">
+    <img src="../assets/img/portal/overview-en-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Portal overview of region eu-demo-1: 4 of 4 nodes active, 2 devices waiting for adoption, cell c1 healthy, cell c2 forming, list of recent operations.">
+  </picture>
+  <figcaption>Region overview – real portal, fictitious demo data.</figcaption>
+</figure>
+<h2 id="waiting-hardware">Waiting hardware<a class="anchor" href="#waiting-hardware" aria-label="Link to this section">#</a></h2>
+<p>Newly discovered devices wait in quarantine. What they report is untrusted content (“ext”) and is shown as text only; adoption requires confirming the device identity with a code, or happens automatically via an adoption rule.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/img/portal/discoveries-en-dark.webp" width="1600" height="1000">
+    <img src="../assets/img/portal/discoveries-en-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="List of waiting hardware with two devices of model EdgeBox E2, architecture x86_64, trust level T1, phase waiting, with buttons to review and adopt or reject.">
+  </picture>
+  <figcaption>Waiting hardware in quarantine, vendor data marked as “ext”.</figcaption>
+</figure>
+<h2 id="nodes">Nodes<a class="anchor" href="#nodes" aria-label="Link to this section">#</a></h2>
+<p>All adopted nodes of the region with model, cell, location, roles, trust level and phase – filterable and sortable.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/img/portal/nodes-en-dark.webp" width="1600" height="1000">
+    <img src="../assets/img/portal/nodes-en-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Node list with n1 and node-01 to node-03, all in cell c1, role dns, trust level T1 and phase active.">
+  </picture>
+  <figcaption>Node list – three nodes were taken in automatically by an adoption rule.</figcaption>
+</figure>
+<h2 id="node-detail">Node detail<a class="anchor" href="#node-detail" aria-label="Link to this section">#</a></h2>
+<p>Identity, operating system state (A/B updates), location in the data center, roles and membership in the control group. Reinstall, replace and decommission are privileged actions that require confirmation.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/img/portal/node-en-dark.webp" width="1600" height="1000">
+    <img src="../assets/img/portal/node-en-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Detail view of node-01: identity with URN, cell c1, role dns, OS version 0.9.0, operating system running, location not set, roles control, identity and dns, voter of the control group.">
+  </picture>
+  <figcaption>Node detail with operating system state and control group.</figcaption>
+</figure>
+<h2 id="cells">Cells and control group<a class="anchor" href="#cells" aria-label="Link to this section">#</a></h2>
+<p>A cell groups nodes with their own Raft control group. The view shows voters, leader and term and checks whether the voters are spread across failure zones so that losing one rack does not stop the control plane.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/img/portal/cell-en-dark.webp" width="1600" height="1000">
+    <img src="../assets/img/portal/cell-en-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="Detail view of cell c1 (Rack A): 4 nodes, 3 voters, leader n1, term 2, notice well distributed, list of the cell's nodes.">
+  </picture>
+  <figcaption>Cell c1 with control group and failure-zone check.</figcaption>
+</figure>
+<h2 id="dns">Platform DNS<a class="anchor" href="#dns" aria-label="Link to this section">#</a></h2>
+<p>Zones of the region, answered by &lt;code&gt;cp-dnsd&lt;/code&gt; on the nodes with the dns role, with fixed VIPs, DNSSEC and automatically generated platform records for the portal and the nodes.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/img/portal/dns-en-dark.webp" width="1600" height="1000">
+    <img src="../assets/img/portal/dns-en-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="DNS view of the region: two fixed VIPs from the documentation range with the nodes currently holding them, below the zone byoc.example with 5 custom and 20 platform records, DNSSEC on, served by all four nodes.">
+  </picture>
+  <figcaption>Platform DNS: zone byoc.example with DNSSEC.</figcaption>
+</figure>
+<h2 id="releases">Platform releases<a class="anchor" href="#releases" aria-label="Link to this section">#</a></h2>
+<p>Signed release bundles are verified (signature chain, security epoch, minimum version) and stored content-addressed on several holders; nodes fetch their updates from there.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/img/portal/releases-en-dark.webp" width="1600" height="1000">
+    <img src="../assets/img/portal/releases-en-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="List of platform releases 1.0.0 and 0.9.0 in channel stable, phase available, with holders, above it the form for importing a release bundle.">
+  </picture>
+  <figcaption>Platform releases – simulated releases without artifacts in the lab (hence 0 B).</figcaption>
+</figure>
+<h2 id="operations">Operations<a class="anchor" href="#operations" aria-label="Link to this section">#</a></h2>
+<p>Every change is a traceable operation with channel (API, portal, MCP, system), initiator, progress and result.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/img/portal/operations-en-dark.webp" width="1600" height="1000">
+    <img src="../assets/img/portal/operations-en-light.webp" width="1600" height="1000" loading="lazy" decoding="async" alt="List of the region's operations with action, target, channel, initiator, progress and status succeeded.">
+  </picture>
+  <figcaption>Operations with channel and initiator.</figcaption>
+</figure>
+<h2 id="setup">Setup wizard<a class="anchor" href="#setup" aria-label="Link to this section">#</a></h2>
+<p>Initial setup runs in the browser: setup token and confirmation code from the first node's console, hardware and network checks, then platform, region, portal address and DNS. Before anything is executed, the wizard shows the complete plan.</p>
+<figure class="shot">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../assets/img/portal/setup-de-dark.webp" width="1600" height="644">
+    <img src="../assets/img/portal/setup-de-light.webp" width="1600" height="644" loading="lazy" decoding="async" alt="Excerpt from the setup wizard (German interface): list of the plan's effects – platform demo with trust domain byoc.example, region eu-demo-1 with cell c1, certificate authorities, recovery shares, first administrator, DNS zone byoc.example with two VIPs.">
+  </picture>
+  <figcaption>Setup wizard, excerpt: effects of the plan before execution (the wizard is currently German only).</figcaption>
+</figure>
+<p>More about the concepts behind these views: <a href="docs/portal.html">portal concept</a>, <a href="features.html">features</a>, <a href="architecture.html">architecture</a> and the <a href="docs/index.html">documentation</a>.</p></article></div></div>
+</main>
+<footer class="site-footer">
+  <div class="bar">
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>BYOC</strong> (Build Your Own Cloud) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
+    <p>Documentation under <a href="https://creativecommons.org/licenses/by/4.0/deed.en" rel="license noopener">CC BY 4.0</a>, code under AGPL-3.0-or-later. No cookies, no tracking, no third-party resources.</p>
+    <nav aria-label="Legal and service"><p><a href="../en/contribute.html#license">License</a> · <a href="../en/contribute.html#security">Report a vulnerability</a> · <a href="../en/search.html">Search</a> · <a href="../en/legal-notice.html">Legal notice</a> · <a href="../en/privacy.html">Privacy policy</a></p></nav>
+  </div>
+</footer>
+<script src="../assets/site.js?v=e58bdc34a6" defer></script>
+</body>
+</html>

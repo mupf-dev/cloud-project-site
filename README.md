@@ -19,6 +19,7 @@ aufbereitete Fassungen der Projektdokumente (Konzepte, Architekturentscheidungen
 | `content/doku/*.md` | Dokumentationsseiten (Konzepte und Prozesse) |
 | `content/en/seiten/*.md`, `content/en/doku/*.md` | englische Fassungen; Kopffeld `de: <slug>` nennt die deutsche Entsprechung |
 | `static/` | Stylesheet (Design-Tokens des Portals), Skript (Menü, Suche), Icon – werden nach `docs/assets/` kopiert |
+| `static/img/portal/` | Portal-Screenshots (WebP, je hell/dunkel und DE/EN; echtes Portal, fiktive Demodaten) – nach `docs/assets/img/` kopiert |
 | `build.py` | Generator (nur Python-Standardbibliothek, ab Python 3.9) |
 | `check-leaks.py`, `check-leaks.sh` | Prüfung auf verbotene Inhalte |
 | `tools/INHALTSREGELN.md` | Regeln für Inhalte und das unterstützte Markdown |
@@ -30,6 +31,10 @@ die Startseite sind Inline-SVG/HTML in Blöcken `::: html … :::`. Es gibt kein
 keine Webfonts, kein CDN und kein Tracking; hell/dunkel folgt `prefers-color-scheme`, Animationen
 entfallen bei `prefers-reduced-motion`. Farben, Radien und Schatten folgen den Design-Tokens des
 Portals (Variante „Technisch“).
+
+Kopffeld `wide: ja` hebt die Lesebreite einer Hauptseite auf (z. B. für die Screenshot-Galerie `portal.html`).
+Screenshots stehen in `<picture>` mit `<source media="(prefers-color-scheme: dark)">`, mit `width`/`height`,
+`loading="lazy"` und Alt-Text in der Seitensprache.
 
 Eine neue Seite braucht beide Sprachen: deutsche Quelle anlegen, englische Fassung mit
 `de: <deutscher-slug>` im Kopf ergänzen. Der Build meldet Seiten ohne Gegenstück als Fehler.
@@ -49,7 +54,8 @@ Zuordnung DE ↔ EN und bricht bei Fehlern ab.
 Namen interner Infrastruktur und Hoster, E-Mail-Adressen, Schlüsselmaterial (PEM-Blöcke),
 IPv4-Adressen außerhalb der Dokumentationsnetze nach RFC 5737, konkreten IPv6-ULA-Präfixen,
 Rust-Code (`fn`, `impl`, `use crate`, Attribute, `struct`) und Pfaden zu `.rs`-Quelldateien.
-Interne Namen sind im Skript nur als SHA-256-Hash hinterlegt. Die Kontaktadresse und die
+Interne Namen sind im Skript nur als SHA-256-Hash hinterlegt. Bilder unter `img/` (in `static/` und `docs/`) prüft es zusätzlich: nur WebP, PNG oder SVG, Inhalt passend zur
+Endung, keine Metadaten (EXIF, XMP, ICC-Profil, Text-/Zeit-Chunks). Die Kontaktadresse und die
 Anbieterdaten sind ausschließlich auf Impressum/Datenschutz bzw. Legal notice/Privacy policy
 erlaubt (nicht im Suchindex). Weitere, nicht zu veröffentlichende
 Muster können lokal in `.leak-patterns.local` (eine Regex je Zeile, per `.gitignore`
