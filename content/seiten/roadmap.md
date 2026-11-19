@@ -84,7 +84,7 @@ Ab Werk gibt es kein Login, kein SSH und keinen Paketmanager; eingehend gilt „
   (systemd-boot, systemd-repart, systemd-sysupdate), mkosi als Bauwerkzeug, AppArmor, nftables.
 - **Nachweis:** Ende-zu-Ende-Boot-Tests in QEMU für beide Architekturen mit emuliertem TPM;
   automatische Härtungsprüfung im gestarteten Image. Ein Erstknoten läuft auf einem gebrauchten
-  Business-Notebook (dort ohne nutzbares TPM, daher im Profil „homelab“). Raspberry Pi ist vorbereitet,
+  Business-Notebook. Raspberry Pi ist vorbereitet,
   aber noch nicht auf echter Hardware getestet.
 
 Mehr: [OS-Image](doku/os-image.html).

@@ -84,8 +84,8 @@ box there is no login, no SSH and no package manager; inbound traffic is denied 
 - **Integrated:** Debian packages, the Linux kernel (dm-verity, dm-crypt/LUKS2, TPM 2.0), systemd
   (systemd-boot, systemd-repart, systemd-sysupdate), mkosi as the build tool, AppArmor, nftables.
 - **Verification:** end-to-end boot tests in QEMU for both architectures with an emulated TPM;
-  automated hardening checks in the booted image. A first node runs on a used business notebook
-  (without a usable TPM there, hence in the "homelab" profile). Raspberry Pi support is prepared but
+  automated hardening checks in the booted image. A first node runs on a used business notebook.
+  Raspberry Pi support is prepared but
   not yet tested on real hardware.
 
 More: [OS image](docs/os-image.html).
