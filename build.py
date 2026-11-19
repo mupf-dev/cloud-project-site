@@ -125,6 +125,16 @@ LOGO_SVG = (
 
 # --------------------------------------------------------------------------- Markdown
 
+
+def _asset_versions() -> dict:
+    """Kurzer Inhalts-Hash je Asset gegen veraltete Browser-Caches (GitHub Pages: max-age=600)."""
+    import hashlib as _h
+    base = Path(__file__).resolve().parent / "static"
+    return {n: _h.sha256((base / n).read_bytes()).hexdigest()[:10] for n in ("style.css", "site.js")}
+
+
+ASSET_V = _asset_versions()
+
 def slugify(text: str) -> str:
     text = re.sub(r"<[^>]+>", "", text).lower()
     repl = {"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss"}
@@ -422,7 +432,7 @@ def layout(*, lang: str, path: str, title: str, body: str, description: str, act
 <meta name="description" content="{html.escape(description)}">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#0e1115">
-{canonical}{alternates}<link rel="stylesheet" href="{root}assets/style.css">
+{canonical}{alternates}<link rel="stylesheet" href="{root}assets/style.css?v={ASSET_V['style.css']}">
 <link rel="icon" href="{root}assets/favicon.svg" type="image/svg+xml">
 </head>
 <body class="k-{kind}">
@@ -453,7 +463,7 @@ def layout(*, lang: str, path: str, title: str, body: str, description: str, act
     <nav aria-label="{t["foot_nav"]}"><p>{foot_links}</p></nav>
   </div>
 </footer>
-<script src="{root}assets/site.js" defer></script>
+<script src="{root}assets/site.js?v={ASSET_V['site.js']}" defer></script>
 </body>
 </html>
 """
@@ -656,6 +666,7 @@ def check_links(out: Path) -> list[str]:
             if ref.startswith(("http://", "https://", "mailto:")):
                 continue
             target, _, frag = ref.partition("#")
+            target = target.partition("?")[0]  # Cache-Busting-Parameter (?v=…) ignorieren
             if not target:
                 tpath = here
             else:
