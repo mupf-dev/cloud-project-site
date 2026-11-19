@@ -1,5 +1,5 @@
 title: Funktionsumfang
-summary: Welche Dienste, Rollen und Plattformfunktionen cloud-project bereitstellt – vom Knoten-Lebenszyklus über Netz, Speicher und Identität bis zur KI-Inferenz.
+summary: Welche Dienste, Rollen und Plattformfunktionen DCP bereitstellt – vom Knoten-Lebenszyklus über Netz, Speicher und Identität bis zur KI-Inferenz.
 toc: ja
 ---
 ## Dienste wie bei einem Hyperscaler

@@ -1,5 +1,5 @@
 title: Vision, Begriffe und Abgrenzung
-summary: Zielbild, Leitprinzipien, Zielgruppen, Glossar, Knotenlebenszyklus, Rollen, Skalierungsstufen und Abgrenzung von cloud-project.
+summary: Zielbild, Leitprinzipien, Zielgruppen, Glossar, Knotenlebenszyklus, Rollen, Skalierungsstufen und Abgrenzung von „Das Cloud Projekt“ (DCP).
 group: konzept
 order: 10
 quelle: Konzept 01 (Vision, Begriffe & Abgrenzung)
@@ -7,7 +7,7 @@ quelle: Konzept 01 (Vision, Begriffe & Abgrenzung)
 
 ## Zielbild
 
-cloud-project ist eine **quelloffene, dezentrale Cloud-Plattform**. Sie nimmt beliebige Hardware – vom Raspberry Pi über Notebooks bis zum Rack-Server – per Netzwerkkabel auf und macht daraus eine **mandantenfähige Cloud mit den Grunddiensten eines Hyperscalers**. Der Einsatzbereich reicht vom Homelab mit zwei Knoten bis zum Rechenzentrum mit tausenden Knoten.
+**Das Cloud Projekt** (kurz **DCP**) ist eine **quelloffene, dezentrale Cloud-Plattform**. Sie nimmt beliebige Hardware – vom Raspberry Pi über Notebooks bis zum Rack-Server – per Netzwerkkabel auf und macht daraus eine **mandantenfähige Cloud mit den Grunddiensten eines Hyperscalers**. Der Einsatzbereich reicht vom Homelab mit zwei Knoten bis zum Rechenzentrum mit tausenden Knoten.
 
 Die Kurzform für Außenstehende:
 

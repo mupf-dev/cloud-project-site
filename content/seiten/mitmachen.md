@@ -1,10 +1,10 @@
 title: Mitmachen und Lizenz
-summary: Wie man zu cloud-project beitragen kann, unter welchen Lizenzen Code und Dokumentation stehen und wie Sicherheitslücken gemeldet werden.
+summary: Wie man zu DCP beitragen kann, unter welchen Lizenzen Code und Dokumentation stehen und wie Sicherheitslücken gemeldet werden.
 toc: ja
 ---
 ## Mitmachen
 
-cloud-project ist als Gemeinschaftsprojekt angelegt. Der Quellcode-Repository wird geöffnet,
+„Das Cloud Projekt“ (DCP) ist als Gemeinschaftsprojekt angelegt. Das Quellcode-Repository wird geöffnet,
 sobald Lizenzdateien, Sicherheitsrichtlinie und REUSE-Konformität vollständig sind. Bis dahin
 freuen wir uns über Rückmeldungen zu Konzepten und Architektur.
 
@@ -44,7 +44,7 @@ cargo xtask ci         # alle Prüfungen lokal ausführen
 git commit -s -m "Kurzbeschreibung"
 ```
 
-## Lizenz
+## Lizenz {#lizenz}
 
 Die Lizenzentscheidung ist in der [ADR Lizenz und Governance](doku/lizenz-governance.html)
 begründet (angenommen 2026-11-12).
@@ -62,7 +62,7 @@ wenn veränderte Fassungen als Dienst über das Netz angeboten werden. Clients u
 freizügigen Lizenzen, damit sie sich in beliebige Software einbauen lassen. Die Lizenz ist
 festgelegt, aber bis zur ersten Veröffentlichung juristisch abschließend zu prüfen.
 
-## Sicherheitslücke melden
+## Sicherheitslücke melden {#sicherheit}
 
 Bitte **keine öffentlichen Issues, Pull Requests oder Diskussionen** für Sicherheitsprobleme.
 
@@ -87,3 +87,4 @@ vollständige Ablauf steht unter [Schwachstellenmanagement](doku/schwachstellenm
 Diese Seite ist statisch erzeugt – ohne Cookies, Tracking, externe Schriften oder Skripte von
 Drittanbietern. Die Suche läuft vollständig im Browser. Die Inhalte sind aufbereitete Fassungen der
 Projektdokumente und stehen unter CC BY 4.0.
+Die Website gibt es auf Deutsch und auf Englisch; bei Abweichungen gilt die deutsche Fassung.

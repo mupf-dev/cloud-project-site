@@ -3,32 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vision, Begriffe und Abgrenzung · cloud-project</title>
-<meta name="description" content="Zielbild, Leitprinzipien, Zielgruppen, Glossar, Knotenlebenszyklus, Rollen, Skalierungsstufen und Abgrenzung von cloud-project.">
+<title>Vision, Begriffe und Abgrenzung · Das Cloud Projekt</title>
+<meta name="description" content="Zielbild, Leitprinzipien, Zielgruppen, Glossar, Knotenlebenszyklus, Rollen, Skalierungsstufen und Abgrenzung von „Das Cloud Projekt“ (DCP).">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e1115">
+<link rel="canonical" href="../doku/vision.html">
+<link rel="alternate" hreflang="de" href="../doku/vision.html">
+<link rel="alternate" hreflang="en" href="../en/docs/vision.html">
+<link rel="alternate" hreflang="x-default" href="../doku/vision.html">
 <link rel="stylesheet" href="../assets/style.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 </head>
-<body>
+<body class="k-doc">
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="../index.html" aria-label="cloud-project – Startseite">
-      <img src="../assets/favicon.svg" alt="" width="28" height="28"><span>cloud-project</span>
+    <a class="brand" href="../index.html" aria-label="Das Cloud Projekt (DCP) – Startseite">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
     <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="../index.html">Start</a></li><li><a href="../funktionen.html">Funktionen</a></li><li><a href="../architektur.html">Architektur</a></li><li><a href="../doku/index.html" aria-current="page">Dokumentation</a></li><li><a href="../roadmap.html">Status & Roadmap</a></li><li><a href="../mitmachen.html">Mitmachen</a></li></ul></nav>
-    <form class="search" role="search" action="../suche.html" method="get">
-      <label for="q" class="sr-only">Suche</label>
-      <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
-    </form>
+    <div class="tools">
+      <form class="search" role="search" action="../suche.html" method="get">
+        <label for="q" class="sr-only">Suche</label>
+        <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+      </form>
+      <a class="lang-switch" href="../en/docs/vision.html" hreflang="en" lang="en" aria-label="English version of this page"><span aria-hidden="true">EN</span><span class="lang-long" aria-hidden="true">English</span></a>
+    </div>
   </div>
 </header>
-<div class="page with-toc">
-<nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#zielbild">Zielbild</a></li><li><a href="#leitprinzipien">Leitprinzipien</a></li><li><a href="#zielgruppen-und-einsatzszenarien">Zielgruppen und Einsatzszenarien</a></li><li><a href="#begriffe-glossar">Begriffe (Glossar)</a></li><li><a href="#knotenlebenszyklus">Knotenlebenszyklus</a></li><li><a href="#rollenkatalog-initial">Rollenkatalog (initial)</a></li><li><a href="#skalierungsstufen-der-steuerungsebene">Skalierungsstufen der Steuerungsebene</a></li><li><a href="#abgrenzung-zu-bestehenden-loesungen">Abgrenzung zu bestehenden Lösungen</a></li><li><a href="#nicht-ziele">Nicht-Ziele</a></li><li><a href="#erfolgskriterien-fuer-den-mvp">Erfolgskriterien für den MVP</a></li><li><a href="#offene-fragen-zum-zeitpunkt-der-vision">Offene Fragen zum Zeitpunkt der Vision</a></li></ol></nav>
 <main id="inhalt" tabindex="-1">
-<nav class="crumbs" aria-label="Brotkrumen"><a href="../index.html">Start</a> › <a href="index.html">Dokumentation</a> › <span>Vision, Begriffe und Abgrenzung</span></nav><article class="doc"><h1>Vision, Begriffe und Abgrenzung</h1><p class="lead">Zielbild, Leitprinzipien, Zielgruppen, Glossar, Knotenlebenszyklus, Rollen, Skalierungsstufen und Abgrenzung von cloud-project.</p><p class="meta">Aufbereitet aus: Konzept 01 (Vision, Begriffe &amp; Abgrenzung)</p><h2 id="zielbild">Zielbild<a class="anchor" href="#zielbild" aria-label="Link zu diesem Abschnitt">#</a></h2>
-<p>cloud-project ist eine <strong>quelloffene, dezentrale Cloud-Plattform</strong>. Sie nimmt beliebige Hardware – vom Raspberry Pi über Notebooks bis zum Rack-Server – per Netzwerkkabel auf und macht daraus eine <strong>mandantenfähige Cloud mit den Grunddiensten eines Hyperscalers</strong>. Der Einsatzbereich reicht vom Homelab mit zwei Knoten bis zum Rechenzentrum mit tausenden Knoten.</p>
+<header class="page-head"><div class="wrap"><nav class="crumbs" aria-label="Brotkrumen"><ol><li><a href="../index.html">Start</a></li><li><a href="index.html">Dokumentation</a></li><li><span aria-current="page">Vision, Begriffe und Abgrenzung</span></li></ol></nav><p class="eyebrow">Konzepte und Architekturentscheidungen</p><h1>Vision, Begriffe und Abgrenzung</h1><p class="lead">Zielbild, Leitprinzipien, Zielgruppen, Glossar, Knotenlebenszyklus, Rollen, Skalierungsstufen und Abgrenzung von „Das Cloud Projekt“ (DCP).</p><p class="meta">Aufbereitet aus: Konzept 01 (Vision, Begriffe &amp; Abgrenzung)</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#zielbild">Zielbild</a></li><li><a href="#leitprinzipien">Leitprinzipien</a></li><li><a href="#zielgruppen-und-einsatzszenarien">Zielgruppen und Einsatzszenarien</a></li><li><a href="#begriffe-glossar">Begriffe (Glossar)</a></li><li><a href="#knotenlebenszyklus">Knotenlebenszyklus</a></li><li><a href="#rollenkatalog-initial">Rollenkatalog (initial)</a></li><li><a href="#skalierungsstufen-der-steuerungsebene">Skalierungsstufen der Steuerungsebene</a></li><li><a href="#abgrenzung-zu-bestehenden-loesungen">Abgrenzung zu bestehenden Lösungen</a></li><li><a href="#nicht-ziele">Nicht-Ziele</a></li><li><a href="#erfolgskriterien-fuer-den-mvp">Erfolgskriterien für den MVP</a></li><li><a href="#offene-fragen-zum-zeitpunkt-der-vision">Offene Fragen zum Zeitpunkt der Vision</a></li></ol></nav><div class="content"><article class="doc"><h2 id="zielbild">Zielbild<a class="anchor" href="#zielbild" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p><strong>Das Cloud Projekt</strong> (kurz <strong>DCP</strong>) ist eine <strong>quelloffene, dezentrale Cloud-Plattform</strong>. Sie nimmt beliebige Hardware – vom Raspberry Pi über Notebooks bis zum Rack-Server – per Netzwerkkabel auf und macht daraus eine <strong>mandantenfähige Cloud mit den Grunddiensten eines Hyperscalers</strong>. Der Einsatzbereich reicht vom Homelab mit zwei Knoten bis zum Rechenzentrum mit tausenden Knoten.</p>
 <p>Die Kurzform für Außenstehende:</p>
 <blockquote><p><em>Kabel rein – Knoten erscheint – freigeben – Rolle zuweisen – fertig. Alles über Portal, API oder MCP.</em></p></blockquote>
 <h3 id="was-hyperscaler-artig-konkret-heisst">Was „Hyperscaler-artig“ konkret heißt<a class="anchor" href="#was-hyperscaler-artig-konkret-heisst" aria-label="Link zu diesem Abschnitt">#</a></h3>
@@ -64,15 +70,13 @@
 <h2 id="erfolgskriterien-fuer-den-mvp">Erfolgskriterien für den MVP<a class="anchor" href="#erfolgskriterien-fuer-den-mvp" aria-label="Link zu diesem Abschnitt">#</a></h2>
 <div class="table-wrap"><table><thead><tr><th scope="col">#</th><th scope="col">Kriterium</th><th scope="col">Messgröße</th></tr></thead><tbody><tr><td>E1</td><td>Erster Knoten per USB-Stick lauffähig, Einrichtung vollständig über Portal <strong>oder</strong> API <strong>oder</strong> MCP</td><td>≤ 15 Minuten bis das Portal erreichbar ist</td></tr><tr><td>E2</td><td>Neuer Knoten per Kabel bis „wartend“</td><td>≤ 5 Minuten (Pi 4/5, x86-Notebook, Server)</td></tr><tr><td>E3</td><td>2-Knoten-Cluster mit Zeuge übersteht den Ausfall eines Knotens</td><td>Steuerung bleibt verfügbar</td></tr><tr><td>E4</td><td>Gemischter Cluster ARM64 + x86_64</td><td>VMs und Container werden passend platziert</td></tr><tr><td>E5</td><td>Zwei Mandanten vollständig getrennt</td><td>Netz, Compute, Speicher, Schlüssel; Penetrationstest ohne kritische Befunde</td></tr><tr><td>E6</td><td>Mandant legt VM, Container Instance, K8s-Cluster, Volume und Bucket selbst an</td><td>über alle drei Zugänge</td></tr><tr><td>E7</td><td>Paritäts-Check</td><td>100 % der API-Operationen in Portal und MCP verfügbar</td></tr><tr><td>E8</td><td>Kein Single Point of Failure ab 3 Knoten</td><td>Boot-Dienst, API, Portal und MCP überleben einen Knotenausfall</td></tr><tr><td>E9</td><td>Nachweise exportierbar</td><td>Control-Matrix für C5, ISO 27001 und Grundschutz (siehe <a href="grundschutz.html">Grundschutz</a>)</td></tr></tbody></table></div>
 <h2 id="offene-fragen-zum-zeitpunkt-der-vision">Offene Fragen zum Zeitpunkt der Vision<a class="anchor" href="#offene-fragen-zum-zeitpunkt-der-vision" aria-label="Link zu diesem Abschnitt">#</a></h2>
-<p>Einige Fragen wurden bewusst in Folgekonzepte verschoben: der endgültige Produktname (bisher Arbeitstitel), der Richtwert für Zellengröße und Steuerungsgruppe (<a href="steuerungsebene.html">Steuerungsebene</a>), die Overlay-Technik (<a href="netzwerk.html">Netzwerk</a>), die Basis des OS-Images (<a href="os-image.html">OS-Image</a>), die Portal-Technologie (<a href="portal.html">Portal</a>) sowie der Vorrang zwischen C5 und ISO 27001 bei Konflikten (<a href="compliance-anforderungen.html">Compliance-Anforderungen</a>).</p></article><nav class="pager" aria-label="Weitere Seiten"><span></span><a rel="next" href="rust-stack.html">Rust-Stack und Kern-Bibliotheken →</a></nav>
+<p>Einige Fragen wurden bewusst in Folgekonzepte verschoben: der endgültige Produktname (bisher Arbeitstitel), der Richtwert für Zellengröße und Steuerungsgruppe (<a href="steuerungsebene.html">Steuerungsebene</a>), die Overlay-Technik (<a href="netzwerk.html">Netzwerk</a>), die Basis des OS-Images (<a href="os-image.html">OS-Image</a>), die Portal-Technologie (<a href="portal.html">Portal</a>) sowie der Vorrang zwischen C5 und ISO 27001 bei Konflikten (<a href="compliance-anforderungen.html">Compliance-Anforderungen</a>).</p></article><nav class="pager" aria-label="Weitere Seiten"><span></span><a rel="next" href="rust-stack.html">Rust-Stack und Kern-Bibliotheken <span aria-hidden="true">→</span></a></nav></div></div>
 </main>
-</div>
 <footer class="site-footer">
   <div class="bar">
-    <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
-    <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
-    Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
-    <p><a href="../mitmachen.html#lizenz">Lizenz</a> · <a href="../mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="../suche.html">Suche</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></p>
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Quelloffene, dezentrale Cloud-Plattform – vom Homelab bis zum Rechenzentrum. Komponenten tragen das Präfix <code>cp</code>.</p></div>
+    <p>Dokumentation unter <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>, Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <nav aria-label="Rechtliches und Service"><p><a href="../mitmachen.html#lizenz">Lizenz</a> · <a href="../mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="../suche.html">Suche</a> · <a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></p></nav>
   </div>
 </footer>
 <script src="../assets/site.js" defer></script>

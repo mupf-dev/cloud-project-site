@@ -7,7 +7,7 @@ quelle: Plattform-DNS-Rolle
 
 ## Ziel
 
-Ein Cluster von cloud-project verwaltet seine DNS-Einträge **selbst**. Portal und API, Knoten, Boot-Dienst und
+Ein DCP-Cluster verwaltet seine DNS-Einträge **selbst**. Portal und API, Knoten, Boot-Dienst und
 Release-Halter ändern sich mit dem Cluster-Zustand – Knoten kommen hinzu, Rollen wandern, Halter fallen aus. Diese
 Namen von Hand im DNS des Betreibers nachzupflegen wäre fehleranfällig. Stattdessen gilt:
 

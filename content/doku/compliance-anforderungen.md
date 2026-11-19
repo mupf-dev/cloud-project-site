@@ -1,5 +1,5 @@
 title: Compliance-Anforderungen
-summary: Welche Regelwerke für cloud-project gelten, wie der Anforderungskatalog aufgebaut ist, wie sich Pflichten zwischen Plattform, Betreiber und Mandant verteilen und welche Vorrangregeln bei Konflikten greifen.
+summary: Welche Regelwerke für DCP gelten, wie der Anforderungskatalog aufgebaut ist, wie sich Pflichten zwischen Plattform, Betreiber und Mandant verteilen und welche Vorrangregeln bei Konflikten greifen.
 group: konzept
 order: 160
 quelle: Konzept 65 (Regelwerks-Analyse und Anforderungskatalog)

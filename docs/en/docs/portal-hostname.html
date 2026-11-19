@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Changing the portal hostname · Das Cloud Projekt</title>
+<meta name="description" content="Runbook for changing the portal address – what happens to the OIDC issuer, the WebAuthn RP ID and registered passkeys, and how access is preserved.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e1115">
+<link rel="canonical" href="../../en/docs/portal-hostname.html">
+<link rel="alternate" hreflang="de" href="../../doku/portal-hostname.html">
+<link rel="alternate" hreflang="en" href="../../en/docs/portal-hostname.html">
+<link rel="alternate" hreflang="x-default" href="../../doku/portal-hostname.html">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="k-doc">
+<a class="skip" href="#inhalt">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../../en/index.html" aria-label="Das Cloud Projekt (DCP) – Home">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menu</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Main navigation"><ul><li><a href="../../en/index.html">Home</a></li><li><a href="../../en/features.html">Features</a></li><li><a href="../../en/architecture.html">Architecture</a></li><li><a href="../../en/docs/index.html" aria-current="page">Docs</a></li><li><a href="../../en/roadmap.html">Status & roadmap</a></li><li><a href="../../en/contribute.html">Contribute</a></li></ul></nav>
+    <div class="tools">
+      <form class="search" role="search" action="../../en/search.html" method="get">
+        <label for="q" class="sr-only">Search</label>
+        <input id="q" name="q" type="search" placeholder="Search …" autocomplete="off">
+      </form>
+      <a class="lang-switch" href="../../doku/portal-hostname.html" hreflang="de" lang="de" aria-label="Deutsche Fassung dieser Seite"><span aria-hidden="true">DE</span><span class="lang-long" aria-hidden="true">Deutsch</span></a>
+    </div>
+  </div>
+</header>
+<main id="inhalt" tabindex="-1">
+<header class="page-head"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../index.html">Home</a></li><li><a href="index.html">Docs</a></li><li><span aria-current="page">Changing the portal hostname</span></li></ol></nav><p class="eyebrow">Processes</p><h1>Changing the portal hostname</h1><p class="lead">Runbook for changing the portal address – what happens to the OIDC issuer, the WebAuthn RP ID and registered passkeys, and how access is preserved.</p><p class="meta">Adapted from: Runbook portal hostname</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Contents of this page"><p class="toc-title">On this page</p><ol><li><a href="#background">Background</a></li><li><a href="#what-happens">What happens</a></li><li><a href="#planned-hostname-change">Planned hostname change</a></li><li><a href="#unplanned-change">Unplanned change</a></li><li><a href="#checks-after-the-change">Checks after the change</a></li><li><a href="#notes">Notes</a></li></ol></nav><div class="content"><article class="doc"><h2 id="background">Background<a class="anchor" href="#background" aria-label="Link to this section">#</a></h2>
+<p>A region's <strong>portal address</strong> is more than just a URL. It is at the same time:</p>
+<ul><li>the <strong>OIDC issuer</strong> (<code>iss</code>) of all tokens the platform issues, and</li><li>the basis of the <strong>WebAuthn RP ID</strong> – which is the hostname of the address.</li></ul>
+<p>Under the WebAuthn standard, passkeys are bound firmly to the RP ID. Changing the hostname therefore has consequences for everyone who signs in with a passkey. This runbook describes how to carry out such a change in a planned way and what to do after an unplanned change. Background on identities, passkeys and emergency access can be found in <a href="identity.html">Identity</a>.</p>
+<h2 id="what-happens">What happens<a class="anchor" href="#what-happens" aria-label="Link to this section">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Change</th><th scope="col">Effect</th></tr></thead><tbody><tr><td>only the <strong>port</strong> (<code>https://cloud.example.org:8443</code> → <code>https://cloud.example.org</code>)</td><td>The RP ID stays the same; passkeys remain valid. The issuer changes: access tokens from the previous issuer remain valid until they expire (10 minutes), and a refresh yields tokens with the new issuer. Command-line and MCP clients must enter the new endpoint.</td></tr><tr><td>the <strong>hostname</strong> (<code>cloud.example.org</code> → <code>portal.example.org</code>)</td><td><strong>New RP ID – all registered passkeys become unusable.</strong> The browser does not offer them for the new domain, and the server rejects assertions with a foreign RP ID hash. Without countermeasures, nobody can sign in with a passkey anymore.</td></tr></tbody></table></div>
+<p>Losing the passkeys is unavoidable by design – it is precisely the phishing protection that WebAuthn provides. The runbook ensures that the change nevertheless succeeds in a controlled way and without locking anyone out.</p>
+<h2 id="planned-hostname-change">Planned hostname change<a class="anchor" href="#planned-hostname-change" aria-label="Link to this section">#</a></h2>
+<ol><li><strong>Prepare (still under the old address):</strong> prepare an admin invitation for every person with a passkey – <strong>do not create</strong> them yet, just record the list of affected people. Existing invitations and sessions can be listed via the command line or the portal.</li><li><strong>Ensure emergency access:</strong> on a control node, locally and as administrator, enable the time-limited emergency access, for example for one hour. It can only be activated locally and is fully audited. This keeps the command line operational with an emergency token in case the switchover runs into problems.</li><li><strong>Switch DNS and address:</strong> create the DNS record for the new name (when using the platform DNS role, via a dedicated zone, see <a href="dns.html">DNS</a>) and then set the portal address to <code>https://portal.example.org</code>. The portal certificate is reissued; the shared issuer is picked up on all identity nodes within a few seconds via the replicated control plane (see <a href="control-plane.html">Control plane</a>).</li><li><strong>Create new invitations:</strong> use the emergency access to create new admin invitations. The invitation links already contain the new address. The recipients redeem them in the browser on the new domain and register a new passkey in the process.</li><li><strong>End emergency access:</strong> after the first successful passkey sign-in, the emergency token is deactivated automatically; in addition, explicitly switch off the emergency access.</li><li><strong>Clean up:</strong> revoke old sessions (command line or portal, "Sessions" section). Old passkey entries remain in place without effect until they are cleaned up.</li><li><strong>Update clients:</strong> command-line users enter the new endpoint in their configuration and sign in again; the same applies to MCP clients.</li></ol>
+<h2 id="unplanned-change">Unplanned change<a class="anchor" href="#unplanned-change" aria-label="Link to this section">#</a></h2>
+<p>If the hostname has already been changed and the passkeys are therefore invalid, the preparation step is dropped. Step 2 (emergency access locally on the node) followed by steps 4 to 7 is sufficient.</p>
+<p>Without administrative access to a control node, the only remaining option is the break-glass procedure from the identity concept (see <a href="identity.html">Identity</a>).</p>
+<h2 id="checks-after-the-change">Checks after the change<a class="anchor" href="#checks-after-the-change" aria-label="Link to this section">#</a></h2>
+<ul><li>The OIDC discovery under the new address (<code>https://portal.example.org/.well-known/openid-configuration</code>) lists the new address as <code>issuer</code>.</li><li>For each node, the agent log shows an event about the changed issuer and the newly loaded portal certificate.</li><li>The audit log contains the reactivation of emergency access, the invitations created and the first sign-in under the new address.</li></ul>
+<h2 id="notes">Notes<a class="anchor" href="#notes" aria-label="Link to this section">#</a></h2>
+<ul><li>A <strong>port-only change</strong> is uncritical and only requires updating the clients.</li><li>Choose the hostname deliberately during setup: the portal address is mandatory when initializing a region and must be a DNS name (see <a href="os-image.html">OS image</a>).</li><li>Emergency access is a deliberately narrow tool: local, time-limited, audited and switched off automatically after the first regular sign-in (see <a href="security-model.html">Security model</a>).</li></ul></article><nav class="pager" aria-label="More pages"><a rel="prev" href="vulnerability-management.html"><span aria-hidden="true">←</span> Vulnerability management</a></nav></div></div>
+</main>
+<footer class="site-footer">
+  <div class="bar">
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
+    <p>Documentation under <a href="https://creativecommons.org/licenses/by/4.0/deed.en" rel="license noopener">CC BY 4.0</a>, code under AGPL-3.0-or-later. No cookies, no tracking, no third-party resources.</p>
+    <nav aria-label="Legal and service"><p><a href="../../en/contribute.html#license">License</a> · <a href="../../en/contribute.html#security">Report a vulnerability</a> · <a href="../../en/search.html">Search</a> · <a href="../../en/legal-notice.html">Legal notice</a> · <a href="../../en/privacy.html">Privacy policy</a></p></nav>
+  </div>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

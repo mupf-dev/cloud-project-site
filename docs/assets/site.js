@@ -1,8 +1,9 @@
 /* SPDX-FileCopyrightText: 2026 cloud-project contributors
    SPDX-License-Identifier: AGPL-3.0-or-later
-   Menü-Umschalter und clientseitige Suche. Keine externen Ressourcen. */
+   Menü-Umschalter und clientseitige Suche (DE/EN, Index je Sprache). Keine externen Ressourcen. */
 (function () {
   "use strict";
+  document.documentElement.classList.add("js");
   var btn = document.querySelector(".nav-toggle");
   var nav = document.getElementById("hauptnav");
   if (btn && nav) {
@@ -17,9 +18,19 @@
   if (!results) return;
   var status = document.getElementById("search-status");
   var input = document.getElementById("sq");
+  var en = document.documentElement.lang === "en";
+  var T = en ? {
+    empty: "Please enter a search term.", busy: "Searching …", fail: "The search index could not be loaded.",
+    hits: function (n, q) { return n + (n === 1 ? " result" : " results") + " for “" + q + "”"; },
+    none: function (q) { return "No results for “" + q + "”."; }
+  } : {
+    empty: "Bitte einen Suchbegriff eingeben.", busy: "Suche läuft …", fail: "Der Suchindex konnte nicht geladen werden.",
+    hits: function (n, q) { return n + " Treffer für „" + q + "“"; },
+    none: function (q) { return "Keine Treffer für „" + q + "“."; }
+  };
   var q = new URLSearchParams(location.search).get("q") || "";
   input.value = q;
-  if (!q.trim()) { status.textContent = "Bitte einen Suchbegriff eingeben."; return; }
+  if (!q.trim()) { status.textContent = T.empty; return; }
 
   function norm(s) { return (s || "").toLowerCase(); }
   function esc(s) {
@@ -34,8 +45,8 @@
     return esc(s).replace(re, "<mark>$1</mark>");
   }
 
-  status.textContent = "Suche läuft …";
-  fetch("suche-index.json").then(function (r) { return r.json(); }).then(function (idx) {
+  status.textContent = T.busy;
+  fetch(results.getAttribute("data-index") || "suche-index.json").then(function (r) { return r.json(); }).then(function (idx) {
     var terms = norm(q).split(/\s+/).filter(Boolean);
     var hits = [];
     idx.forEach(function (e) {
@@ -54,12 +65,12 @@
       if (ok) hits.push({ e: e, score: score });
     });
     hits.sort(function (a, b) { return b.score - a.score; });
-    status.textContent = hits.length ? hits.length + " Treffer für „" + q + "“" : "Keine Treffer für „" + q + "“.";
+    status.textContent = hits.length ? T.hits(hits.length, q) : T.none(q);
     results.innerHTML = hits.map(function (h) {
       return '<li><a href="' + esc(h.e.u) + '">' + esc(h.e.t) + "</a><p>" +
         (snippet(h.e.x, terms[0]) || esc(h.e.s)) + "</p></li>";
     }).join("");
   }).catch(function () {
-    status.textContent = "Der Suchindex konnte nicht geladen werden.";
+    status.textContent = T.fail;
   });
 })();

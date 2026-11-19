@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contributing and license · Das Cloud Projekt</title>
+<meta name="description" content="How to contribute to DCP, which licenses cover code and documentation, and how to report vulnerabilities.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e1115">
+<link rel="canonical" href="../en/contribute.html">
+<link rel="alternate" hreflang="de" href="../mitmachen.html">
+<link rel="alternate" hreflang="en" href="../en/contribute.html">
+<link rel="alternate" hreflang="x-default" href="../mitmachen.html">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="k-page">
+<a class="skip" href="#inhalt">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../en/index.html" aria-label="Das Cloud Projekt (DCP) – Home">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menu</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Main navigation"><ul><li><a href="../en/index.html">Home</a></li><li><a href="../en/features.html">Features</a></li><li><a href="../en/architecture.html">Architecture</a></li><li><a href="../en/docs/index.html">Docs</a></li><li><a href="../en/roadmap.html">Status & roadmap</a></li><li><a href="../en/contribute.html" aria-current="page">Contribute</a></li></ul></nav>
+    <div class="tools">
+      <form class="search" role="search" action="../en/search.html" method="get">
+        <label for="q" class="sr-only">Search</label>
+        <input id="q" name="q" type="search" placeholder="Search …" autocomplete="off">
+      </form>
+      <a class="lang-switch" href="../mitmachen.html" hreflang="de" lang="de" aria-label="Deutsche Fassung dieser Seite"><span aria-hidden="true">DE</span><span class="lang-long" aria-hidden="true">Deutsch</span></a>
+    </div>
+  </div>
+</header>
+<main id="inhalt" tabindex="-1">
+<header class="page-head"><div class="wrap"><p class="eyebrow">DCP</p><h1>Contributing and license</h1><p class="lead">How to contribute to DCP, which licenses cover code and documentation, and how to report vulnerabilities.</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Contents of this page"><p class="toc-title">On this page</p><ol><li><a href="#contributing">Contributing</a></li><li><a href="#rules-for-contributions">Rules for contributions</a></li><li><a href="#license">License</a></li><li><a href="#security">Reporting a vulnerability</a></li><li><a href="#about-this-website">About this website</a></li></ol></nav><div class="content"><article class="doc"><h2 id="contributing">Contributing<a class="anchor" href="#contributing" aria-label="Link to this section">#</a></h2>
+<p>"Das Cloud Projekt" (DCP) is set up as a community project. The source code repository will be opened as soon as the license files, security policy and REUSE compliance are complete. Until then, we welcome feedback on concepts and architecture.</p>
+<p>Especially welcome are:</p>
+<ul><li><strong>Feedback on the concepts</strong> in the <a href="docs/index.html">documentation</a> – assumptions, gaps, better alternatives.</li><li><strong>Operational experience</strong> from homelabs, edge sites and data centers: hardware, network topologies, requirements from compliance audits.</li><li><strong>Tests on unusual hardware</strong> (ARM boards, older notebooks, servers with and without BMC), as soon as pre-release versions are available.</li><li><strong>Code</strong> in Rust for the agent, roles and tools, TypeScript for the portal, documentation and translations.</li></ul>
+<h2 id="rules-for-contributions">Rules for contributions<a class="anchor" href="#rules-for-contributions" aria-label="Link to this section">#</a></h2>
+<ul><li><strong>DCO instead of CLA:</strong> contributions are made under the <a href="https://developercertificate.org/" rel="noopener">Developer Certificate of Origin 1.1</a>. Every commit carries a <code>Signed-off-by:</code> line (<code>git commit -s</code>). There is no transfer of rights to a company.</li><li><strong>Quality before speed:</strong> formatting, lints without warnings, tests, license and dependency checks, a security audit of the dependencies, SBOM and MSRV check run in CI and must be green.</li><li><strong>No <code>unsafe</code></strong> without a justified entry in a dedicated register; new dependencies only centrally in the workspace and after checking license, maintenance status and process boundaries.</li><li><strong>Every file carries SPDX license information</strong> (REUSE-compliant).</li><li><strong>Security-critical paths</strong> – PKI, consensus, authorization, boot and discovery, update – require two reviews.</li><li><strong>New features in all three access paths:</strong> whatever works via the API must also work in the portal and via MCP; the parity check in CI enforces this.</li><li><strong>Architecture decisions as ADRs</strong> with the mandatory section "Security &amp; Compliance" (see <a href="docs/compliance-by-design.html">Compliance by design</a>).</li></ul>
+<pre><span class="code-lang">sh</span><code class="lang-sh"># typical workflow for contributors (once the repository is opened)
+cargo xtask setup      # install tools in pinned versions
+cargo xtask ci         # run all checks locally
+git commit -s -m "Short description"</code></pre>
+<h2 id="license">License<a class="anchor" href="#license" aria-label="Link to this section">#</a></h2>
+<p>The license decision is justified in the <a href="docs/license-governance.html">ADR License and governance</a> (accepted 2026-11-12).</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Component</th><th scope="col">License</th></tr></thead><tbody><tr><td>Core: agent, control plane, services, portal, MCP server, image build tools</td><td>GNU AGPL-3.0-or-later</td></tr><tr><td>SDKs, client libraries, CLI, API specifications, MCP schemas</td><td>Apache-2.0 OR MIT</td></tr><tr><td>Documentation, concepts, diagrams (including this website)</td><td>CC BY 4.0</td></tr><tr><td>Code examples and configuration templates</td><td>MIT-0</td></tr><tr><td>Logos and product name</td><td>not freely licensed, trademark policy</td></tr></tbody></table></div>
+<p>The AGPL ensures that improvements to the platform benefit the community even when modified versions are offered as a service over the network. Clients and SDKs are under permissive licenses so that they can be embedded in any software. The license is decided, but is subject to a final legal review before the first publication.</p>
+<h2 id="security">Reporting a vulnerability<a class="anchor" href="#security" aria-label="Link to this section">#</a></h2>
+<p>Please <strong>do not use public issues, pull requests or discussions</strong> for security problems.</p>
+<ul><li><strong>Preferred:</strong> GitHub <em>Private Vulnerability Reporting</em> in the project repository ("Security" tab → "Report a vulnerability").</li><li><strong>Alternatively by e-mail:</strong> the address, together with an OpenPGP key, will be defined before the first public release and also published at <code>/.well-known/security.txt</code>.</li></ul>
+<div class="table-wrap"><table><thead><tr><th scope="col">Step</th><th scope="col">Deadline</th></tr></thead><tbody><tr><td>Acknowledgment of receipt</td><td>≤ 3 business days</td></tr><tr><td>Initial assessment (CVSS v4.0)</td><td>≤ 7 calendar days</td></tr><tr><td>Status updates to reporters</td><td>at least every 14 days</td></tr><tr><td>Fix (target)</td><td>critical ≤ 14 days, high ≤ 30 days, medium ≤ 90 days</td></tr><tr><td>Publication</td><td>with the fix, at the latest after a 90-day embargo</td></tr></tbody></table></div>
+<p>Actively exploited vulnerabilities are reported under Art. 14 of the Cyber Resilience Act. The full process is described under <a href="docs/vulnerability-management.html">Vulnerability management</a>.</p>
+<h2 id="about-this-website">About this website<a class="anchor" href="#about-this-website" aria-label="Link to this section">#</a></h2>
+<p>This site is statically generated – without cookies, tracking, external fonts or third-party scripts. Search runs entirely in the browser. The content consists of edited versions of the project documents and is licensed under CC BY 4.0. The site is available in German and English; where the two differ, the German version prevails.</p></article></div></div>
+</main>
+<footer class="site-footer">
+  <div class="bar">
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
+    <p>Documentation under <a href="https://creativecommons.org/licenses/by/4.0/deed.en" rel="license noopener">CC BY 4.0</a>, code under AGPL-3.0-or-later. No cookies, no tracking, no third-party resources.</p>
+    <nav aria-label="Legal and service"><p><a href="../en/contribute.html#license">License</a> · <a href="../en/contribute.html#security">Report a vulnerability</a> · <a href="../en/search.html">Search</a> · <a href="../en/legal-notice.html">Legal notice</a> · <a href="../en/privacy.html">Privacy policy</a></p></nav>
+  </div>
+</footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

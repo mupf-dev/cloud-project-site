@@ -1,7 +1,12 @@
-# cloud-project – Projekt-Website
+# Das Cloud Projekt (DCP) – Projekt-Website
 
-Quellen und Generator der öffentlichen Website von **cloud-project**, einer quelloffenen,
-dezentralen und mandantenfähigen Cloud-Plattform in Rust. Die Website ist vollständig auf Deutsch.
+Quellen und Generator der öffentlichen Website von **„Das Cloud Projekt“** (kurz **DCP**, Alpha-Name),
+einer quelloffenen, dezentralen und mandantenfähigen Cloud-Plattform in Rust. Komponenten tragen
+das Präfix `cp` (`cpctl`, `cpOS`, `cp-agent` …); der Name dieses Repositorys bleibt unverändert.
+
+Die Website ist zweisprachig: **Deutsch** an der Wurzel, **Englisch** unter `en/`. Jede Seite hat
+einen Sprachumschalter zur Entsprechungsseite, `hreflang`-Links und ein korrektes `lang`-Attribut;
+jede Sprache hat einen eigenen Suchindex (`suche-index.json` bzw. `en/search-index.json`).
 
 Dieses Repository enthält **nur die Website** – keinen Plattform-Quellcode. Die Inhalte sind
 aufbereitete Fassungen der Projektdokumente (Konzepte, Architekturentscheidungen, Prozesse).
@@ -10,18 +15,24 @@ aufbereitete Fassungen der Projektdokumente (Konzepte, Architekturentscheidungen
 
 | Pfad | Inhalt |
 |---|---|
-| `content/seiten/*.md` | Hauptseiten: Start, Funktionen, Architektur, Status & Roadmap, Mitmachen |
+| `content/seiten/*.md` | Hauptseiten: Start, Funktionen, Architektur, Status & Roadmap, Mitmachen, Impressum, Datenschutz |
 | `content/doku/*.md` | Dokumentationsseiten (Konzepte und Prozesse) |
-| `static/` | Stylesheet, Skript (Menü, Suche), Icon – werden nach `docs/assets/` kopiert |
+| `content/en/seiten/*.md`, `content/en/doku/*.md` | englische Fassungen; Kopffeld `de: <slug>` nennt die deutsche Entsprechung |
+| `static/` | Stylesheet (Design-Tokens des Portals), Skript (Menü, Suche), Icon – werden nach `docs/assets/` kopiert |
 | `build.py` | Generator (nur Python-Standardbibliothek, ab Python 3.9) |
 | `check-leaks.py`, `check-leaks.sh` | Prüfung auf verbotene Inhalte |
 | `tools/INHALTSREGELN.md` | Regeln für Inhalte und das unterstützte Markdown |
 | `docs/` | **generierte** Website (wird eingecheckt, von GitHub Pages ausgeliefert) |
 
-Die Seiten verwenden eine kleine Markdown-Teilmenge (Überschriften, Absätze, Listen, Tabellen,
-Zitate, Code-Blöcke, Links). Diagramme sind Inline-SVG in Blöcken `::: html … :::`. Es gibt kein
-externes JavaScript, keine Webfonts, kein CDN und kein Tracking; hell/dunkel folgt
-`prefers-color-scheme`.
+Die Seiten verwenden eine kleine Markdown-Teilmenge (Überschriften, optional mit eigener
+Sprungmarke `## Titel {#id}`, Absätze, Listen, Tabellen, Zitate, Code-Blöcke, Links). Diagramme und
+die Startseite sind Inline-SVG/HTML in Blöcken `::: html … :::`. Es gibt kein externes JavaScript,
+keine Webfonts, kein CDN und kein Tracking; hell/dunkel folgt `prefers-color-scheme`, Animationen
+entfallen bei `prefers-reduced-motion`. Farben, Radien und Schatten folgen den Design-Tokens des
+Portals (Variante „Technisch“).
+
+Eine neue Seite braucht beide Sprachen: deutsche Quelle anlegen, englische Fassung mit
+`de: <deutscher-slug>` im Kopf ergänzen. Der Build meldet Seiten ohne Gegenstück als Fehler.
 
 ## Bauen und prüfen
 
@@ -31,13 +42,16 @@ python3 build.py          # nur bauen
 python3 -m http.server -d docs 8000   # lokal ansehen: http://localhost:8000/
 ```
 
-`build.py` bricht mit Fehler ab, wenn interne Links auf nicht vorhandene Doku-Seiten zeigen.
+`build.py` prüft nach dem Bauen alle internen Links und Sprungmarken (beide Sprachen) sowie die
+Zuordnung DE ↔ EN und bricht bei Fehlern ab.
 
 `check-leaks.py` sucht unter anderem nach Ticketschlüsseln des internen Projektmanagements,
 Namen interner Infrastruktur und Hoster, E-Mail-Adressen, Schlüsselmaterial (PEM-Blöcke),
 IPv4-Adressen außerhalb der Dokumentationsnetze nach RFC 5737, konkreten IPv6-ULA-Präfixen,
 Rust-Code (`fn`, `impl`, `use crate`, Attribute, `struct`) und Pfaden zu `.rs`-Quelldateien.
-Interne Namen sind im Skript nur als SHA-256-Hash hinterlegt. Weitere, nicht zu veröffentlichende
+Interne Namen sind im Skript nur als SHA-256-Hash hinterlegt. Die Kontaktadresse und die
+Anbieterdaten sind ausschließlich auf Impressum/Datenschutz bzw. Legal notice/Privacy policy
+erlaubt (nicht im Suchindex). Weitere, nicht zu veröffentlichende
 Muster können lokal in `.leak-patterns.local` (eine Regex je Zeile, per `.gitignore`
 ausgeschlossen) ergänzt werden.
 
@@ -63,4 +77,4 @@ ebenso wie unter einer eigenen Domain.
 - **Generator, Prüfskript, Stylesheet und Skript** (`build.py`, `check-leaks.*`, `static/`):
   [AGPL-3.0-or-later](LICENSES/AGPL-3.0-or-later.txt) – wie der Kern des Projekts.
 
-Namensnennung: „cloud-project contributors“.
+Namensnennung: „cloud-project contributors“ (Urheberbezeichnung wie im Projekt-Repository).

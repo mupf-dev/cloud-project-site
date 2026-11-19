@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Threat model · Das Cloud Projekt</title>
+<meta name="description" content="Method and principles of the product risk analysis – STRIDE per trust boundary, assessment and treatment according to BSI Standard 200-3, abstract attacker models, security assumptions and maintenance of the model.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e1115">
+<link rel="canonical" href="../../en/docs/threat-model.html">
+<link rel="alternate" hreflang="de" href="../../doku/bedrohungsmodell.html">
+<link rel="alternate" hreflang="en" href="../../en/docs/threat-model.html">
+<link rel="alternate" hreflang="x-default" href="../../doku/bedrohungsmodell.html">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="k-doc">
+<a class="skip" href="#inhalt">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../../en/index.html" aria-label="Das Cloud Projekt (DCP) – Home">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menu</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Main navigation"><ul><li><a href="../../en/index.html">Home</a></li><li><a href="../../en/features.html">Features</a></li><li><a href="../../en/architecture.html">Architecture</a></li><li><a href="../../en/docs/index.html" aria-current="page">Docs</a></li><li><a href="../../en/roadmap.html">Status & roadmap</a></li><li><a href="../../en/contribute.html">Contribute</a></li></ul></nav>
+    <div class="tools">
+      <form class="search" role="search" action="../../en/search.html" method="get">
+        <label for="q" class="sr-only">Search</label>
+        <input id="q" name="q" type="search" placeholder="Search …" autocomplete="off">
+      </form>
+      <a class="lang-switch" href="../../doku/bedrohungsmodell.html" hreflang="de" lang="de" aria-label="Deutsche Fassung dieser Seite"><span aria-hidden="true">DE</span><span class="lang-long" aria-hidden="true">Deutsch</span></a>
+    </div>
+  </div>
+</header>
+<main id="inhalt" tabindex="-1">
+<header class="page-head"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../index.html">Home</a></li><li><a href="index.html">Docs</a></li><li><span aria-current="page">Threat model</span></li></ol></nav><p class="eyebrow">Concepts and architecture decisions</p><h1>Threat model</h1><p class="lead">Method and principles of the product risk analysis – STRIDE per trust boundary, assessment and treatment according to BSI Standard 200-3, abstract attacker models, security assumptions and maintenance of the model.</p><p class="meta">Adapted from: Concept 67 (Threat Model)</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Contents of this page"><p class="toc-title">On this page</p><ol><li><a href="#method">Method</a></li><li><a href="#trust-boundaries">Trust boundaries</a></li><li><a href="#attacker-models">Attacker models</a></li><li><a href="#security-assumptions-and-non-goals">Security assumptions and non-goals</a></li><li><a href="#principles-of-risk-treatment">Principles of risk treatment</a></li><li><a href="#maintaining-the-model">Maintaining the model</a></li></ol></nav><div class="content"><article class="doc"><p>The threat model is the <strong>project's product risk analysis</strong>. It assesses the software and its intended architecture, not a specific deployment. Operators carry out their own risk analysis for their information domain; the model is structured so that threats, controls and residual risks can be adopted as a <strong>template</strong> into an operator's ISMS. This page summarizes the method and principles; the controls themselves are found in the individual concepts, in particular the <a href="security-model.html">security model</a> and <a href="cryptography.html">cryptography</a>.</p>
+<h2 id="method">Method<a class="anchor" href="#method" aria-label="Link to this section">#</a></h2>
+<p>Threats are identified using <strong>STRIDE per trust boundary</strong> and assessed and treated according to <strong>BSI Standard 200-3</strong>. The procedure:</p>
+<ol><li><strong>System model:</strong> assets, data flows and trust boundaries.</li><li><strong>Attacker models and assumptions.</strong></li><li><strong>Threat overview:</strong> STRIDE per boundary; each threat is mapped to at least one <strong>elementary threat</strong> of BSI IT-Grundschutz so that operators can import it into their 200-3 or Grundschutz++ tooling.</li><li><strong>Risk rating:</strong> likelihood × impact, each gross (without) and net (with controls).</li><li><strong>Risk treatment:</strong> avoid, reduce, transfer, accept.</li><li><strong>Consolidation</strong> of new controls and remaining risks.</li><li><strong>Feedback</strong> into the individual concepts and the development process.</li></ol>
+<p>STRIDE maps to the security objectives: <em>Spoofing</em> violates authenticity, <em>Tampering</em> integrity, <em>Repudiation</em> non-repudiation, <em>Information Disclosure</em> confidentiality, <em>Denial of Service</em> availability and <em>Elevation of Privilege</em> authorization. Cross-cutting concerns are software vulnerabilities, products from unreliable sources, operating errors, theft and malware.</p>
+<h3 id="rating-scales">Rating scales<a class="anchor" href="#rating-scales" aria-label="Link to this section">#</a></h3>
+<p>Ratings are made for a <strong>"multi-tenant operation" reference profile</strong> over a typical year of operation. Likelihood ranges in four levels from <em>rare</em> (requires rare capabilities or a chain of failures) to <em>very frequent</em> (normal operation creates the condition). Impact ranges from <em>negligible</em> to <em>existential</em> – the latter meaning cross-tenant loss of confidentiality or integrity, or the takeover of a cell, region or PKI. Together they yield one of four risk categories: low, medium, high, very high.</p>
+<h3 id="acceptance-criteria">Acceptance criteria<a class="anchor" href="#acceptance-criteria" aria-label="Link to this section">#</a></h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Category</th><th scope="col">Handling</th></tr></thead><tbody><tr><td>low</td><td>accepted</td></tr><tr><td>medium</td><td>accepted on condition that the effectiveness of the control is demonstrated (test, pentest)</td></tr><tr><td>high</td><td>release blocker unless explicitly accepted as residual risk</td></tr><tr><td>very high</td><td>never accepted – the architecture is changed</td></tr></tbody></table></div>
+<p>A net risk only counts as reduced once the control is <strong>implemented and tested</strong>; until then the gross risk applies.</p>
+<h2 id="trust-boundaries">Trust boundaries<a class="anchor" href="#trust-boundaries" aria-label="Link to this section">#</a></h2>
+<p>The system model distinguishes thirteen trust boundaries, including: internet and users versus portal and API, AI clients versus the MCP interface, tenant versus tenant, tenant workload versus host, nodes among each other, the control group versus the remaining nodes, witnesses, discovery and boot network, out-of-band management, supply chain versus installation, operator versus tenant content, physical site, and external identity providers. For each boundary it is defined what crosses it and what enforces it.</p>
+<h2 id="attacker-models">Attacker models<a class="anchor" href="#attacker-models" aria-label="Link to this section">#</a></h2>
+<p>Attackers are modeled abstractly by starting position and capabilities:</p>
+<ul><li><strong>External attacker</strong> with access to public endpoints, from automated scans to targeted attacks.</li><li><strong>Malicious tenant</strong> with a valid account and arbitrary code in their own workloads.</li><li><strong>Compromised node</strong> with root privileges and that node's key material.</li><li><strong>Foreign device in the discovery or home network</strong> on the same network segment.</li><li><strong>Physical attacker</strong> with brief or permanent access to devices and disks.</li><li><strong>Malicious operator or insider</strong> – deliberately modeled as strong.</li><li><strong>Compromised dependency or supply chain.</strong></li><li><strong>Compromised or manipulated AI agent</strong>, for example steered via prompt injection.</li><li><strong>Third-party operator of an external witness.</strong></li></ul>
+<p>In addition, operating errors, hardware and power failures, and software bugs count as threat sources within the meaning of 200-3.</p>
+<h2 id="security-assumptions-and-non-goals">Security assumptions and non-goals<a class="anchor" href="#security-assumptions-and-non-goals" aria-label="Link to this section">#</a></h2>
+<p>The model rests on explicitly stated assumptions, including: the cryptographic primitives and random number generator used are secure; CPU, virtualization hardware and IOMMU work as specified; control nodes are physically protected or have TPM, measured boot and disk encryption; at most one voter of a cell is compromised at any one time (the consensus is not Byzantine fault tolerant); people control their authenticators; operators fulfill their obligations under the shared responsibility model; time is authenticated after boot.</p>
+<p><strong>Non-goals</strong> are protection against state-level attackers with hardware implants in new devices, protection of tenant content against operators with physical access without confidential computing, and defense against volumetric DDoS attacks on the internet uplink.</p>
+<h2 id="principles-of-risk-treatment">Principles of risk treatment<a class="anchor" href="#principles-of-risk-treatment" aria-label="Link to this section">#</a></h2>
+<ul><li><strong>Avoid</strong> through architecture decisions that eliminate a threat – for example no shared kernel between tenants, no interactive login out of the box, no automatic break-glass, no destructive actions based on gossip messages, no security-critical roles at adoption, no automatic admission of foreign devices.</li><li><strong>Reduce</strong> through technical controls in the individual concepts.</li><li><strong>Transfer</strong> to operators (network separation, physical protection, firmware selection) or tenants (guest operating systems, their own applications) according to the shared responsibility model, documented in the operator and tenant handbooks.</li><li><strong>Accept</strong> only what is at most <em>medium</em> after reduction or has been explicitly taken on by the risk owner.</li></ul>
+<p>Guiding principles from the analysis: trust must <strong>never arise from network boot</strong>, but only from an adoption process bound to a device key with human confirmation or an allowlist; new nodes start at a lower trust level. Destructive actions by AI agents are confirmed <strong>outside the client</strong>, because prompt injection cannot be fully prevented.</p>
+<h2 id="maintaining-the-model">Maintaining the model<a class="anchor" href="#maintaining-the-model" aria-label="Link to this section">#</a></h2>
+<p>The model is updated when new roles, components or trust boundaries are added, when a third-party component is replaced, after pentest findings and security-relevant vulnerabilities, for new versions of the MCP specification, and at the latest before every minor release. It is maintained in machine-readable form so that CI can check that every threat has a control with a test or a documented acceptance. Every control with a net risk of <em>medium</em> receives at least one automated test or a pentest checkpoint.</p>
+<p>Related pages: <a href="it-grundschutz.html">BSI IT-Grundschutz</a> · <a href="compliance-by-design.html">Compliance by design</a> · <a href="vulnerability-management.html">Vulnerability management</a></p></article><nav class="pager" aria-label="More pages"><a rel="prev" href="cryptography.html"><span aria-hidden="true">←</span> Cryptography</a><a rel="next" href="portal.html">Portal technology <span aria-hidden="true">→</span></a></nav></div></div>
+</main>
+<footer class="site-footer">
+  <div class="bar">
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
+    <p>Documentation under <a href="https://creativecommons.org/licenses/by/4.0/deed.en" rel="license noopener">CC BY 4.0</a>, code under AGPL-3.0-or-later. No cookies, no tracking, no third-party resources.</p>
+    <nav aria-label="Legal and service"><p><a href="../../en/contribute.html#license">License</a> · <a href="../../en/contribute.html#security">Report a vulnerability</a> · <a href="../../en/search.html">Search</a> · <a href="../../en/legal-notice.html">Legal notice</a> · <a href="../../en/privacy.html">Privacy policy</a></p></nav>
+  </div>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

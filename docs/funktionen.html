@@ -3,31 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Funktionsumfang · cloud-project</title>
-<meta name="description" content="Welche Dienste, Rollen und Plattformfunktionen cloud-project bereitstellt – vom Knoten-Lebenszyklus über Netz, Speicher und Identität bis zur KI-Inferenz.">
+<title>Funktionsumfang · Das Cloud Projekt</title>
+<meta name="description" content="Welche Dienste, Rollen und Plattformfunktionen DCP bereitstellt – vom Knoten-Lebenszyklus über Netz, Speicher und Identität bis zur KI-Inferenz.">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e1115">
+<link rel="canonical" href="funktionen.html">
+<link rel="alternate" hreflang="de" href="funktionen.html">
+<link rel="alternate" hreflang="en" href="en/features.html">
+<link rel="alternate" hreflang="x-default" href="funktionen.html">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
-<body>
+<body class="k-page">
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="index.html" aria-label="cloud-project – Startseite">
-      <img src="assets/favicon.svg" alt="" width="28" height="28"><span>cloud-project</span>
+    <a class="brand" href="index.html" aria-label="Das Cloud Projekt (DCP) – Startseite">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
     <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="index.html">Start</a></li><li><a href="funktionen.html" aria-current="page">Funktionen</a></li><li><a href="architektur.html">Architektur</a></li><li><a href="doku/index.html">Dokumentation</a></li><li><a href="roadmap.html">Status & Roadmap</a></li><li><a href="mitmachen.html">Mitmachen</a></li></ul></nav>
-    <form class="search" role="search" action="suche.html" method="get">
-      <label for="q" class="sr-only">Suche</label>
-      <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
-    </form>
+    <div class="tools">
+      <form class="search" role="search" action="suche.html" method="get">
+        <label for="q" class="sr-only">Suche</label>
+        <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+      </form>
+      <a class="lang-switch" href="en/features.html" hreflang="en" lang="en" aria-label="English version of this page"><span aria-hidden="true">EN</span><span class="lang-long" aria-hidden="true">English</span></a>
+    </div>
   </div>
 </header>
-<div class="page with-toc">
-<nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#dienste-wie-bei-einem-hyperscaler">Dienste wie bei einem Hyperscaler</a></li><li><a href="#drei-gleichwertige-zugaenge">Drei gleichwertige Zugänge</a></li><li><a href="#rollen">Rollen</a></li><li><a href="#knoten-lebenszyklus">Knoten-Lebenszyklus</a></li><li><a href="#updates-und-releases">Updates und Releases</a></li><li><a href="#plattform-dns">Plattform-DNS</a></li><li><a href="#identitaet-und-mandanten">Identität und Mandanten</a></li><li><a href="#speicher">Speicher</a></li><li><a href="#netzwerk">Netzwerk</a></li><li><a href="#sicherheit-und-compliance">Sicherheit und Compliance</a></li><li><a href="#ki-native-plattform">KI-native Plattform</a></li></ol></nav>
 <main id="inhalt" tabindex="-1">
-<article class="doc"><h1>Funktionsumfang</h1><p class="lead">Welche Dienste, Rollen und Plattformfunktionen cloud-project bereitstellt – vom Knoten-Lebenszyklus über Netz, Speicher und Identität bis zur KI-Inferenz.</p><h2 id="dienste-wie-bei-einem-hyperscaler">Dienste wie bei einem Hyperscaler<a class="anchor" href="#dienste-wie-bei-einem-hyperscaler" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<header class="page-head"><div class="wrap"><p class="eyebrow">DCP</p><h1>Funktionsumfang</h1><p class="lead">Welche Dienste, Rollen und Plattformfunktionen DCP bereitstellt – vom Knoten-Lebenszyklus über Netz, Speicher und Identität bis zur KI-Inferenz.</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#dienste-wie-bei-einem-hyperscaler">Dienste wie bei einem Hyperscaler</a></li><li><a href="#drei-gleichwertige-zugaenge">Drei gleichwertige Zugänge</a></li><li><a href="#rollen">Rollen</a></li><li><a href="#knoten-lebenszyklus">Knoten-Lebenszyklus</a></li><li><a href="#updates-und-releases">Updates und Releases</a></li><li><a href="#plattform-dns">Plattform-DNS</a></li><li><a href="#identitaet-und-mandanten">Identität und Mandanten</a></li><li><a href="#speicher">Speicher</a></li><li><a href="#netzwerk">Netzwerk</a></li><li><a href="#sicherheit-und-compliance">Sicherheit und Compliance</a></li><li><a href="#ki-native-plattform">KI-native Plattform</a></li></ol></nav><div class="content"><article class="doc"><h2 id="dienste-wie-bei-einem-hyperscaler">Dienste wie bei einem Hyperscaler<a class="anchor" href="#dienste-wie-bei-einem-hyperscaler" aria-label="Link zu diesem Abschnitt">#</a></h2>
 <p>Die Plattform bietet Grunddienste, die sich an den bekannten öffentlichen Clouds orientieren. Alle Dienste sind Ressourcen derselben API und damit gleichermaßen über Portal, API und MCP nutzbar.</p>
 <div class="table-wrap"><table><thead><tr><th scope="col">Kategorie</th><th scope="col">Dienst</th><th scope="col">Entspricht etwa</th></tr></thead><tbody><tr><td>Compute</td><td>Virtuelle Maschinen (Cloud Hypervisor/KVM)</td><td>AWS EC2 · Azure VMs · Compute Engine</td></tr><tr><td>Compute</td><td>Container Instances (MicroVM-isoliert)</td><td>Fargate · Azure Container Instances · Cloud Run</td></tr><tr><td>Compute</td><td>Managed Kubernetes</td><td>EKS · AKS · GKE</td></tr><tr><td>Speicher</td><td>Block-Volumes</td><td>EBS · Managed Disks · Persistent Disk</td></tr><tr><td>Speicher</td><td>Objektspeicher (S3-kompatibel)</td><td>S3 · Blob Storage · Cloud Storage</td></tr><tr><td>Speicher</td><td>Dateispeicher (NFS)</td><td>EFS · Azure Files · Filestore</td></tr><tr><td>Netzwerk</td><td>VPCs, Subnetze, Sicherheitsgruppen, Load Balancer, Floating IPs</td><td>VPC · VNet · VPC</td></tr><tr><td>Netzwerk</td><td>Plattform-DNS mit DNSSEC</td><td>Route 53 · Azure DNS · Cloud DNS</td></tr><tr><td>Identität</td><td>Mandanten, Projekte, Nutzer, Rollen, Dienstkonten, API-Schlüssel</td><td>IAM · Entra ID · Cloud IAM</td></tr><tr><td>Plattform</td><td>Registry, Schlüsselverwaltung (KMS), Monitoring, Audit-Log</td><td>ECR · Key Vault · CloudWatch · CloudTrail</td></tr><tr><td>KI</td><td>Modellkatalog, Inferenz-Endpunkte, AI-Gateway, Vektorsuche</td><td>Bedrock · Azure AI Foundry · Vertex AI</td></tr></tbody></table></div>
 <p>Weitere Dienste – Datenbanken, Secrets, Warteschlangen, Serverless-Funktionen, GPU/NPU-Pools – folgen in späteren Phasen. Eine detaillierte Gegenüberstellung mit AWS, Azure und Google Cloud steht in der <a href="doku/funktionsanalyse.html">Hyperscaler-Funktionsanalyse</a>.</p>
@@ -105,15 +111,13 @@ status:                     # tatsächlicher Zustand, schreibt nur das System
 <p>Mehr: <a href="doku/sicherheitsmodell.html">Sicherheitsmodell</a> · <a href="doku/kryptografie.html">Kryptografie</a> · <a href="doku/compliance-by-design.html">Compliance-by-Design</a>.</p>
 <h2 id="ki-native-plattform">KI-native Plattform<a class="anchor" href="#ki-native-plattform" aria-label="Link zu diesem Abschnitt">#</a></h2>
 <ul><li>Eigene API-Gruppe für <strong>Modelle, Modellversionen, Inferenz-Endpunkte, AI-Gateways, Budgets, Guardrails, Vektorindizes</strong> und Wissensbasen.</li><li>Inferenz-Engines (zunächst llama.cpp, dann vLLM) laufen als signierte Container hinter einem einheitlichen Adapter; dedizierte Endpunkte in MicroVMs mit durchgereichtem Beschleuniger.</li><li>Zwei Betriebsmodelle: <strong>dediziert</strong> je Mandant oder <strong>geteilt/serverless</strong> mit Abrechnung je Token – ohne mandantenübergreifenden Cache.</li><li>Beschleuniger (GPU, NPU) als Scheduler-Ressource, Scale-to-zero mit lokalem Modell-Cache, Modelle als signierte OCI-Artefakte mit Cache je Zelle.</li><li>Die Plattform selbst ist per <strong>MCP</strong> steuerbar; Agenten der Mandanten nutzen Plattform-Werkzeuge mit eingeschränkten Rechten.</li><li>KI-Compliance als Querschnitt: Modellkarten, Herkunft, Kennzeichnung, Protokollierung nach EU AI Act, Abbildung auf BSI AIC4.</li></ul>
-<p>Mehr: <a href="doku/ki-plattform.html">KI-native Plattform</a>.</p></article>
+<p>Mehr: <a href="doku/ki-plattform.html">KI-native Plattform</a>.</p></article></div></div>
 </main>
-</div>
 <footer class="site-footer">
   <div class="bar">
-    <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
-    <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
-    Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
-    <p><a href="mitmachen.html#lizenz">Lizenz</a> · <a href="mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="suche.html">Suche</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Quelloffene, dezentrale Cloud-Plattform – vom Homelab bis zum Rechenzentrum. Komponenten tragen das Präfix <code>cp</code>.</p></div>
+    <p>Dokumentation unter <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>, Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <nav aria-label="Rechtliches und Service"><p><a href="mitmachen.html#lizenz">Lizenz</a> · <a href="mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="suche.html">Suche</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p></nav>
   </div>
 </footer>
 <script src="assets/site.js" defer></script>

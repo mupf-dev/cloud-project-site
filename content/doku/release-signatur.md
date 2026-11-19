@@ -7,7 +7,7 @@ quelle: Prozessbeschreibung Release-Signatur, Update-Metadaten und Reproduzierba
 
 ## Überblick: zwei Signaturwege
 
-cloud-project signiert Releases auf zwei voneinander unabhängigen Wegen. Sie beantworten unterschiedliche Fragen
+DCP signiert Releases auf zwei voneinander unabhängigen Wegen. Sie beantworten unterschiedliche Fragen
 für unterschiedliche Prüfer.
 
 | Weg | Zweck | Schlüssel | Prüfer |

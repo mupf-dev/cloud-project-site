@@ -3,32 +3,38 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mitmachen und Lizenz · cloud-project</title>
-<meta name="description" content="Wie man zu cloud-project beitragen kann, unter welchen Lizenzen Code und Dokumentation stehen und wie Sicherheitslücken gemeldet werden.">
+<title>Mitmachen und Lizenz · Das Cloud Projekt</title>
+<meta name="description" content="Wie man zu DCP beitragen kann, unter welchen Lizenzen Code und Dokumentation stehen und wie Sicherheitslücken gemeldet werden.">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e1115">
+<link rel="canonical" href="mitmachen.html">
+<link rel="alternate" hreflang="de" href="mitmachen.html">
+<link rel="alternate" hreflang="en" href="en/contribute.html">
+<link rel="alternate" hreflang="x-default" href="mitmachen.html">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 </head>
-<body>
+<body class="k-page">
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 <header class="site-header">
   <div class="bar">
-    <a class="brand" href="index.html" aria-label="cloud-project – Startseite">
-      <img src="assets/favicon.svg" alt="" width="28" height="28"><span>cloud-project</span>
+    <a class="brand" href="index.html" aria-label="Das Cloud Projekt (DCP) – Startseite">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
     <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="index.html">Start</a></li><li><a href="funktionen.html">Funktionen</a></li><li><a href="architektur.html">Architektur</a></li><li><a href="doku/index.html">Dokumentation</a></li><li><a href="roadmap.html">Status & Roadmap</a></li><li><a href="mitmachen.html" aria-current="page">Mitmachen</a></li></ul></nav>
-    <form class="search" role="search" action="suche.html" method="get">
-      <label for="q" class="sr-only">Suche</label>
-      <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
-    </form>
+    <div class="tools">
+      <form class="search" role="search" action="suche.html" method="get">
+        <label for="q" class="sr-only">Suche</label>
+        <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+      </form>
+      <a class="lang-switch" href="en/contribute.html" hreflang="en" lang="en" aria-label="English version of this page"><span aria-hidden="true">EN</span><span class="lang-long" aria-hidden="true">English</span></a>
+    </div>
   </div>
 </header>
-<div class="page with-toc">
-<nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#mitmachen">Mitmachen</a></li><li><a href="#regeln-fuer-beitraege">Regeln für Beiträge</a></li><li><a href="#lizenz">Lizenz</a></li><li><a href="#sicherheitsluecke-melden">Sicherheitslücke melden</a></li><li><a href="#ueber-diese-website">Über diese Website</a></li></ol></nav>
 <main id="inhalt" tabindex="-1">
-<article class="doc"><h1>Mitmachen und Lizenz</h1><p class="lead">Wie man zu cloud-project beitragen kann, unter welchen Lizenzen Code und Dokumentation stehen und wie Sicherheitslücken gemeldet werden.</p><h2 id="mitmachen">Mitmachen<a class="anchor" href="#mitmachen" aria-label="Link zu diesem Abschnitt">#</a></h2>
-<p>cloud-project ist als Gemeinschaftsprojekt angelegt. Der Quellcode-Repository wird geöffnet, sobald Lizenzdateien, Sicherheitsrichtlinie und REUSE-Konformität vollständig sind. Bis dahin freuen wir uns über Rückmeldungen zu Konzepten und Architektur.</p>
+<header class="page-head"><div class="wrap"><p class="eyebrow">DCP</p><h1>Mitmachen und Lizenz</h1><p class="lead">Wie man zu DCP beitragen kann, unter welchen Lizenzen Code und Dokumentation stehen und wie Sicherheitslücken gemeldet werden.</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#mitmachen">Mitmachen</a></li><li><a href="#regeln-fuer-beitraege">Regeln für Beiträge</a></li><li><a href="#lizenz">Lizenz</a></li><li><a href="#sicherheit">Sicherheitslücke melden</a></li><li><a href="#ueber-diese-website">Über diese Website</a></li></ol></nav><div class="content"><article class="doc"><h2 id="mitmachen">Mitmachen<a class="anchor" href="#mitmachen" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>„Das Cloud Projekt“ (DCP) ist als Gemeinschaftsprojekt angelegt. Das Quellcode-Repository wird geöffnet, sobald Lizenzdateien, Sicherheitsrichtlinie und REUSE-Konformität vollständig sind. Bis dahin freuen wir uns über Rückmeldungen zu Konzepten und Architektur.</p>
 <p>Willkommen sind insbesondere:</p>
 <ul><li><strong>Rückmeldungen zu den Konzepten</strong> in der <a href="doku/index.html">Dokumentation</a> – Annahmen, Lücken, bessere Alternativen.</li><li><strong>Erfahrungen aus dem Betrieb</strong> von Homelabs, Edge-Standorten und Rechenzentren: Hardware, Netztopologien, Anforderungen aus Compliance-Prüfungen.</li><li><strong>Tests auf ungewöhnlicher Hardware</strong> (ARM-Boards, ältere Notebooks, Server mit und ohne BMC), sobald Vorabversionen verfügbar sind.</li><li><strong>Code</strong> in Rust für Agent, Rollen und Werkzeuge, TypeScript für das Portal, Dokumentation und Übersetzungen.</li></ul>
 <h2 id="regeln-fuer-beitraege">Regeln für Beiträge<a class="anchor" href="#regeln-fuer-beitraege" aria-label="Link zu diesem Abschnitt">#</a></h2>
@@ -41,21 +47,19 @@ git commit -s -m "Kurzbeschreibung"</code></pre>
 <p>Die Lizenzentscheidung ist in der <a href="doku/lizenz-governance.html">ADR Lizenz und Governance</a> begründet (angenommen 2026-11-12).</p>
 <div class="table-wrap"><table><thead><tr><th scope="col">Bestandteil</th><th scope="col">Lizenz</th></tr></thead><tbody><tr><td>Kern: Agent, Steuerungsebene, Dienste, Portal, MCP-Server, Image-Bau-Werkzeuge</td><td>GNU AGPL-3.0-or-later</td></tr><tr><td>SDKs, Client-Bibliotheken, CLI, API-Spezifikationen, MCP-Schemata</td><td>Apache-2.0 OR MIT</td></tr><tr><td>Dokumentation, Konzepte, Diagramme (auch diese Website)</td><td>CC BY 4.0</td></tr><tr><td>Code-Beispiele und Konfigurationsvorlagen</td><td>MIT-0</td></tr><tr><td>Logos und Produktname</td><td>nicht frei lizenziert, Markenrichtlinie</td></tr></tbody></table></div>
 <p>Die AGPL stellt sicher, dass Verbesserungen an der Plattform auch dann der Gemeinschaft zugutekommen, wenn veränderte Fassungen als Dienst über das Netz angeboten werden. Clients und SDKs stehen unter freizügigen Lizenzen, damit sie sich in beliebige Software einbauen lassen. Die Lizenz ist festgelegt, aber bis zur ersten Veröffentlichung juristisch abschließend zu prüfen.</p>
-<h2 id="sicherheitsluecke-melden">Sicherheitslücke melden<a class="anchor" href="#sicherheitsluecke-melden" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<h2 id="sicherheit">Sicherheitslücke melden<a class="anchor" href="#sicherheit" aria-label="Link zu diesem Abschnitt">#</a></h2>
 <p>Bitte <strong>keine öffentlichen Issues, Pull Requests oder Diskussionen</strong> für Sicherheitsprobleme.</p>
 <ul><li><strong>Bevorzugt:</strong> GitHub <em>Private Vulnerability Reporting</em> im Projekt-Repository (Reiter „Security“ → „Report a vulnerability“).</li><li><strong>Alternativ per E-Mail:</strong> die Adresse samt OpenPGP-Schlüssel wird vor dem ersten öffentlichen Release festgelegt und auch unter <code>/.well-known/security.txt</code> veröffentlicht.</li></ul>
 <div class="table-wrap"><table><thead><tr><th scope="col">Schritt</th><th scope="col">Frist</th></tr></thead><tbody><tr><td>Eingangsbestätigung</td><td>≤ 3 Werktage</td></tr><tr><td>Ersteinschätzung (CVSS v4.0)</td><td>≤ 7 Kalendertage</td></tr><tr><td>Statusmeldungen an Meldende</td><td>mindestens alle 14 Tage</td></tr><tr><td>Behebung (Ziel)</td><td>kritisch ≤ 14 Tage, hoch ≤ 30 Tage, mittel ≤ 90 Tage</td></tr><tr><td>Veröffentlichung</td><td>mit dem Fix, spätestens nach 90 Tagen Embargo</td></tr></tbody></table></div>
 <p>Aktiv ausgenutzte Schwachstellen werden nach Art. 14 des Cyber Resilience Act gemeldet. Der vollständige Ablauf steht unter <a href="doku/schwachstellenmanagement.html">Schwachstellenmanagement</a>.</p>
 <h2 id="ueber-diese-website">Über diese Website<a class="anchor" href="#ueber-diese-website" aria-label="Link zu diesem Abschnitt">#</a></h2>
-<p>Diese Seite ist statisch erzeugt – ohne Cookies, Tracking, externe Schriften oder Skripte von Drittanbietern. Die Suche läuft vollständig im Browser. Die Inhalte sind aufbereitete Fassungen der Projektdokumente und stehen unter CC BY 4.0.</p></article>
+<p>Diese Seite ist statisch erzeugt – ohne Cookies, Tracking, externe Schriften oder Skripte von Drittanbietern. Die Suche läuft vollständig im Browser. Die Inhalte sind aufbereitete Fassungen der Projektdokumente und stehen unter CC BY 4.0. Die Website gibt es auf Deutsch und auf Englisch; bei Abweichungen gilt die deutsche Fassung.</p></article></div></div>
 </main>
-</div>
 <footer class="site-footer">
   <div class="bar">
-    <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
-    <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
-    Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
-    <p><a href="mitmachen.html#lizenz">Lizenz</a> · <a href="mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="suche.html">Suche</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Quelloffene, dezentrale Cloud-Plattform – vom Homelab bis zum Rechenzentrum. Komponenten tragen das Präfix <code>cp</code>.</p></div>
+    <p>Dokumentation unter <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>, Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <nav aria-label="Rechtliches und Service"><p><a href="mitmachen.html#lizenz">Lizenz</a> · <a href="mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="suche.html">Suche</a> · <a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p></nav>
   </div>
 </footer>
 <script src="assets/site.js" defer></script>

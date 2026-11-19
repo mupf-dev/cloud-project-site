@@ -72,8 +72,10 @@ ALLOW_LINES = [
 
 
 # Pflichtangaben (§ 5 DDG) – ausschließlich auf Impressum und Datenschutzerklärung erlaubt
-IMPRESSUM_FILES = {"impressum", "datenschutz"}
+IMPRESSUM_FILES = {"impressum", "datenschutz", "legal-notice", "privacy"}  # DE + EN
 IMPRESSUM_ALLOW = re.compile(r"marc\.leunig\+cloudproject(@|&#64;|&amp;#64;)miefda\.de")
+# Anbieterdaten (Name, Anschrift) dürfen nur dort stehen – nicht auf anderen Seiten und nicht im Suchindex
+IMPRESSUM_ONLY = re.compile(r"\bleunig|burgstallstra", re.I)
 
 
 def check_ipv4(text: str) -> list[str]:
@@ -112,6 +114,9 @@ def scan_file(path: Path) -> list[str]:
             line = a.sub(" ", line)
         if path.stem in IMPRESSUM_FILES:  # Anbieterkennzeichnung: nur die Kontaktadresse ist dort erlaubt
             line = IMPRESSUM_ALLOW.sub(" ", line)
+        else:
+            for m in IMPRESSUM_ONLY.finditer(line):
+                findings.append(f"{path}:{lineno}: Impressumsdaten außerhalb von Impressum/Datenschutz: {m.group(0)!r}")
         for name, pat in PATTERNS:
             for m in pat.finditer(line):
                 findings.append(f"{path}:{lineno}: {name}: {m.group(0)!r}")

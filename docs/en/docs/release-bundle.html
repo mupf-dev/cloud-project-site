@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release bundle · Das Cloud Projekt</title>
+<meta name="description" content="Format, verification, import and distribution of the release bundle that brings a platform release into a cluster.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e1115">
+<link rel="canonical" href="../../en/docs/release-bundle.html">
+<link rel="alternate" hreflang="de" href="../../doku/release-buendel.html">
+<link rel="alternate" hreflang="en" href="../../en/docs/release-bundle.html">
+<link rel="alternate" hreflang="x-default" href="../../doku/release-buendel.html">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="k-doc">
+<a class="skip" href="#inhalt">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../../en/index.html" aria-label="Das Cloud Projekt (DCP) – Home">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menu</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Main navigation"><ul><li><a href="../../en/index.html">Home</a></li><li><a href="../../en/features.html">Features</a></li><li><a href="../../en/architecture.html">Architecture</a></li><li><a href="../../en/docs/index.html" aria-current="page">Docs</a></li><li><a href="../../en/roadmap.html">Status & roadmap</a></li><li><a href="../../en/contribute.html">Contribute</a></li></ul></nav>
+    <div class="tools">
+      <form class="search" role="search" action="../../en/search.html" method="get">
+        <label for="q" class="sr-only">Search</label>
+        <input id="q" name="q" type="search" placeholder="Search …" autocomplete="off">
+      </form>
+      <a class="lang-switch" href="../../doku/release-buendel.html" hreflang="de" lang="de" aria-label="Deutsche Fassung dieser Seite"><span aria-hidden="true">DE</span><span class="lang-long" aria-hidden="true">Deutsch</span></a>
+    </div>
+  </div>
+</header>
+<main id="inhalt" tabindex="-1">
+<header class="page-head"><div class="wrap"><nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../index.html">Home</a></li><li><a href="index.html">Docs</a></li><li><span aria-current="page">Release bundle</span></li></ol></nav><p class="eyebrow">Processes</p><h1>Release bundle</h1><p class="lead">Format, verification, import and distribution of the release bundle that brings a platform release into a cluster.</p><p class="meta">Adapted from: Process description release bundle and release manifest</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Contents of this page"><p class="toc-title">On this page</p><ol><li><a href="#purpose">Purpose</a></li><li><a href="#container-format">Container format</a></li><li><a href="#release-manifest-cp-release-v1">Release manifest cp.release/v1</a></li><li><a href="#verification">Verification</a></li><li><a href="#import-resuming-and-deduplication">Import, resuming and deduplication</a></li><li><a href="#storage-and-distribution">Storage and distribution</a></li><li><a href="#build-and-signing-process">Build and signing (process)</a></li></ol></nav><div class="content"><article class="doc"><h2 id="purpose">Purpose<a class="anchor" href="#purpose" aria-label="Link to this section">#</a></h2>
+<p>A platform release – agent, OS base, extensions and boot artifacts under one common version – reaches a cluster <strong>by import only</strong>. There is no online fetch from inside the cluster; the operator uploads a bundle via the API, command line, MCP or portal. This way updates work in isolated (air-gapped) environments exactly as they do in connected ones, and the operator makes a deliberate decision about which release enters their region.</p>
+<p>The transport format is called <code>cp.release-bundle/v1</code>. It is a single <strong>uncompressed tar archive with a fixed order</strong>. This order is the core of the design:</p>
+<ul><li>The receiver checks signatures and release rules <strong>before</strong> the large artifacts arrive. An invalid bundle is rejected after a few kilobytes.</li><li>Every artifact is hashed on receipt – streamed, without buffering the whole bundle.</li><li>Compression is deliberately not used: the images are already compressed or are verity images, and compression would prevent the random access that resuming interrupted uploads requires.</li></ul>
+<p>The signature chain itself is described in <a href="release-signing.html">Release signing</a>; how an imported release is rolled out to the nodes is described in <a href="rollout.html">Rollout controller</a>.</p>
+<h2 id="container-format">Container format<a class="anchor" href="#container-format" aria-label="Link to this section">#</a></h2>
+<p>The archive is POSIX <strong>ustar</strong> (512-byte blocks, two zero blocks at the end). The strict rules are meant to keep the parser small and its attack surface low:</p>
+<ul><li>regular files only; directory entries are skipped,</li><li>each name at most once,</li><li>no links, no PAX or GNU long names,</li><li>no paths containing <code>..</code> or a leading <code>/</code>,</li><li>sizes of 8 GiB and above in the base-256 field.</li></ul>
+<div class="table-wrap"><table><thead><tr><th scope="col">#</th><th scope="col">Entry</th><th scope="col">Required</th><th scope="col">Content</th></tr></thead><tbody><tr><td>1</td><td><code>bundle.json</code></td><td>yes</td><td>format identifier and version (informational only; the manifest is authoritative)</td></tr><tr><td>2</td><td><code>metadata/&lt;n&gt;.root.json</code></td><td>no</td><td>root rotation chain, in ascending order of root version</td></tr><tr><td>3</td><td><code>metadata/timestamp.json</code></td><td>yes</td><td>signed role <em>timestamp</em></td></tr><tr><td>4</td><td><code>metadata/snapshot.json</code></td><td>yes</td><td>signed role <em>snapshot</em></td></tr><tr><td>5</td><td><code>metadata/targets.json</code></td><td>yes</td><td>signed role <em>targets</em>: <strong>all</strong> artifacts and the manifest with length, SHA-256 and SHA-512</td></tr><tr><td>6</td><td><code>targets/release/manifest.json</code></td><td>yes</td><td>release manifest <code>cp.release/v1</code>, itself a signed target</td></tr><tr><td>7</td><td><code>targets/&lt;target&gt;</code></td><td>yes¹</td><td>every further target from <code>targets.json</code>, in any order</td></tr></tbody></table></div>
+<p>¹ A target may be missing if the receiver already holds it content-addressed (see Resuming).</p>
+<p>Target names consist of segments of letters, digits and <code>._+-</code>, separated by <code>/</code>, for example <code>os/x86-64/uki.efi</code>. The prefix <code>boot/</code> marks boot artifacts for the network boot service (see <a href="boot-adoption.html">Boot and adoption</a>). Because the format is deliberately simple, a bundle can also be created with standard tools (<code>tar --format=ustar</code>) in the order of the table; the project's release tool writes it as a stream.</p>
+<h2 id="release-manifest-cp-release-v1">Release manifest <code>cp.release/v1</code><a class="anchor" href="#release-manifest-cp-release-v1" aria-label="Link to this section">#</a></h2>
+<p>The manifest describes the release in functional terms. It is itself a target of the signed chain and is therefore protected against substitution, rollback and freezing. Example with placeholder values:</p>
+<pre><span class="code-lang">json</span><code class="lang-json">{
+  "apiVersion": "cp.release/v1",
+  "version": "1.4.2",
+  "channel": "stable",
+  "securityEpoch": 7,
+  "minVersion": "1.3.0",
+  "minAgentProtocol": 12,
+  "artifacts": [
+    { "name": "usr", "arch": "x86-64", "target": "os/x86-64/usr.raw",
+      "sha256": "…", "size": 287309824, "verityRootHash": "…" },
+    { "name": "uki", "arch": "x86-64", "target": "os/x86-64/uki.efi",
+      "sha256": "…", "size": 61440000 }
+  ],
+  "sbom": { "cyclonedx": "sha256:…" },
+  "sources": { "bundle": "sha256:…" },
+  "provenance": { "slsa": "sha256:…" },
+  "notBefore": "2026-11-10T00:00:00Z",
+  "expires": "2027-05-10T00:00:00Z"
+}</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td><code>version</code></td><td><code>MAJOR.MINOR.PATCH</code> for the entire platform release; PATCH contains only security and bug fixes</td></tr><tr><td><code>channel</code></td><td><code>stable</code>, <code>candidate</code> (pre-release testing) or <code>edge</code> (development only)</td></tr><tr><td><code>securityEpoch</code></td><td>increases with security-relevant fixes; going back below the running epoch is forbidden</td></tr><tr><td><code>minVersion</code></td><td>minimum version for a direct update path</td></tr><tr><td><code>minAgentProtocol</code></td><td>minimum agent protocol level for version negotiation</td></tr><tr><td><code>artifacts</code></td><td>name, architecture, target name in the bundle, SHA-256, size, and the root hash for verity images</td></tr><tr><td><code>sbom</code>, <code>sources</code>, <code>provenance</code></td><td>references (by hash) to the SBOM, source code archive and SLSA provenance – also targets of the bundle</td></tr><tr><td><code>notBefore</code>, <code>expires</code></td><td>validity window; prevents nodes from being held on an old manifest indefinitely</td></tr></tbody></table></div>
+<p>Unknown fields are rejected. The <code>target</code> field binds each artifact to exactly one signed target.</p>
+<h2 id="verification">Verification<a class="anchor" href="#verification" aria-label="Link to this section">#</a></h2>
+<p>Verification is <strong>identical for all delivery paths</strong> – import via the API, the agent during an update, and the installer. So there is no "more convenient" path with weaker rules.</p>
+<ol><li><strong>Signature chain</strong> against the trusted root anchor in the OS image: root rotation step by step if needed, then timestamp → snapshot → targets with signature, version reference, hash and expiry. The most recently trusted root version is recorded per region (protection against root rollback).</li><li><strong>Manifest</strong> is a signed target (length, SHA-256 and SHA-512 match).</li><li><strong>Release rules:</strong> format and version, known channel, <code>notBefore ≤ now &lt; expires</code>, <code>securityEpoch</code> at least as high as the highest epoch currently running on nodes, and <code>minVersion</code> at most the lowest running version.</li><li><strong>Artifact list = signed targets:</strong> every artifact corresponds to exactly one target with the same length and the same hashes, and every target (except the manifest) to exactly one artifact.</li><li><strong>Every received artifact</strong> is checked against length, SHA-256 <strong>and</strong> SHA-512. Only then does it become visible in storage (temporary file, <code>fsync</code>, atomic rename).</li></ol>
+<p>Errors are mapped to the usual API error classes (see <a href="api-first.html">API-first</a>): signature, format and hash errors as an invalid argument; epoch, minimum version or validity window as a failed precondition; the same version with different content as a conflict. A configurable size limit protects against oversized uploads.</p>
+<h2 id="import-resuming-and-deduplication">Import, resuming and deduplication<a class="anchor" href="#import-resuming-and-deduplication" aria-label="Link to this section">#</a></h2>
+<p>Import is an action on the region (<code>region:importArtifacts</code>). The bundle is transferred as a tar stream; for small bundles – for example via MCP – a JSON form with Base64 content is also available. Import is not a privileged action, because the signature chain decides what is accepted.</p>
+<p>With <code>validateOnly</code>, the server only verifies and additionally reports <code>missingTargets</code>, i.e. the targets it does not yet hold. The result of an import is <code>created</code>, <code>unchanged</code>, <code>validated</code> or <code>incomplete</code>.</p>
+<p><strong>Resuming</strong> after an interruption relies on content addressing: fully received artifacts are kept. The command line and the portal therefore first send only the metadata and manifest as a dry run, and then a partial bundle containing <strong>only the missing</strong> targets. Importing the same release again is harmless (<code>unchanged</code>); identical artifacts in different releases are stored only once.</p>
+<h2 id="storage-and-distribution">Storage and distribution<a class="anchor" href="#storage-and-distribution" aria-label="Link to this section">#</a></h2>
+<p>Every holding node stores releases content-addressed: artifacts and metadata files as read-only blobs keyed by SHA-256, and per version a directory with the metadata, hard links to the artifacts and a local entry listing all targets and hashes. This structure matches what the network boot service expects – a release's boot artifacts are thus available for PXE and HTTP boot without copying. In addition, the boot service serves all targets of verified releases content-addressed.</p>
+<ul><li><strong>Holders</strong> are nodes with the role <code>boot</code> or <code>control</code>; the target is two copies (or as many as there are candidates).</li><li><strong>Replication</strong> between holders runs over an internal, mutually authenticated TLS endpoint using node certificates. The receiver verifies the chain again – it does not trust the sender.</li><li><strong>Failure of a holder</strong> is detected by the cluster through the missing heartbeat; the next candidate fetches the release.</li><li>The status of the <code>Release</code> resource lists the reachable complete copies. The <a href="rollout.html">rollout controller</a> releases a target version only once the release is available and has enough holders.</li></ul>
+<p>Nodes later fetch their update from these holders. Peer-to-peer distribution between arbitrary nodes is planned for a later stage.</p>
+<h2 id="build-and-signing-process">Build and signing (process)<a class="anchor" href="#build-and-signing-process" aria-label="Link to this section">#</a></h2>
+<p>Build and signing are separate, so that private release keys never come into contact with the build environment:</p>
+<ol><li><strong>Build:</strong> binaries and OS images are built per architecture; SBOM, source code archive and provenance are generated. The result is an unsigned <strong>plan</strong> containing the manifest (exact bytes) as well as the length, SHA-256 and SHA-512 of all targets.</li><li><strong>Sign offline:</strong> a separate signing environment receives only the plan, checks that the manifest and target list match, and signs the update metadata. The large artifacts do not leave the build environment; only public data (plan, signed metadata, root files) is exchanged.</li><li><strong>Assemble the bundle:</strong> metadata, manifest and artifacts are written as a stream in the fixed order.</li><li><strong>Verify:</strong> the finished bundle goes through the same verification as on import; in addition, it is checked that the trust anchor embedded in the image matches the root used.</li></ol>
+<p>On validity: by default, a bundle's metadata is valid for as long as the manifest (<code>expires</code>), so that bundles transported offline remain importable. Protection against being frozen on an old state is provided by <code>expires</code> and <code>securityEpoch</code>. Separate roots are used for test and production; root rotation is described in <a href="release-signing.html">Release signing</a>.</p></article><nav class="pager" aria-label="More pages"><span></span><a rel="next" href="release-signing.html">Release signing <span aria-hidden="true">→</span></a></nav></div></div>
+</main>
+<footer class="site-footer">
+  <div class="bar">
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
+    <p>Documentation under <a href="https://creativecommons.org/licenses/by/4.0/deed.en" rel="license noopener">CC BY 4.0</a>, code under AGPL-3.0-or-later. No cookies, no tracking, no third-party resources.</p>
+    <nav aria-label="Legal and service"><p><a href="../../en/contribute.html#license">License</a> · <a href="../../en/contribute.html#security">Report a vulnerability</a> · <a href="../../en/search.html">Search</a> · <a href="../../en/legal-notice.html">Legal notice</a> · <a href="../../en/privacy.html">Privacy policy</a></p></nav>
+  </div>
+</footer>
+<script src="../../assets/site.js" defer></script>
+</body>
+</html>

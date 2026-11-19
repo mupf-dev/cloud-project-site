@@ -1,4 +1,4 @@
-# Inhaltsregeln für content/doku/*.md
+# Inhaltsregeln für content/doku/*.md (und content/en/doku/*.md)
 
 Diese Seiten sind **öffentlich**. Sie sind aufbereitete Fassungen der internen Konzeptdokumente,
 keine Kopien.
@@ -26,9 +26,17 @@ Danach Markdown-Teilmenge:
 - Zitate/Hinweise mit `> `
 - Codeblöcke mit ``` nur für kurze Konfig-/CLI-Beispiele (`sh`, `yaml`, `toml`, `json`, `text`)
 
+## Englische Fassungen
+
+- Ablage unter `content/en/seiten/` bzw. `content/en/doku/` mit englischem Dateinamen
+  (z. B. `netzwerk.md` → `network.md`), Kopffeld `de: netzwerk` zusätzlich.
+- `group`, `order`, `toc`, `noindex`, `hero` unverändert übernehmen; Links auf englische Slugs
+  (Hauptseiten verlinken Doku als `docs/<slug>.html`).
+- Projektname: „Das Cloud Projekt“ bzw. „DCP“ wird nicht übersetzt.
+
 ## Inhalt
 
-- Deutsch, sachlich, verständlich für Fachpublikum (Betreiber, Entwickler). Kernentscheidungen,
+- Deutsch (bzw. Englisch in `content/en/`), sachlich, verständlich für Fachpublikum (Betreiber, Entwickler). Kernentscheidungen,
   Begründungen, Abläufe und Begriffe erhalten; Details, die nur intern relevant sind, weglassen.
 - Umfang je Seite etwa 800–2500 Wörter. Lieber gut strukturiert als vollständig.
 

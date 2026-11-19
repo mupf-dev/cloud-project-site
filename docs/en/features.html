@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Features · Das Cloud Projekt</title>
+<meta name="description" content="Which services, roles and platform capabilities DCP provides – from the node lifecycle through networking, storage and identity to AI inference.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0e1115">
+<link rel="canonical" href="../en/features.html">
+<link rel="alternate" hreflang="de" href="../funktionen.html">
+<link rel="alternate" hreflang="en" href="../en/features.html">
+<link rel="alternate" hreflang="x-default" href="../funktionen.html">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body class="k-page">
+<a class="skip" href="#inhalt">Skip to content</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../en/index.html" aria-label="Das Cloud Projekt (DCP) – Home">
+      <svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><span class="brand-text"><span class="brand-name">Das Cloud Projekt</span><span class="brand-sub">DCP · alpha</span></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menu</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Main navigation"><ul><li><a href="../en/index.html">Home</a></li><li><a href="../en/features.html" aria-current="page">Features</a></li><li><a href="../en/architecture.html">Architecture</a></li><li><a href="../en/docs/index.html">Docs</a></li><li><a href="../en/roadmap.html">Status & roadmap</a></li><li><a href="../en/contribute.html">Contribute</a></li></ul></nav>
+    <div class="tools">
+      <form class="search" role="search" action="../en/search.html" method="get">
+        <label for="q" class="sr-only">Search</label>
+        <input id="q" name="q" type="search" placeholder="Search …" autocomplete="off">
+      </form>
+      <a class="lang-switch" href="../funktionen.html" hreflang="de" lang="de" aria-label="Deutsche Fassung dieser Seite"><span aria-hidden="true">DE</span><span class="lang-long" aria-hidden="true">Deutsch</span></a>
+    </div>
+  </div>
+</header>
+<main id="inhalt" tabindex="-1">
+<header class="page-head"><div class="wrap"><p class="eyebrow">DCP</p><h1>Features</h1><p class="lead">Which services, roles and platform capabilities DCP provides – from the node lifecycle through networking, storage and identity to AI inference.</p></div></header><div class="page with-toc"><nav class="toc" aria-label="Contents of this page"><p class="toc-title">On this page</p><ol><li><a href="#services-like-a-hyperscaler">Services like a hyperscaler</a></li><li><a href="#three-equivalent-access-paths">Three equivalent access paths</a></li><li><a href="#roles">Roles</a></li><li><a href="#node-lifecycle">Node lifecycle</a></li><li><a href="#updates-and-releases">Updates and releases</a></li><li><a href="#platform-dns">Platform DNS</a></li><li><a href="#identity-and-tenants">Identity and tenants</a></li><li><a href="#storage">Storage</a></li><li><a href="#network">Network</a></li><li><a href="#security-and-compliance">Security and compliance</a></li><li><a href="#ai-native-platform">AI-native platform</a></li></ol></nav><div class="content"><article class="doc"><h2 id="services-like-a-hyperscaler">Services like a hyperscaler<a class="anchor" href="#services-like-a-hyperscaler" aria-label="Link to this section">#</a></h2>
+<p>The platform offers core services modeled on the well-known public clouds. All services are resources of the same API and can therefore be used equally through the portal, the API and MCP.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Category</th><th scope="col">Service</th><th scope="col">Roughly equivalent to</th></tr></thead><tbody><tr><td>Compute</td><td>Virtual machines (Cloud Hypervisor/KVM)</td><td>AWS EC2 · Azure VMs · Compute Engine</td></tr><tr><td>Compute</td><td>Container Instances (MicroVM-isolated)</td><td>Fargate · Azure Container Instances · Cloud Run</td></tr><tr><td>Compute</td><td>Managed Kubernetes</td><td>EKS · AKS · GKE</td></tr><tr><td>Storage</td><td>Block volumes</td><td>EBS · Managed Disks · Persistent Disk</td></tr><tr><td>Storage</td><td>Object storage (S3-compatible)</td><td>S3 · Blob Storage · Cloud Storage</td></tr><tr><td>Storage</td><td>File storage (NFS)</td><td>EFS · Azure Files · Filestore</td></tr><tr><td>Network</td><td>VPCs, subnets, security groups, load balancers, floating IPs</td><td>VPC · VNet · VPC</td></tr><tr><td>Network</td><td>Platform DNS with DNSSEC</td><td>Route 53 · Azure DNS · Cloud DNS</td></tr><tr><td>Identity</td><td>Tenants, projects, users, roles, service accounts, API keys</td><td>IAM · Entra ID · Cloud IAM</td></tr><tr><td>Platform</td><td>Registry, key management (KMS), monitoring, audit log</td><td>ECR · Key Vault · CloudWatch · CloudTrail</td></tr><tr><td>AI</td><td>Model catalog, inference endpoints, AI gateway, vector search</td><td>Bedrock · Azure AI Foundry · Vertex AI</td></tr></tbody></table></div>
+<p>Further services – databases, secrets, queues, serverless functions, GPU/NPU pools – will follow in later phases. A detailed comparison with AWS, Azure and Google Cloud is available in the <a href="docs/hyperscaler-analysis.html">hyperscaler feature analysis</a>.</p>
+<h2 id="three-equivalent-access-paths">Three equivalent access paths<a class="anchor" href="#three-equivalent-access-paths" aria-label="Link to this section">#</a></h2>
+<p>Every feature is available through the <strong>REST API (OpenAPI)</strong>, the <strong>web portal</strong> and <strong>MCP</strong> (Model Context Protocol, for AI assistants and agents) – at every level: platform, tenant, project, resource. The portal and the MCP tools are derived from the same API schema; a CI check prevents any access path from gaining features the others lack. In addition there is the command-line tool <code>cpctl</code>. Details: <a href="docs/api-first.html">API-first principle</a>.</p>
+<pre><span class="code-lang">yaml</span><code class="lang-yaml"># Example resource (simplified)
+apiVersion: compute.cloud-project.io/v1
+kind: VirtualMachine
+metadata:
+  name: web-01
+  parent: cp:global:tenant/acme/project/shop
+  labels: { env: prod }
+spec:                       # desired state
+  machineType: small-2c-4g
+  arch: any                 # arm64 | x86_64 | any
+  image: cp:global:image/debian-13
+  network: { vpc: default, subnet: web }
+status:                     # actual state, written only by the system
+  phase: Running</code></pre>
+<h2 id="roles">Roles<a class="anchor" href="#roles" aria-label="Link to this section">#</a></h2>
+<p>Every node runs the agent <code>cp-agent</code>. It takes on additional tasks through <strong>roles</strong>, which are assigned manually, by rule (for example "all nodes with at least two disks → <code>storage-block</code>") or on the scheduler's recommendation.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Role</th><th scope="col">Task</th></tr></thead><tbody><tr><td><code>agent</code></td><td>implicit on every node: lifecycle, local API, portal and MCP, forwarding</td></tr><tr><td><code>control</code></td><td>control group (Raft) of a cell</td></tr><tr><td><code>witness</code></td><td>quorum vote only, e.g. on a small Raspberry Pi</td></tr><tr><td><code>boot</code></td><td>network boot service: proxyDHCP, TFTP/HTTP boot, image cache</td></tr><tr><td><code>dns</code></td><td>platform DNS: authoritative zones, DNSSEC, virtual IPs</td></tr><tr><td><code>identity</code></td><td>OIDC/OAuth authorization server, users, tenants, federation</td></tr><tr><td><code>kms</code></td><td>key management, tenant keys</td></tr><tr><td><code>network-gateway</code></td><td>north-south traffic, NAT, load balancers, floating IPs</td></tr><tr><td><code>compute-vm</code></td><td>virtual machines</td></tr><tr><td><code>compute-container</code></td><td>Container Instances in MicroVMs</td></tr><tr><td><code>kubernetes</code></td><td>Managed Kubernetes for tenants</td></tr><tr><td><code>storage-block</code></td><td>block volumes</td></tr><tr><td><code>storage-object</code></td><td>S3-compatible object storage</td></tr><tr><td><code>observability</code></td><td>metrics, logs, traces</td></tr></tbody></table></div>
+<h2 id="node-lifecycle">Node lifecycle<a class="anchor" href="#node-lifecycle" aria-label="Link to this section">#</a></h2>
+<p>A node goes through a clearly defined lifecycle. Unknown hardware <strong>never automatically</strong> gets access to tenant data – only adoption assigns it an identity.</p>
+<figure class="diagram" role="group" aria-labelledby="lz-cap">
+<svg viewBox="0 0 860 330" role="img" aria-labelledby="lz-t lz-d">
+<title id="lz-t">State diagram of the node lifecycle</title>
+<desc id="lz-d">Discovered, Inventoried, Pending, Adopted, Provisioned, Active. From Active to Maintenance and back, to Degraded and back through self-healing. From any adopted state to Quarantine. From Maintenance or Quarantine to Decommissioned. Pending can also be Rejected.</desc>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="box" x="10" y="40" width="110" height="44" rx="8"/><text x="65" y="67" text-anchor="middle">Discovered</text>
+<rect class="box" x="150" y="40" width="130" height="44" rx="8"/><text x="215" y="67" text-anchor="middle">Inventoried</text>
+<rect class="box4" x="310" y="40" width="110" height="44" rx="8"/><text x="365" y="67" text-anchor="middle">Pending</text>
+<rect class="box2" x="450" y="40" width="110" height="44" rx="8"/><text x="505" y="67" text-anchor="middle">Adopted</text>
+<rect class="box2" x="590" y="40" width="140" height="44" rx="8"/><text x="660" y="67" text-anchor="middle">Provisioned</text>
+<rect class="box3" x="590" y="150" width="140" height="44" rx="8"/><text x="660" y="177" text-anchor="middle" class="b">Active</text>
+<rect class="box" x="760" y="150" width="90" height="44" rx="8"/><text x="805" y="177" text-anchor="middle">Maintenance</text>
+<rect class="box" x="450" y="150" width="110" height="44" rx="8"/><text x="505" y="177" text-anchor="middle">Degraded</text>
+<rect class="box4" x="590" y="260" width="140" height="44" rx="8"/><text x="660" y="287" text-anchor="middle">Quarantine</text>
+<rect class="box" x="760" y="260" width="90" height="44" rx="8"/><text x="805" y="287" text-anchor="middle" class="s">Decommissioned</text>
+<rect class="box" x="310" y="150" width="110" height="44" rx="8"/><text x="365" y="177" text-anchor="middle">Rejected</text>
+<path class="ln" d="M120 62 H148" marker-end="url(#ah)"/>
+<path class="ln" d="M280 62 H308" marker-end="url(#ah)"/>
+<path class="ln" d="M420 62 H448" marker-end="url(#ah)"/><text x="434" y="32" text-anchor="middle" class="s">Approval</text>
+<path class="ln dash" d="M215 40 V20 H505 V38" marker-end="url(#ah)"/><text x="360" y="15" text-anchor="middle" class="s">Auto-adopt rule</text>
+<path class="ln" d="M560 62 H588" marker-end="url(#ah)"/>
+<path class="ln" d="M660 84 V148" marker-end="url(#ah)"/><text x="666" y="122" class="s">Roles assigned, healthy</text>
+<path class="ln" d="M730 165 H758" marker-end="url(#ah)"/><path class="ln" d="M758 182 H732" marker-end="url(#ah)"/>
+<path class="ln" d="M590 165 H562" marker-end="url(#ah)"/><path class="ln" d="M562 182 H588" marker-end="url(#ah)"/><text x="575" y="212" text-anchor="middle" class="s">Self-healing</text>
+<path class="ln" d="M365 84 V148" marker-end="url(#ah)"/><text x="371" y="122" class="s">Rejection</text>
+<path class="ln" d="M660 194 V258" marker-end="url(#ah)"/><text x="666" y="232" class="s">Integrity in doubt</text>
+<path class="ln dash" d="M505 194 V282 H588" marker-end="url(#ah)"/>
+<path class="ln" d="M730 282 H758" marker-end="url(#ah)"/>
+<path class="ln" d="M805 194 V258" marker-end="url(#ah)"/><text x="811" y="232" class="s">Drain</text>
+</svg>
+<figcaption id="lz-cap">Node lifecycle (simplified). Quarantine can be reached from any adopted state; returning requires fresh attestation and human approval.</figcaption>
+</figure>
+<ul><li><strong>Discover:</strong> A new node boots over the network (PXE/HTTP boot, Raspberry Pi network boot) or from a USB stick into an in-memory discovery system. It writes nothing to disks and reports a hardware profile.</li><li><strong>Adopt:</strong> Approval via portal, API or MCP – protected by a confirmation code and, at higher expansion stages, additionally by TPM attestation. The node's private key never leaves the node.</li><li><strong>Provision:</strong> Installation of the signed OS image (or diskless operation), issuance of the node certificate, admission to the underlay network and gossip.</li><li><strong>Operate:</strong> Assign roles, maintenance with drain, self-healing on faults.</li><li><strong>Retire:</strong> Verifiable erasure, revocation of the certificate, rotation of the gossip keys – with proof of erasure for compliance.</li></ul>
+<p>More: <a href="docs/boot-adoption.html">Boot and adoption</a>.</p>
+<h2 id="updates-and-releases">Updates and releases<a class="anchor" href="#updates-and-releases" aria-label="Link to this section">#</a></h2>
+<ul><li><strong>Immutable OS image (cpOS):</strong> <code>/usr</code> is read-only and protected by dm-verity, <code>/</code> is ephemeral, state lives in an encrypted partition.</li><li><strong>A/B updates with automatic rollback:</strong> The update is written to the inactive slot. The new version only takes effect once a <strong>health gate</strong> reports green after the reboot; otherwise the node falls back to the old slot on its own after a few attempts.</li><li><strong>Signed release bundles:</strong> Images, extensions and the agent are delivered as a bundle with a manifest, checksums, SBOM and signatures; update metadata follows the principles of TUF (The Update Framework) with offline root keys.</li><li><strong>Rollout controller:</strong> Updates roll out in waves with a canary stage, maintenance windows and <code>maxUnavailable</code>. At most one voter per cell is updated at a time, the leader last. If a gate fails, the rollout stops.</li></ul>
+<p>More: <a href="docs/os-image.html">OS image</a> · <a href="docs/rollout.html">Rollout</a> · <a href="docs/release-bundle.html">Release bundle</a> · <a href="docs/release-signing.html">Release signing</a>.</p>
+<h2 id="platform-dns">Platform DNS<a class="anchor" href="#platform-dns" aria-label="Link to this section">#</a></h2>
+<p>The <code>dns</code> role (service <code>cp-dnsd</code>) answers authoritatively for the names of the platform and the tenants, signs zones with <strong>DNSSEC</strong>, assigns <strong>virtual IP addresses (VIPs)</strong> for platform services such as the portal and the API, and protects itself against abuse with rate limiting. Within tenant networks, every host answers DNS, DHCP and metadata locally – with no central service in the data path. More: <a href="docs/dns.html">Platform DNS</a>.</p>
+<h2 id="identity-and-tenants">Identity and tenants<a class="anchor" href="#identity-and-tenants" aria-label="Link to this section">#</a></h2>
+<ul><li>Hierarchy <strong>platform → tenant → project → resource</strong>, optionally with folders inside a tenant.</li><li>A dedicated, lean <strong>OIDC/OAuth 2.1 authorization server</strong> with <strong>passkeys first</strong> and federation with existing identity providers (OIDC/SAML).</li><li>Short-lived, sender-constrained tokens that are verified locally on every node. Authorization via a Zanzibar-style relationship store plus <strong>Cedar</strong> policies for conditions and guardrails.</li><li>Strict separation between operator and tenant content: operators see metadata; content only through a justified, time-limited and logged access request.</li><li>AI agents are a separate actor type; they act with the intersection of user permissions, token scope and agent guardrails.</li><li>Tenant deletion with <strong>crypto-shredding</strong> and a signed proof of deletion.</li></ul>
+<p>More: <a href="docs/identity.html">Tenants, identity and permissions</a>.</p>
+<h2 id="storage">Storage<a class="anchor" href="#storage" aria-label="Link to this section">#</a></h2>
+<ul><li><strong>Block volumes</strong> over a dedicated Rust data path: local (dm-thin + dm-crypt) and replicated (two to three copies) – the same path from 2 to thousands of nodes.</li><li>Metadata in the cell's existing Raft group; user data never goes through consensus.</li><li><strong>Tenant encryption on the compute node:</strong> storage nodes only see ciphertext.</li><li><strong>Object storage</strong>, S3-compatible, behind a dedicated S3 front end with permission checks and quotas.</li><li><strong>File storage</strong> via NFS on replicated volumes, in the network of the respective VPC.</li><li>Placement across failure domains; a maturity gate before replicated volumes are used for tenant data.</li></ul>
+<p>More: <a href="docs/storage.html">Storage concept</a>.</p>
+<h2 id="network">Network<a class="anchor" href="#network" aria-label="Link to this section">#</a></h2>
+<ul><li><strong>Underlay:</strong> one WireGuard interface per node, IPv6-only inside; peers come exclusively from the replicated state. Additionally, a pre-shared key from a post-quantum scheme.</li><li><strong>Tenant overlay <code>cp-vnet</code>:</strong> its own control logic in the agent, Linux kernel data path (VRF per VPC, VXLAN inside the WireGuard tunnel, nftables) – no second consensus database.</li><li><strong>Security groups</strong> are stateful, with inbound traffic blocked by default.</li><li><strong>North-south traffic</strong> via the <code>network-gateway</code> role: NAT, floating IPs, L4 load balancers; advertised via Layer 2 in a homelab and via BGP in a data center.</li><li>Three expansion stages: <code>flat</code> (a single LAN), <code>vlan</code>, <code>routed</code> (L3 to the host).</li></ul>
+<p>More: <a href="docs/network.html">Network architecture</a>.</p>
+<h2 id="security-and-compliance">Security and compliance<a class="anchor" href="#security-and-compliance" aria-label="Link to this section">#</a></h2>
+<ul><li><strong>Chain of trust</strong> from Secure Boot with the installation's own keys through Measured Boot and TPM-bound disk encryption to mTLS between all services.</li><li><strong>Node identity</strong> with short-lived certificates from an internal PKI, trust levels T0–T4, remote attestation.</li><li><strong>Cryptography according to BSI TR-02102</strong>, crypto agility and a roadmap for post-quantum schemes.</li><li><strong>Complete audit trail</strong> of every change, break-glass procedure with logging.</li><li><strong>Compliance by design:</strong> 36 architecture guidelines, a requirements catalog drawn from ISO 27001, BSI IT-Grundschutz, BSI C5, GDPR, NIS2 and the Cyber Resilience Act; evidence becomes exportable.</li><li><strong>Supply chain:</strong> reproducible builds, an SBOM per artifact, signed releases, VEX for vulnerability assessments.</li></ul>
+<p>More: <a href="docs/security-model.html">Security model</a> · <a href="docs/cryptography.html">Cryptography</a> · <a href="docs/compliance-by-design.html">Compliance by design</a>.</p>
+<h2 id="ai-native-platform">AI-native platform<a class="anchor" href="#ai-native-platform" aria-label="Link to this section">#</a></h2>
+<ul><li>A dedicated API group for <strong>models, model versions, inference endpoints, AI gateways, budgets, guardrails, vector indexes</strong> and knowledge bases.</li><li>Inference engines (llama.cpp first, then vLLM) run as signed containers behind a unified adapter; dedicated endpoints run in MicroVMs with a passed-through accelerator.</li><li>Two operating models: <strong>dedicated</strong> per tenant or <strong>shared/serverless</strong> with per-token billing – without a cross-tenant cache.</li><li>Accelerators (GPU, NPU) as a scheduler resource, scale-to-zero with a local model cache, models as signed OCI artifacts with a cache per cell.</li><li>The platform itself can be controlled via <strong>MCP</strong>; tenants' agents use platform tools with restricted permissions.</li><li>AI compliance as a cross-cutting concern: model cards, provenance, labeling, logging under the EU AI Act, mapping to BSI AIC4.</li></ul>
+<p>More: <a href="docs/ai-platform.html">AI-native platform</a>.</p></article></div></div>
+</main>
+<footer class="site-footer">
+  <div class="bar">
+    <div class="foot-brand"><svg class="logo" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="6" class="logo-bg"/><path d="M9.5 20.5a4.6 4.6 0 0 1 .5-9.15A6.6 6.6 0 0 1 22.6 12.6a4 4 0 0 1-.5 7.9Z" class="logo-cloud"/><g class="logo-dots"><circle cx="11" cy="25" r="1.5"/><circle cx="16" cy="25" r="1.5"/><circle cx="21" cy="25" r="1.5"/></g><path d="M11 20.5V23.5M16 20.5V23.5M21 20.5V23.5" class="logo-wire"/></svg><p><strong>Das Cloud Projekt</strong> (DCP) – Open-source, decentralized cloud platform – from homelab to data center. Components carry the prefix <code>cp</code>.</p></div>
+    <p>Documentation under <a href="https://creativecommons.org/licenses/by/4.0/deed.en" rel="license noopener">CC BY 4.0</a>, code under AGPL-3.0-or-later. No cookies, no tracking, no third-party resources.</p>
+    <nav aria-label="Legal and service"><p><a href="../en/contribute.html#license">License</a> · <a href="../en/contribute.html#security">Report a vulnerability</a> · <a href="../en/search.html">Search</a> · <a href="../en/legal-notice.html">Legal notice</a> · <a href="../en/privacy.html">Privacy policy</a></p></nav>
+  </div>
+</footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

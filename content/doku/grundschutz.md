@@ -1,5 +1,5 @@
 title: Grundschutz-Modellierung
-summary: Wie cloud-project den Teil-Informationsverbund „Plattform“ aus Herstellersicht nach Grundschutz++ modelliert, Anforderungen auf Komponenten und Nachweise abbildet und Betreibern eine Schutzbedarfs-Vorlage liefert.
+summary: Wie DCP den Teil-Informationsverbund „Plattform“ aus Herstellersicht nach Grundschutz++ modelliert, Anforderungen auf Komponenten und Nachweise abbildet und Betreibern eine Schutzbedarfs-Vorlage liefert.
 group: konzept
 order: 170
 quelle: Konzept 66 (IT-Grundschutz-Modellierung)
@@ -43,7 +43,7 @@ Konfiguration, Architektur, Entwicklung und Notfallmanagement. Jede Anforderung 
 `erhöht`), ihre Wirkung auf die Schutzziele, zugeordnete Gefährdungen, Zielobjektkategorien und teils Parameter, die der
 Betreiber festlegt. Rund 140 Anforderungen tragen das Tag **„Produktbeschreibung“** – genau die Anforderungen, die ein
 Hersteller als OSCAL-Komponentendefinition bereitstellen kann. Sie bilden den Pflichtumfang der Komponentendefinition von
-cloud-project.
+DCP.
 
 Etwa ein Drittel der Anforderungen hat keine Zielobjektkategorie; das sind überwiegend ISMS- und Organisationsanforderungen,
 die für den gesamten Verbund des Betreibers gelten. Hier liefert die Plattform nur **Datenquellen**: Umsetzungsstatus aus der

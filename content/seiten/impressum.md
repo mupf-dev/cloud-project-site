@@ -22,7 +22,7 @@ Marc André Leunig, Anschrift wie oben.
 
 ## Hinweise
 
-cloud-project ist ein nicht kommerzielles Open-Source-Projekt. Die Inhalte dieser Website wurden
+„Das Cloud Projekt“ (DCP) ist ein nicht kommerzielles Open-Source-Projekt. Die Inhalte dieser Website wurden
 sorgfältig erstellt; für Vollständigkeit, Richtigkeit und Aktualität wird keine Gewähr übernommen.
 Für die Inhalte verlinkter externer Seiten sind ausschließlich deren Betreiber verantwortlich.
 
