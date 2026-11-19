@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release-Signatur · cloud-project</title>
+<meta name="description" content="Zwei Signaturwege für Releases, das Format der Update-Metadaten nach dem TUF-Prinzip, die Abläufe und die Reproduzierbarkeit der Builds.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html" aria-label="cloud-project – Startseite">
+      <img src="../assets/favicon.svg" alt="" width="28" height="28"><span>cloud-project</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="../index.html">Start</a></li><li><a href="../funktionen.html">Funktionen</a></li><li><a href="../architektur.html">Architektur</a></li><li><a href="../doku/index.html" aria-current="page">Dokumentation</a></li><li><a href="../roadmap.html">Status & Roadmap</a></li><li><a href="../mitmachen.html">Mitmachen</a></li></ul></nav>
+    <form class="search" role="search" action="../suche.html" method="get">
+      <label for="q" class="sr-only">Suche</label>
+      <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+    </form>
+  </div>
+</header>
+<div class="page with-toc">
+<nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#ueberblick-zwei-signaturwege">Überblick: zwei Signaturwege</a></li><li><a href="#update-metadaten-nach-dem-tuf-prinzip">Update-Metadaten nach dem TUF-Prinzip</a></li><li><a href="#ablaeufe">Abläufe</a></li><li><a href="#reproduzierbarkeit">Reproduzierbarkeit</a></li><li><a href="#sbom">SBOM</a></li><li><a href="#sicherheit-und-compliance">Sicherheit und Compliance</a></li></ol></nav>
+<main id="inhalt" tabindex="-1">
+<nav class="crumbs" aria-label="Brotkrumen"><a href="../index.html">Start</a> › <a href="index.html">Dokumentation</a> › <span>Release-Signatur</span></nav><article class="doc"><h1>Release-Signatur</h1><p class="lead">Zwei Signaturwege für Releases, das Format der Update-Metadaten nach dem TUF-Prinzip, die Abläufe und die Reproduzierbarkeit der Builds.</p><p class="meta">Aufbereitet aus: Prozessbeschreibung Release-Signatur, Update-Metadaten und Reproduzierbarkeit</p><h2 id="ueberblick-zwei-signaturwege">Überblick: zwei Signaturwege<a class="anchor" href="#ueberblick-zwei-signaturwege" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>cloud-project signiert Releases auf zwei voneinander unabhängigen Wegen. Sie beantworten unterschiedliche Fragen für unterschiedliche Prüfer.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Weg</th><th scope="col">Zweck</th><th scope="col">Schlüssel</th><th scope="col">Prüfer</th></tr></thead><tbody><tr><td><strong>Sigstore/cosign keyless</strong></td><td>öffentliche Releases; Nachweis „gebaut von genau diesem CI-Workflow“</td><td>kurzlebiges Zertifikat aus der OIDC-Identität des Workflows, Eintrag im öffentlichen Transparenzlog; zusätzlich SLSA-Provenienz</td><td>Menschen, Paketierer, Betreiber vor der Installation</td></tr><tr><td><strong>Offline-Schlüssel ECDSA P-384</strong> (TUF-Muster)</td><td>Update-Kette der Knoten</td><td>Root und Targets offline, Snapshot und Timestamp kurzlebig</td><td>Agent und Installer auf jedem Knoten – <strong>offline</strong>, ohne Netz und ohne Sigstore</td></tr></tbody></table></div>
+<p>Die Knoten vertrauen <strong>ausschließlich</strong> dem im OS-Image eingebetteten Root der Update-Kette. Sigstore ist eine zusätzliche, öffentliche Transparenzschicht, aber keine Laufzeitabhängigkeit: Ein Cluster ohne Internetzugang prüft Updates genauso streng wie ein vernetzter. In einer späteren Phase kommt ML-DSA-87 als zweite, post-quantensichere Signatur je Umschlag hinzu (siehe <a href="kryptografie.html">Kryptografie</a>).</p>
+<h2 id="update-metadaten-nach-dem-tuf-prinzip">Update-Metadaten nach dem TUF-Prinzip<a class="anchor" href="#update-metadaten-nach-dem-tuf-prinzip" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Die Update-Kette folgt dem Muster von <em>The Update Framework</em> (TUF) mit vier Rollen. Jede Rolle hat eigene Schlüssel, eigene Schwellwerte und eigene Ablaufzeiten – eine kompromittierte Rolle allein genügt nicht, um Knoten ein manipuliertes Update unterzuschieben.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Datei</th><th scope="col">Rolle</th><th scope="col">Inhalt</th><th scope="col">Standard-Ablauf</th><th scope="col">Schlüssel</th></tr></thead><tbody><tr><td><code>root.json</code></td><td>root</td><td>alle öffentlichen Schlüssel, je Rolle Schlüssel-IDs und Schwellwert</td><td>365 Tage</td><td>offline, im Echtbetrieb <em>k</em> von <em>n</em></td></tr><tr><td><code>targets.json</code></td><td>targets</td><td>Zielname → Länge, SHA-256, SHA-512</td><td>90 Tage</td><td>offline (Release-Schlüssel)</td></tr><tr><td><code>snapshot.json</code></td><td>snapshot</td><td>Verweis auf <code>targets.json</code> (Version, Länge, Hashes)</td><td>30 Tage</td><td>Release-Infrastruktur</td></tr><tr><td><code>timestamp.json</code></td><td>timestamp</td><td>Verweis auf <code>snapshot.json</code></td><td>7 Tage</td><td>Release-Infrastruktur, häufig neu signiert</td></tr><tr><td><code>&lt;n&gt;.root.json</code></td><td>root</td><td>frühere/neue Root-Versionen für die Rotationskette</td><td>–</td><td>alter <strong>und</strong> neuer Root</td></tr></tbody></table></div>
+<p>Für Release-Bündel, die offline transportiert werden, können die Metadaten so lange gültig sein wie das Release-Manifest (siehe <a href="release-buendel.html">Release-Bündel</a>).</p>
+<h3 id="umschlag-dsse">Umschlag (DSSE)<a class="anchor" href="#umschlag-dsse" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Jede Metadatei ist ein DSSE-Umschlag (<em>Dead Simple Signing Envelope</em>): Typangabe, Base64-kodierte Nutzlast und eine Liste von Signaturen mit Schlüssel-ID. Signiert wird die <em>Pre-Authentication Encoding</em> aus Typ und Nutzlast. Dadurch entfällt kanonisches JSON: Geprüft werden exakt die signierten Bytes, <strong>erst danach</strong> wird geparst – und dabei werden unbekannte Felder abgewiesen. Die Schlüssel-ID ist der SHA-256 des öffentlichen Punkts.</p>
+<pre><span class="code-lang">json</span><code class="lang-json">{
+  "payloadType": "application/vnd.cloud-project.update-metadata+json",
+  "payload": "&lt;Base64 der JSON-Nutzlast&gt;",
+  "signatures": [ { "keyid": "&lt;hex&gt;", "sig": "&lt;Base64&gt;" } ]
+}</code></pre>
+<p>Zeitangaben sind strikt UTC im Format <code>YYYY-MM-DDTHH:MM:SSZ</code>. Die Versionsnummer von targets, snapshot und timestamp leitet sich standardmäßig aus der Commitzeit ab und ist damit monoton.</p>
+<h3 id="pruefablauf-auf-dem-knoten">Prüfablauf auf dem Knoten<a class="anchor" href="#pruefablauf-auf-dem-knoten" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<ol><li><strong>Root laden</strong> (eingebettet bzw. zuletzt vertraut): muss sich selbst mit Schwellwert signieren; Version nicht kleiner als die gespeicherte.</li><li><strong>Root-Kette</strong> abarbeiten: jede neue Root-Version genau eine höher und mit dem Schwellwert <strong>des alten und des neuen</strong> Roots signiert. Wechseln Timestamp- oder Snapshot-Schlüssel, werden deren gespeicherte Versionen zurückgesetzt (Erholung nach einem Fast-Forward-Angriff).</li><li><strong>Ablauf des Roots</strong> erst nach der Kette prüfen – so kann auch ein abgelaufener Anker noch rotiert werden.</li><li><strong>timestamp:</strong> Signatur, Versionsmonotonie, nicht abgelaufen.</li><li><strong>snapshot:</strong> Länge und Hashes laut timestamp, Signatur, passende Version, nicht abgelaufen.</li><li><strong>targets:</strong> Länge und Hashes laut snapshot, Signatur, passende Version, nicht abgelaufen.</li><li><strong>Artefakt:</strong> Länge, SHA-256 und SHA-512 laut targets.</li><li><strong>Versionen dauerhaft speichern</strong>, damit der Rollback-Schutz auch über Neustarts hinweg wirkt.</li></ol>
+<div class="table-wrap"><table><thead><tr><th scope="col">Angriff</th><th scope="col">Abwehr</th></tr></thead><tbody><tr><td>Rollback auf alte Metadaten</td><td>Versionsmonotonie, persistiert</td></tr><tr><td>Einfrieren auf altem Stand (Freeze)</td><td>Ablaufzeiten, kurzlebiger Timestamp</td></tr><tr><td>Mix-and-Match verschiedener Stände</td><td>Hashbindung timestamp → snapshot → targets</td></tr><tr><td>Endlos-Daten</td><td>feste Größengrenze für Metadateien</td></tr><tr><td>Schlüsselkompromittierung</td><td>Rollentrennung, Schwellwerte, Root-Rotation</td></tr><tr><td>doppelte Signaturen</td><td>nur verschiedene Schlüssel zählen zum Schwellwert</td></tr></tbody></table></div>
+<p><strong>Bewusste Vereinfachungen gegenüber TUF 1.0:</strong> keine delegierten Targets, kein <em>consistent snapshot</em>, DSSE statt kanonischem JSON, Schlüssel-ID über die Punktbytes. Interoperabilität mit fremden TUF-Clients ist kein Ziel; das Format ist über <code>spec_version</code> versioniert.</p>
+<h2 id="ablaeufe">Abläufe<a class="anchor" href="#ablaeufe" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<h3 id="entwicklung-und-ci">Entwicklung und CI<a class="anchor" href="#entwicklung-und-ci" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>In der Entwicklung und in der CI wird mit einem <strong>flüchtigen Einmalschlüssel</strong> signiert, der nach dem Lauf gelöscht wird. Das Werkzeug verweigert Schlüsselverzeichnisse innerhalb des Repositorys, damit keine Schlüssel versehentlich eingecheckt werden. Die Prüfung läuft mit derselben Bibliothek wie auf den Knoten.</p>
+<h3 id="oeffentliches-release">Öffentliches Release<a class="anchor" href="#oeffentliches-release" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<ol><li>Ein Versions-Tag startet den Release-Workflow: Build je Zielplattform ohne Cache, Prüfsummenliste, unabhängiger Nachbau, cosign-Signaturen und SLSA-Provenienz. Ergebnis ist ein Release-<strong>Entwurf</strong>.</li><li><strong>Offline-Zeremonie</strong> auf einem Rechner ohne Netz, Schlüssel auf verschlüsseltem Datenträger bzw. später auf Hardware-Token oder HSM: Artefakte und Sigstore-Nachweise prüfen (Zertifikatsidentität muss der Release-Workflow des Projekts sein), Hashes mit dem Nachbau vergleichen, dann die Update-Metadaten signieren.</li><li>Die Update-Metadaten werden dem Release angehängt; der Entwurf wird im <strong>Vier-Augen-Prinzip</strong> freigegeben.</li><li>Der Timestamp wird regelmäßig (spätestens alle 7 Tage) neu signiert; die Automatisierung mit einem Online-Schlüssel ist ein offener Punkt.</li></ol>
+<h3 id="root-rotation">Root-Rotation<a class="anchor" href="#root-rotation" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Eine neue Root-Generation wird mit den neuen <strong>und</strong> den alten Root-Schlüsseln signiert (jeweils mit Schwellwert). Bündel tragen die Rotationskette mit; Knoten mit älterem Anker steigen darüber Schritt für Schritt auf, und die Region schreibt die vertraute Root-Version fort. Mit alten Schlüsseln signierte Bündel werden danach abgewiesen.</p>
+<h2 id="reproduzierbarkeit">Reproduzierbarkeit<a class="anchor" href="#reproduzierbarkeit" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Ein eigener Nachbau-Schritt kopiert den Arbeitsbaum in zwei verschiedene temporäre Verzeichnisse mit unterschiedlichen Pfadlängen, baut dort jeweils unabhängig (eigenes Build-Verzeichnis, andere Uhrzeit, gleiche Quellzeit <code>SOURCE_DATE_EPOCH</code>) und vergleicht die SHA-256 aller Artefakte – Binaries und SBOMs. Nur bitgleiche Ergebnisse gelten als reproduzierbar. Bei der Offline-Zeremonie wird zusätzlich gegen den Nachbau verglichen.</p>
+<h2 id="sbom">SBOM<a class="anchor" href="#sbom" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Jeder Build erzeugt je Komponente eine SBOM im Format <strong>CycloneDX 1.5</strong> und daraus <strong>SPDX 2.3</strong> – mit einem projekteigenen Konverter, um keine zusätzliche Werkzeug-Lieferkette einzuführen. Auch die SBOM ist reproduzierbar: Zeitstempel aus der Quellzeit, Seriennummer deterministisch aus dem normalisierten Dokument, sortierte Komponenten und Abhängigkeiten. Die Binaries tragen zusätzlich ihre Abhängigkeitsliste eingebettet, sodass sich auch installierte Knoten nachträglich gegen neue Advisories prüfen lassen (siehe <a href="schwachstellenmanagement.html">Schwachstellenmanagement</a>).</p>
+<h2 id="sicherheit-und-compliance">Sicherheit und Compliance<a class="anchor" href="#sicherheit-und-compliance" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ul><li><strong>Integrität und Rollback-Schutz</strong> der Updates, <strong>signierte, reproduzierbare Builds mit Provenienz</strong> und <strong>SBOM in zwei Formaten</strong> sind feste Anforderungen des Projekts (siehe <a href="sicherheitsmodell.html">Sicherheitsmodell</a>).</li><li>Einziger Kryptografie-Provider ist eine geprüfte Bibliothek (siehe <a href="kryptografie.html">Kryptografie</a>).</li><li><strong>Rückfallebene:</strong> Ohne HSM liegen Offline-Schlüssel auf verschlüsselten Datenträgern, Root-Schlüssel <em>k</em> von <em>n</em> auf getrennte Verantwortliche verteilt. Ohne Zugang zu Sigstore prüfen Knoten unverändert weiter, denn sie verwenden nur die Offline-Kette.</li><li><strong>Offen:</strong> Automatisierung des Timestamps, Schlüsselzeremonie und HSM-Wahl, zweite Signatur mit ML-DSA-87.</li></ul></article><nav class="pager" aria-label="Weitere Seiten"><a rel="prev" href="release-buendel.html">← Release-Bündel</a><a rel="next" href="schwachstellenmanagement.html">Schwachstellenmanagement →</a></nav>
+</main>
+</div>
+<footer class="site-footer">
+  <div class="bar">
+    <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
+    <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
+    Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <p><a href="../mitmachen.html#lizenz">Lizenz</a> · <a href="../mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="../suche.html">Suche</a></p>
+  </div>
+</footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

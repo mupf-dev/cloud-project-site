@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bedrohungsmodell · cloud-project</title>
+<meta name="description" content="Methode und Prinzipien der Produkt-Risikoanalyse – STRIDE je Vertrauensgrenze, Bewertung und Behandlung nach BSI-Standard 200-3, abstrakte Angreifermodelle, Sicherheitsannahmen und Pflege des Modells.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html" aria-label="cloud-project – Startseite">
+      <img src="../assets/favicon.svg" alt="" width="28" height="28"><span>cloud-project</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="../index.html">Start</a></li><li><a href="../funktionen.html">Funktionen</a></li><li><a href="../architektur.html">Architektur</a></li><li><a href="../doku/index.html" aria-current="page">Dokumentation</a></li><li><a href="../roadmap.html">Status & Roadmap</a></li><li><a href="../mitmachen.html">Mitmachen</a></li></ul></nav>
+    <form class="search" role="search" action="../suche.html" method="get">
+      <label for="q" class="sr-only">Suche</label>
+      <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+    </form>
+  </div>
+</header>
+<div class="page with-toc">
+<nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#methode">Methode</a></li><li><a href="#vertrauensgrenzen">Vertrauensgrenzen</a></li><li><a href="#angreifermodelle">Angreifermodelle</a></li><li><a href="#sicherheitsannahmen-und-nicht-ziele">Sicherheitsannahmen und Nicht-Ziele</a></li><li><a href="#grundsaetze-der-risikobehandlung">Grundsätze der Risikobehandlung</a></li><li><a href="#pflege-des-modells">Pflege des Modells</a></li></ol></nav>
+<main id="inhalt" tabindex="-1">
+<nav class="crumbs" aria-label="Brotkrumen"><a href="../index.html">Start</a> › <a href="index.html">Dokumentation</a> › <span>Bedrohungsmodell</span></nav><article class="doc"><h1>Bedrohungsmodell</h1><p class="lead">Methode und Prinzipien der Produkt-Risikoanalyse – STRIDE je Vertrauensgrenze, Bewertung und Behandlung nach BSI-Standard 200-3, abstrakte Angreifermodelle, Sicherheitsannahmen und Pflege des Modells.</p><p class="meta">Aufbereitet aus: Konzept 67 (Bedrohungsmodell)</p><p>Das Bedrohungsmodell ist die <strong>Produkt-Risikoanalyse des Projekts</strong>. Es bewertet die Software und ihre vorgesehene Architektur, nicht einen konkreten Betrieb. Betreiber führen für ihren Informationsverbund eine eigene Risikoanalyse durch; das Modell ist so aufgebaut, dass Bedrohungen, Maßnahmen und Restrisiken als <strong>Vorlage</strong> in ein Betreiber-ISMS übernommen werden können. Diese Seite fasst Methode und Prinzipien zusammen; die Maßnahmen selbst finden sich in den Fachkonzepten, insbesondere im <a href="sicherheitsmodell.html">Sicherheitsmodell</a> und in der <a href="kryptografie.html">Kryptografie</a>.</p>
+<h2 id="methode">Methode<a class="anchor" href="#methode" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Bedrohungen werden mit <strong>STRIDE je Vertrauensgrenze</strong> ermittelt und nach <strong>BSI-Standard 200-3</strong> bewertet und behandelt. Das Vorgehen:</p>
+<ol><li><strong>Systemmodell:</strong> Schutzobjekte, Datenflüsse und Vertrauensgrenzen.</li><li><strong>Angreifermodelle und Annahmen.</strong></li><li><strong>Gefährdungsübersicht:</strong> STRIDE je Grenze; jede Bedrohung wird mindestens einer <strong>elementaren Gefährdung</strong> des IT-Grundschutzes zugeordnet, damit Betreiber sie in ihre 200-3- bzw. Grundschutz++-Werkzeuge übernehmen können.</li><li><strong>Risikoeinstufung:</strong> Eintrittshäufigkeit × Schadenshöhe, jeweils brutto (ohne) und netto (mit Maßnahmen).</li><li><strong>Risikobehandlung:</strong> Vermeiden, Reduzieren, Übertragen, Akzeptieren.</li><li><strong>Konsolidierung</strong> neuer Maßnahmen und verbleibender Risiken.</li><li><strong>Rückführung</strong> in die Fachkonzepte und den Entwicklungsprozess.</li></ol>
+<p>STRIDE bildet die Schutzziele ab: <em>Spoofing</em> verletzt die Authentizität, <em>Tampering</em> die Integrität, <em>Repudiation</em> die Nichtabstreitbarkeit, <em>Information Disclosure</em> die Vertraulichkeit, <em>Denial of Service</em> die Verfügbarkeit und <em>Elevation of Privilege</em> die Autorisierung. Querschnittlich betrachtet werden Softwareschwachstellen, Produkte aus unzuverlässiger Quelle, Fehlbedienung, Diebstahl und Schadprogramme.</p>
+<h3 id="bewertungsskalen">Bewertungsskalen<a class="anchor" href="#bewertungsskalen" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Bewertet wird für ein <strong>Referenzprofil „Mehrmandanten-Betrieb“</strong> über ein typisches Betriebsjahr. Die Eintrittshäufigkeit reicht in vier Stufen von <em>selten</em> (setzt seltene Fähigkeiten oder eine Fehlerkette voraus) bis <em>sehr häufig</em> (der Normalbetrieb erzeugt die Bedingung). Die Schadenshöhe reicht von <em>vernachlässigbar</em> bis <em>existenzbedrohend</em> – letzteres bedeutet mandantenübergreifenden Vertraulichkeits- oder Integritätsverlust oder die Übernahme einer Zelle, Region oder PKI. Aus beiden ergibt sich eine von vier Risikokategorien: gering, mittel, hoch, sehr hoch.</p>
+<h3 id="akzeptanzkriterien">Akzeptanzkriterien<a class="anchor" href="#akzeptanzkriterien" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Kategorie</th><th scope="col">Umgang</th></tr></thead><tbody><tr><td>gering</td><td>akzeptiert</td></tr><tr><td>mittel</td><td>akzeptiert unter der Bedingung, dass die Wirksamkeit der Maßnahme nachgewiesen ist (Test, Pentest)</td></tr><tr><td>hoch</td><td>Release-Blocker, sofern nicht ausdrücklich als Restrisiko akzeptiert</td></tr><tr><td>sehr hoch</td><td>nie akzeptiert – die Architektur wird geändert</td></tr></tbody></table></div>
+<p>Ein Netto-Risiko gilt erst dann als gesenkt, wenn die Maßnahme <strong>umgesetzt und getestet</strong> ist; bis dahin zählt das Brutto-Risiko.</p>
+<h2 id="vertrauensgrenzen">Vertrauensgrenzen<a class="anchor" href="#vertrauensgrenzen" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Das Systemmodell unterscheidet dreizehn Vertrauensgrenzen, darunter: Internet und Nutzer gegenüber Portal und API, KI-Clients gegenüber der MCP-Schnittstelle, Mandant gegenüber Mandant, Mandanten-Workload gegenüber Host, Knoten untereinander, Steuerungsgruppe gegenüber übrigen Knoten, Zeugen, Discovery- und Boot-Netz, Out-of-Band-Management, Lieferkette gegenüber Installation, Betreiber gegenüber Mandanteninhalten, physischer Standort sowie fremde Identitätsanbieter. Für jede Grenze ist festgelegt, was sie überquert und wodurch sie durchgesetzt wird.</p>
+<h2 id="angreifermodelle">Angreifermodelle<a class="anchor" href="#angreifermodelle" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Die Angreifer sind abstrakt nach Ausgangslage und Fähigkeiten modelliert:</p>
+<ul><li><strong>Externer Angreifer</strong> mit Zugang zu öffentlichen Endpunkten, von automatisierten Scans bis zum gezielten Angriff.</li><li><strong>Böswilliger Mandant</strong> mit gültigem Konto und beliebigem Code in eigenen Workloads.</li><li><strong>Kompromittierter Knoten</strong> mit Root-Rechten und dem Schlüsselmaterial dieses Knotens.</li><li><strong>Fremdes Gerät im Discovery- oder Heimnetz</strong> im selben Netzsegment.</li><li><strong>Physischer Angreifer</strong> mit kurzzeitigem oder dauerhaftem Zugriff auf Geräte und Datenträger.</li><li><strong>Böswilliger Betreiber oder Insider</strong> – bewusst stark modelliert.</li><li><strong>Kompromittierte Abhängigkeit oder Lieferkette.</strong></li><li><strong>Kompromittierter oder manipulierter KI-Agent</strong>, etwa über Prompt-Injection gesteuert.</li><li><strong>Fremdbetreiber eines externen Zeugen.</strong></li></ul>
+<p>Zusätzlich gelten Fehlbedienung, Hardware- und Stromausfälle sowie Softwarefehler als Gefährdungsquellen im Sinne von 200-3.</p>
+<h2 id="sicherheitsannahmen-und-nicht-ziele">Sicherheitsannahmen und Nicht-Ziele<a class="anchor" href="#sicherheitsannahmen-und-nicht-ziele" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Das Modell beruht auf ausdrücklich benannten Annahmen, darunter: Die eingesetzten kryptografischen Primitive und der Zufallsgenerator sind sicher; CPU, Virtualisierungshardware und IOMMU funktionieren wie spezifiziert; Steuerungsknoten sind physisch geschützt oder verfügen über TPM, Measured Boot und Datenträgerverschlüsselung; höchstens ein Voter einer Zelle ist gleichzeitig kompromittiert (der Konsens ist nicht byzantinisch fehlertolerant); Menschen kontrollieren ihre Authenticatoren; Betreiber erfüllen ihre Pflichten aus der Verantwortungsteilung; die Uhrzeit ist nach dem Start authentisiert.</p>
+<p><strong>Nicht-Ziele</strong> sind der Schutz gegen staatliche Angreifer mit Hardware-Implantaten in Neugeräten, der Schutz von Mandanteninhalten gegen Betreiber mit physischem Zugriff ohne Confidential Computing sowie die Abwehr volumetrischer DDoS-Angriffe auf die Internetanbindung.</p>
+<h2 id="grundsaetze-der-risikobehandlung">Grundsätze der Risikobehandlung<a class="anchor" href="#grundsaetze-der-risikobehandlung" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ul><li><strong>Vermeiden</strong> durch Architekturentscheidungen, die eine Bedrohung entfallen lassen – etwa kein geteilter Kernel zwischen Mandanten, kein interaktiver Login ab Werk, kein automatischer Break-Glass, keine destruktiven Aktionen aus Gossip-Meldungen, keine sicherheitskritischen Rollen bei der Adoption, keine automatische Aufnahme fremder Geräte.</li><li><strong>Reduzieren</strong> durch technische Maßnahmen in den Fachkonzepten.</li><li><strong>Übertragen</strong> auf Betreiber (Netztrennung, physischer Schutz, Firmware-Auswahl) oder Mandanten (Gast-Betriebssysteme, eigene Anwendungen) gemäß Verantwortungsteilung, dokumentiert in Betreiber- und Mandantenhandbüchern.</li><li><strong>Akzeptieren</strong> nur, was nach Reduktion höchstens <em>mittel</em> ist oder ausdrücklich vom Risikoeigentümer übernommen wurde.</li></ul>
+<p>Leitprinzipien aus der Analyse: Vertrauen darf <strong>nie aus dem Netzboot</strong> entstehen, sondern nur aus einem an einen Geräteschlüssel gebundenen Adoptionsvorgang mit menschlicher Bestätigung oder Allowlist; neue Knoten starten in einer niedrigeren Vertrauensstufe. Destruktive Aktionen von KI-Agenten werden <strong>außerhalb des Clients</strong> bestätigt, weil Prompt-Injection nicht vollständig vermeidbar ist.</p>
+<h2 id="pflege-des-modells">Pflege des Modells<a class="anchor" href="#pflege-des-modells" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Das Modell wird aktualisiert bei neuen Rollen, Komponenten oder Vertrauensgrenzen, beim Wechsel einer Fremdkomponente, nach Pentest-Befunden und sicherheitsrelevanten Schwachstellen, bei neuen Versionen der MCP-Spezifikation und mindestens vor jedem Minor-Release. Es wird maschinenlesbar gepflegt, sodass die CI prüfen kann, dass jede Bedrohung eine Maßnahme mit Test oder eine dokumentierte Akzeptanz hat. Jede Maßnahme mit Netto-Risiko <em>mittel</em> erhält mindestens einen automatisierten Test oder einen Pentest-Prüfpunkt.</p>
+<p>Verwandte Seiten: <a href="grundschutz.html">Grundschutz</a> · <a href="compliance-by-design.html">Compliance by Design</a> · <a href="schwachstellenmanagement.html">Schwachstellenmanagement</a></p></article><nav class="pager" aria-label="Weitere Seiten"><a rel="prev" href="kryptografie.html">← Kryptografie</a><a rel="next" href="portal.html">Portal-Technologie →</a></nav>
+</main>
+</div>
+<footer class="site-footer">
+  <div class="bar">
+    <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
+    <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
+    Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <p><a href="../mitmachen.html#lizenz">Lizenz</a> · <a href="../mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="../suche.html">Suche</a></p>
+  </div>
+</footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

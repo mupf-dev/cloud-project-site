@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release-Bündel · cloud-project</title>
+<meta name="description" content="Format, Prüfung, Import und Verteilung des Release-Bündels, über das ein Plattform-Release in einen Cluster gelangt.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html" aria-label="cloud-project – Startseite">
+      <img src="../assets/favicon.svg" alt="" width="28" height="28"><span>cloud-project</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="../index.html">Start</a></li><li><a href="../funktionen.html">Funktionen</a></li><li><a href="../architektur.html">Architektur</a></li><li><a href="../doku/index.html" aria-current="page">Dokumentation</a></li><li><a href="../roadmap.html">Status & Roadmap</a></li><li><a href="../mitmachen.html">Mitmachen</a></li></ul></nav>
+    <form class="search" role="search" action="../suche.html" method="get">
+      <label for="q" class="sr-only">Suche</label>
+      <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+    </form>
+  </div>
+</header>
+<div class="page with-toc">
+<nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#zweck">Zweck</a></li><li><a href="#container-format">Container-Format</a></li><li><a href="#release-manifest-cp-release-v1">Release-Manifest cp.release/v1</a></li><li><a href="#pruefung">Prüfung</a></li><li><a href="#import-wiederaufnahme-und-deduplizierung">Import, Wiederaufnahme und Deduplizierung</a></li><li><a href="#ablage-und-verteilung">Ablage und Verteilung</a></li><li><a href="#bau-und-signatur-ablauf">Bau und Signatur (Ablauf)</a></li></ol></nav>
+<main id="inhalt" tabindex="-1">
+<nav class="crumbs" aria-label="Brotkrumen"><a href="../index.html">Start</a> › <a href="index.html">Dokumentation</a> › <span>Release-Bündel</span></nav><article class="doc"><h1>Release-Bündel</h1><p class="lead">Format, Prüfung, Import und Verteilung des Release-Bündels, über das ein Plattform-Release in einen Cluster gelangt.</p><p class="meta">Aufbereitet aus: Prozessbeschreibung Release-Bündel und Release-Manifest</p><h2 id="zweck">Zweck<a class="anchor" href="#zweck" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Ein Plattform-Release – Agent, OS-Basis, Erweiterungen und Boot-Artefakte in einer gemeinsamen Version – gelangt <strong>ausschließlich per Import</strong> in einen Cluster. Es gibt keinen Online-Abruf aus dem Cluster heraus; der Betreiber lädt ein Bündel über API, Kommandozeile, MCP oder Portal hoch. Damit funktionieren Updates in abgeschotteten Umgebungen (Air-Gap) genauso wie in vernetzten, und der Betreiber entscheidet bewusst, welches Release in seine Region kommt.</p>
+<p>Das Transportformat heißt <code>cp.release-bundle/v1</code>. Es ist ein einzelnes, <strong>unkomprimiertes tar-Archiv mit fester Reihenfolge</strong>. Diese Reihenfolge ist der Kern des Designs:</p>
+<ul><li>Der Empfänger prüft Signaturen und Release-Regeln, <strong>bevor</strong> die großen Artefakte ankommen. Ein ungültiges Bündel wird nach wenigen Kilobyte abgewiesen.</li><li>Jedes Artefakt wird beim Empfang gehasht – gestreamt, ohne das ganze Bündel zwischenzuspeichern.</li><li>Kompression wird bewusst nicht verwendet: Die Images sind bereits komprimiert bzw. Verity-Abbilder, und Kompression würde den wahlfreien Zugriff verhindern, den die Wiederaufnahme abgebrochener Uploads braucht.</li></ul>
+<p>Die Signaturkette selbst ist in <a href="release-signatur.html">Release-Signatur</a> beschrieben; wie ein importiertes Release auf die Knoten ausgerollt wird, beschreibt <a href="rollout.html">Rollout-Controller</a>.</p>
+<h2 id="container-format">Container-Format<a class="anchor" href="#container-format" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Das Archiv ist POSIX-<strong>ustar</strong> (512-Byte-Blöcke, zwei Nullblöcke am Ende). Die strengen Regeln sollen den Parser klein und angriffsarm halten:</p>
+<ul><li>nur reguläre Dateien; Verzeichniseinträge werden übersprungen,</li><li>jeder Name höchstens einmal,</li><li>keine Links, keine PAX- oder GNU-Langnamen,</li><li>keine Pfade mit <code>..</code> oder führendem <code>/</code>,</li><li>Größen ab 8 GiB im Base-256-Feld.</li></ul>
+<div class="table-wrap"><table><thead><tr><th scope="col">#</th><th scope="col">Eintrag</th><th scope="col">Pflicht</th><th scope="col">Inhalt</th></tr></thead><tbody><tr><td>1</td><td><code>bundle.json</code></td><td>ja</td><td>Formatkennung und Version (nur Hinweis, maßgeblich ist das Manifest)</td></tr><tr><td>2</td><td><code>metadata/&lt;n&gt;.root.json</code></td><td>nein</td><td>Root-Rotationskette, aufsteigend nach Root-Version</td></tr><tr><td>3</td><td><code>metadata/timestamp.json</code></td><td>ja</td><td>signierte Rolle <em>timestamp</em></td></tr><tr><td>4</td><td><code>metadata/snapshot.json</code></td><td>ja</td><td>signierte Rolle <em>snapshot</em></td></tr><tr><td>5</td><td><code>metadata/targets.json</code></td><td>ja</td><td>signierte Rolle <em>targets</em>: <strong>alle</strong> Artefakte und das Manifest mit Länge, SHA-256 und SHA-512</td></tr><tr><td>6</td><td><code>targets/release/manifest.json</code></td><td>ja</td><td>Release-Manifest <code>cp.release/v1</code>, selbst ein signiertes Ziel</td></tr><tr><td>7</td><td><code>targets/&lt;ziel&gt;</code></td><td>ja¹</td><td>jedes weitere Ziel aus <code>targets.json</code>, in beliebiger Reihenfolge</td></tr></tbody></table></div>
+<p>¹ Ein Ziel darf fehlen, wenn der Empfänger es bereits inhaltsadressiert vorhält (siehe Wiederaufnahme).</p>
+<p>Zielnamen bestehen aus Segmenten mit Buchstaben, Ziffern und <code>._+-</code>, getrennt durch <code>/</code>, etwa <code>os/x86-64/uki.efi</code>. Das Präfix <code>boot/</code> kennzeichnet Boot-Artefakte für den Netzboot-Dienst (siehe <a href="boot-adoption.html">Boot und Adoption</a>). Weil das Format bewusst schlicht ist, lässt sich ein Bündel auch mit Standardwerkzeugen (<code>tar --format=ustar</code>) in der Reihenfolge der Tabelle erzeugen; das Release-Werkzeug des Projekts schreibt es gestreamt.</p>
+<h2 id="release-manifest-cp-release-v1">Release-Manifest <code>cp.release/v1</code><a class="anchor" href="#release-manifest-cp-release-v1" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Das Manifest beschreibt das Release fachlich. Es ist selbst ein Ziel der signierten Kette und damit gegen Austausch, Rollback und Einfrieren geschützt. Beispiel mit Platzhalterwerten:</p>
+<pre><span class="code-lang">json</span><code class="lang-json">{
+  "apiVersion": "cp.release/v1",
+  "version": "1.4.2",
+  "channel": "stable",
+  "securityEpoch": 7,
+  "minVersion": "1.3.0",
+  "minAgentProtocol": 12,
+  "artifacts": [
+    { "name": "usr", "arch": "x86-64", "target": "os/x86-64/usr.raw",
+      "sha256": "…", "size": 287309824, "verityRootHash": "…" },
+    { "name": "uki", "arch": "x86-64", "target": "os/x86-64/uki.efi",
+      "sha256": "…", "size": 61440000 }
+  ],
+  "sbom": { "cyclonedx": "sha256:…" },
+  "sources": { "bundle": "sha256:…" },
+  "provenance": { "slsa": "sha256:…" },
+  "notBefore": "2026-11-10T00:00:00Z",
+  "expires": "2027-05-10T00:00:00Z"
+}</code></pre>
+<div class="table-wrap"><table><thead><tr><th scope="col">Feld</th><th scope="col">Bedeutung</th></tr></thead><tbody><tr><td><code>version</code></td><td><code>MAJOR.MINOR.PATCH</code> für das gesamte Plattform-Release; PATCH enthält nur Sicherheits- und Fehlerbehebungen</td></tr><tr><td><code>channel</code></td><td><code>stable</code>, <code>candidate</code> (Vorabtest) oder <code>edge</code> (nur Entwicklung)</td></tr><tr><td><code>securityEpoch</code></td><td>steigt bei sicherheitsrelevanten Korrekturen; ein Rückschritt unter die laufende Epoche ist verboten</td></tr><tr><td><code>minVersion</code></td><td>Mindestversion für einen direkten Update-Pfad</td></tr><tr><td><code>minAgentProtocol</code></td><td>Mindeststand des Agentenprotokolls für die Versionsverhandlung</td></tr><tr><td><code>artifacts</code></td><td>Name, Architektur, Zielname im Bündel, SHA-256, Größe, bei Verity-Abbildern der Root-Hash</td></tr><tr><td><code>sbom</code>, <code>sources</code>, <code>provenance</code></td><td>Verweise (per Hash) auf SBOM, Quellcode-Archiv und SLSA-Provenienz – ebenfalls Ziele des Bündels</td></tr><tr><td><code>notBefore</code>, <code>expires</code></td><td>Gültigkeitsfenster; schützt davor, Knoten dauerhaft auf einem alten Manifest festzuhalten</td></tr></tbody></table></div>
+<p>Unbekannte Felder werden abgewiesen. Das Feld <code>target</code> verbindet jedes Artefakt mit genau einem signierten Ziel.</p>
+<h2 id="pruefung">Prüfung<a class="anchor" href="#pruefung" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Die Prüfung ist für <strong>alle Bezugswege identisch</strong> – Import über die API, Agent beim Update und Installer. Es gibt also keinen „bequemeren“ Pfad mit schwächeren Regeln.</p>
+<ol><li><strong>Signaturkette</strong> gegen den vertrauten Root-Anker im OS-Image: gegebenenfalls Root-Rotation Schritt für Schritt, dann timestamp → snapshot → targets mit Signatur, Versionsbezug, Hash und Ablauf. Die zuletzt vertraute Root-Version wird je Region festgehalten (Schutz vor Root-Rollback).</li><li><strong>Manifest</strong> ist ein signiertes Ziel (Länge, SHA-256, SHA-512 stimmen).</li><li><strong>Release-Regeln:</strong> Format und Version, bekannter Kanal, <code>notBefore ≤ jetzt &lt; expires</code>, <code>securityEpoch</code> mindestens so hoch wie die höchste Epoche, die Knoten gerade ausführen, und <code>minVersion</code> höchstens die niedrigste laufende Version.</li><li><strong>Artefaktliste = signierte Ziele:</strong> Jedes Artefakt entspricht genau einem Ziel gleicher Länge und gleichen Hashes, jedes Ziel (außer dem Manifest) genau einem Artefakt.</li><li><strong>Jedes empfangene Artefakt</strong> wird gegen Länge, SHA-256 <strong>und</strong> SHA-512 geprüft. Erst danach wird es im Speicher sichtbar (temporäre Datei, <code>fsync</code>, atomares Umbenennen).</li></ol>
+<p>Fehler werden auf die üblichen API-Fehlerklassen abgebildet (siehe <a href="api-first.html">API-first</a>): Signatur-, Format- und Hashfehler als ungültiges Argument, Epoche, Mindestversion oder Gültigkeitsfenster als nicht erfüllte Vorbedingung, dieselbe Version mit anderem Inhalt als Konflikt. Eine konfigurierbare Größengrenze schützt vor übergroßen Uploads.</p>
+<h2 id="import-wiederaufnahme-und-deduplizierung">Import, Wiederaufnahme und Deduplizierung<a class="anchor" href="#import-wiederaufnahme-und-deduplizierung" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Der Import ist eine Aktion auf der Region (<code>region:importArtifacts</code>). Das Bündel wird als tar-Strom übertragen; für kleine Bündel – etwa über MCP – ist zusätzlich eine JSON-Form mit Base64-Inhalt möglich. Der Import ist keine privilegierte Aktion, denn die Signaturkette entscheidet, was angenommen wird.</p>
+<p>Mit <code>validateOnly</code> prüft der Server nur und meldet zusätzlich <code>missingTargets</code>, also die Ziele, die er noch nicht vorhält. Das Ergebnis eines Imports ist <code>created</code>, <code>unchanged</code>, <code>validated</code> oder <code>incomplete</code>.</p>
+<p>Die <strong>Wiederaufnahme</strong> nach einem Abbruch nutzt die Inhaltsadressierung: Vollständig empfangene Artefakte bleiben erhalten. Kommandozeile und Portal senden deshalb zuerst nur Metadaten und Manifest als Probelauf und danach ein Teilbündel mit <strong>ausschließlich den fehlenden</strong> Zielen. Ein erneuter Import desselben Release ist unschädlich (<code>unchanged</code>); gleiche Artefakte in verschiedenen Releases werden nur einmal gespeichert.</p>
+<h2 id="ablage-und-verteilung">Ablage und Verteilung<a class="anchor" href="#ablage-und-verteilung" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Jeder haltende Knoten legt Releases inhaltsadressiert ab: Artefakte und Metadateien als schreibgeschützte Blobs nach SHA-256, je Version ein Verzeichnis mit den Metadaten, harten Links auf die Artefakte und einem lokalen Eintrag mit allen Zielen und Hashes. Diese Struktur entspricht dem, was der Netzboot-Dienst erwartet – die Boot-Artefakte eines Release stehen damit ohne Umkopieren für PXE- und HTTP-Boot bereit. Zusätzlich liefert der Boot-Dienst alle Ziele geprüfter Releases inhaltsadressiert aus.</p>
+<ul><li><strong>Halter</strong> sind Knoten mit der Rolle <code>boot</code> oder <code>control</code>; Soll sind zwei Kopien (bzw. so viele, wie Kandidaten vorhanden sind).</li><li><strong>Replikation</strong> zwischen Haltern läuft über einen internen, gegenseitig authentisierten TLS-Endpunkt mit Knotenzertifikaten. Der Empfänger prüft die Kette erneut – er vertraut dem Sender nicht.</li><li><strong>Ausfall eines Halters</strong> erkennt der Cluster am ausbleibenden Takt; der nächste Kandidat holt das Release nach.</li><li>Der Status der Ressource <code>Release</code> nennt die erreichbaren vollständigen Kopien. Der <a href="rollout.html">Rollout-Controller</a> gibt eine Zielversion erst frei, wenn das Release verfügbar ist und genug Halter hat.</li></ul>
+<p>Knoten holen ihr Update später bei diesen Haltern ab. Eine Peer-to-Peer-Verteilung zwischen beliebigen Knoten ist für eine spätere Ausbaustufe vorgesehen.</p>
+<h2 id="bau-und-signatur-ablauf">Bau und Signatur (Ablauf)<a class="anchor" href="#bau-und-signatur-ablauf" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Bau und Signatur sind getrennt, damit private Release-Schlüssel nie mit der Build-Umgebung in Berührung kommen:</p>
+<ol><li><strong>Bauen:</strong> Binaries und OS-Images je Architektur werden gebaut, SBOM, Quellcode-Archiv und Provenienz erzeugt. Ergebnis ist ein unsignierter <strong>Plan</strong>, der das Manifest (exakte Bytes) sowie Länge, SHA-256 und SHA-512 aller Ziele enthält.</li><li><strong>Offline signieren:</strong> Eine getrennte Signierumgebung erhält nur den Plan, prüft, dass Manifest und Zielliste zusammenpassen, und signiert die Update-Metadaten. Die großen Artefakte verlassen die Build-Umgebung dabei nicht; ausgetauscht werden nur öffentliche Daten (Plan, signierte Metadaten, Root-Dateien).</li><li><strong>Bündel zusammensetzen:</strong> Metadaten, Manifest und Artefakte werden in der festen Reihenfolge gestreamt geschrieben.</li><li><strong>Prüfen:</strong> Das fertige Bündel durchläuft dieselbe Prüfung wie beim Import; zusätzlich wird kontrolliert, dass der im Image eingebettete Vertrauensanker zur verwendeten Root passt.</li></ol>
+<p>Zur Gültigkeit: Die Metadaten eines Bündels sind standardmäßig so lange gültig wie das Manifest (<code>expires</code>), damit offline transportierte Bündel importierbar bleiben. Schutz gegen das Einfrieren auf altem Stand bieten <code>expires</code> und <code>securityEpoch</code>. Für Test- und Echtbetrieb werden getrennte Roots verwendet; die Root-Rotation ist in <a href="release-signatur.html">Release-Signatur</a> beschrieben.</p></article><nav class="pager" aria-label="Weitere Seiten"><span></span><a rel="next" href="release-signatur.html">Release-Signatur →</a></nav>
+</main>
+</div>
+<footer class="site-footer">
+  <div class="bar">
+    <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
+    <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
+    Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <p><a href="../mitmachen.html#lizenz">Lizenz</a> · <a href="../mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="../suche.html">Suche</a></p>
+  </div>
+</footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

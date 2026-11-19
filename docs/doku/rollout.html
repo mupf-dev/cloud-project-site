@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rollout-Controller · cloud-project</title>
+<meta name="description" content="Wie Plattform-Updates rollend und quorumsicher auf die Knoten kommen – Release-Pläne, Reihenfolge und Gates, Health-Gate am Knoten, Pause und Rückfall.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html" aria-label="cloud-project – Startseite">
+      <img src="../assets/favicon.svg" alt="" width="28" height="28"><span>cloud-project</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="../index.html">Start</a></li><li><a href="../funktionen.html">Funktionen</a></li><li><a href="../architektur.html">Architektur</a></li><li><a href="../doku/index.html" aria-current="page">Dokumentation</a></li><li><a href="../roadmap.html">Status & Roadmap</a></li><li><a href="../mitmachen.html">Mitmachen</a></li></ul></nav>
+    <form class="search" role="search" action="../suche.html" method="get">
+      <label for="q" class="sr-only">Suche</label>
+      <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+    </form>
+  </div>
+</header>
+<div class="page with-toc">
+<nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#ueberblick">Überblick</a></li><li><a href="#der-controller">Der Controller</a></li><li><a href="#release-plan">Release-Plan</a></li><li><a href="#reihenfolge-und-gates">Reihenfolge und Gates</a></li><li><a href="#ablauf-am-knoten">Ablauf am Knoten</a></li><li><a href="#health-gate">Health-Gate</a></li><li><a href="#abbruch-und-rueckfall">Abbruch und Rückfall</a></li><li><a href="#ausbaustufen">Ausbaustufen</a></li></ol></nav>
+<main id="inhalt" tabindex="-1">
+<nav class="crumbs" aria-label="Brotkrumen"><a href="../index.html">Start</a> › <a href="index.html">Dokumentation</a> › <span>Rollout-Controller</span></nav><article class="doc"><h1>Rollout-Controller</h1><p class="lead">Wie Plattform-Updates rollend und quorumsicher auf die Knoten kommen – Release-Pläne, Reihenfolge und Gates, Health-Gate am Knoten, Pause und Rückfall.</p><p class="meta">Aufbereitet aus: Rollout-Controller</p><h2 id="ueberblick">Überblick<a class="anchor" href="#ueberblick" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Ein Plattform-Update ersetzt auf jedem Knoten das <strong>ganze Plattform-Release</strong> – Agent, OS-Basis, Erweiterungen – per <strong>A/B-Slotwechsel</strong> (siehe <a href="os-image.html">OS-Image</a>). Der Weg dorthin hat drei Teile:</p>
+<ol><li><strong>Import:</strong> Das signierte Release gelangt per Import in die Region und wird auf mindestens zwei Halter verteilt (siehe <a href="release-buendel.html">Release-Bündel</a>).</li><li><strong>Rollout-Controller:</strong> Er entscheidet, <strong>welcher Knoten wann</strong> aktualisiert wird – rollend, quorumsicher, mit Pause bei Fehlern.</li><li><strong>Knoten-Seite:</strong> Agent und privilegierter Hilfsdienst laden, prüfen und schreiben den inaktiven Slot, starten neu und bestätigen den neuen Stand erst nach einem grünen Health-Gate.</li></ol>
+<p>Die Aufgaben sind klar getrennt: Das OS liefert die knotenlokale Mechanik, der Controller die Steuerung. Der Controller schreibt nur die Zielversion, den Wartungszustand und eine Rollout-Markierung am Knotenobjekt; der Agent schreibt nur den OS-Status seines eigenen Knotens.</p>
+<h2 id="der-controller">Der Controller<a class="anchor" href="#der-controller" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Der Rollout-Controller läuft im Agenten auf dem aktuellen <strong>Raft-Leader</strong> der Steuerungsebene (siehe <a href="steuerungsebene.html">Steuerungsebene</a>). Er ist <strong>pegelgesteuert</strong>: Jeder Durchlauf leitet alles aus dem beobachteten Zustand ab; im Status stehen nur Beginn und Zeitlimit des aktuellen Schritts. Ein Wechsel des Leaders unterbricht den Rollout deshalb nicht – der neue Leader setzt ihn aus demselben Zustand fort.</p>
+<p>Die Entscheidungslogik ist eine reine, deterministische Funktion ohne Uhr, Netz oder Speicher. Dadurch lässt sie sich in einer Simulation vollständig prüfen: Modellknoten mit Neustarts, Ausfallzeiten und Leader-Wechseln; gemessen werden Schreibverfügbarkeit, gleichzeitig ausgefallene Voter und die Neustart-Reihenfolge.</p>
+<p><strong>Gesundheit misst der Leader selbst</strong> – anhand der Antworten auf die Replikation und des Abstands im Replikationslog, nie anhand einer Selbstauskunft des Knotens.</p>
+<h2 id="release-plan">Release-Plan<a class="anchor" href="#release-plan" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Bevor eine Zielversion gesetzt wird, lässt sich ein <strong>Plan</strong> abrufen (Probelauf über die API-Aktion <code>region:planUpdate</code>). Derselbe Plan wird beim tatsächlichen Setzen der Zielversion erneut geprüft. Er enthält:</p>
+<ul><li>die <strong>Reihenfolge</strong> der Knoten,</li><li>ob eine <strong>Schreibpause</strong> nötig ist (kleiner Cluster) und wie lange sie voraussichtlich dauert – geschätzt aus der gemessenen Neustartdauer,</li><li>die <strong>Hindernisse</strong>, die einen Rollout verhindern.</li></ul>
+<div class="table-wrap"><table><thead><tr><th scope="col">Hindernis</th><th scope="col">Bedeutung</th></tr></thead><tbody><tr><td>Release nicht verfügbar</td><td>noch im Import, fehlgeschlagen oder zu wenige Halter</td></tr><tr><td>Versionsabstand</td><td>in einer Zelle wären mehr als zwei Versionen gleichzeitig im Einsatz</td></tr><tr><td>Mindestversion</td><td>die niedrigste laufende Version liegt unter der <code>minVersion</code> des Release – kein direkter Update-Pfad</td></tr></tbody></table></div>
+<p>Eine <strong>niedrigere Sicherheitsepoche</strong> ist kein Hindernis im Plan, verlangt aber eine privilegierte Freigabe. Wie jede Plattformfunktion steht die Steuerung über API, Kommandozeile, MCP und Portal zur Verfügung (siehe <a href="api-first.html">API-first</a>).</p>
+<h2 id="reihenfolge-und-gates">Reihenfolge und Gates<a class="anchor" href="#reihenfolge-und-gates" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<h3 id="ein-knoten-nach-dem-anderen">Ein Knoten nach dem anderen<a class="anchor" href="#ein-knoten-nach-dem-anderen" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Es ist immer <strong>genau ein Knoten in Arbeit</strong>. Ein Knoten gilt als in Arbeit, solange seine Zielversion von der laufenden abweicht oder die Rollout-Markierung gesetzt ist. Erst danach wird der nächste freigegeben. Höchstens ein Knoten ist gleichzeitig im Wartungszustand.</p>
+<h3 id="reihenfolge-innerhalb-der-region">Reihenfolge innerhalb der Region<a class="anchor" href="#reihenfolge-innerhalb-der-region" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Der Rollout geht <strong>Zelle für Zelle</strong> vor, Regionen nacheinander. Innerhalb einer Zelle gilt:</p>
+<ol><li>Arbeitsknoten und Learner,</li><li>der Zeuge,</li><li>Follower-Voter einzeln,</li><li><strong>der Leader zuletzt</strong> – vorher übergibt er die Führung an einen gesunden, aufgeholten Voter.</li></ol>
+<h3 id="quorumschutz">Quorumschutz<a class="anchor" href="#quorumschutz" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Ein Voter (und der Zeuge) wird nur aktualisiert, wenn <strong>alle übrigen Daten-Voter gesund und aufgeholt</strong> sind – das Quorum ist also auch ohne ihn stabil. Für kleine Cluster gilt:</p>
+<ul><li><strong>ein einziger Voter:</strong> Das Update bedeutet eine kurze Schreibsperre; es ist nur mit Warnung und ausdrücklicher Bestätigung erlaubt.</li><li><strong>zwei Daten-Voter mit Zeuge:</strong> ein Daten-Voter nach dem anderen, nur wenn der Zeuge erreichbar ist.</li></ul>
+<h3 id="geplanter-neustart-ist-kein-ausfall">Geplanter Neustart ist kein Ausfall<a class="anchor" href="#geplanter-neustart-ist-kein-ausfall" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Vor dem Neustart setzt der Controller den Knoten in den <strong>Wartungszustand</strong> (Drain): Workloads werden migriert, wo möglich live, sonst gemäß Mandanten-Richtlinie neu gestartet; Speicherrollen warten auf einen gesunden Replikationszustand (siehe <a href="speicher.html">Speicher</a>). Knoten in Wartung zählen nicht in die <strong>Massenausfall-Bremse</strong> der Steuerungsebene – ein geplanter Neustart soll keine Notfallreaktion auslösen. Leases und Fencing bleiben unverändert wirksam.</p>
+<h3 id="versionsabstand-und-feature-gates">Versionsabstand und Feature-Gates<a class="anchor" href="#versionsabstand-und-feature-gates" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>In einer Zelle laufen höchstens zwei Versionen gleichzeitig (N und N−1). Neue Formate für die replizierte Datenbank oder den Speicher dürfen erst geschrieben werden, wenn <strong>alle</strong> Knoten sie lesen können – sonst könnte ein Knoten mit Vorgängerversion das Log nicht mehr anwenden. Dafür gibt es <strong>Feature-Gates</strong>:</p>
+<ul><li>Jedes Gate nennt die Mindestversion, ab der das Format gelesen werden kann.</li><li>Eingeschaltet wird es erst, wenn der Rollout <strong>vollständig</strong> ist und die niedrigste laufende Version diese Mindestversion erreicht.</li><li>Ein eingeschaltetes Gate bleibt eingeschaltet. Danach ist ein Zurück auf die Vorgängerversion nicht mehr möglich; ein Rückfall ist nur noch innerhalb der Version möglich.</li></ul>
+<h2 id="ablauf-am-knoten">Ablauf am Knoten<a class="anchor" href="#ablauf-am-knoten" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Der Knoten folgt einem festen Vertrag, den er aus seiner Zielversion und seinem Zustand ableitet:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Knoten sieht</th><th scope="col">Knoten tut</th><th scope="col">meldet</th></tr></thead><tbody><tr><td>Zielversion = laufende Version</td><td>nichts, offene Phase beenden</td><td><code>Running</code></td></tr><tr><td>neue Zielversion W</td><td>Release von den Haltern laden, prüfen, inaktiven Slot schreiben – im laufenden Betrieb, gedrosselt</td><td><code>Staging</code> → <code>Staged</code> bzw. <code>Failed</code> mit Grund</td></tr><tr><td><code>Staged</code>, Wartung und Rollout-Freigabe für W</td><td>Neustart in den neuen Slot</td><td>vorher <code>Rebooting</code></td></tr><tr><td>nach dem Start läuft W, Health-Gate grün</td><td>neuen Slot bestätigen (<em>bless</em>)</td><td><code>Running</code> (W), vorherige Version vermerkt</td></tr><tr><td>nach dem Start läuft die alte Version</td><td>–</td><td><code>RolledBack</code> mit Grund aus dem Journal</td></tr><tr><td><code>RolledBack</code> oder <code>Failed</code> für W</td><td><strong>kein</strong> neuer Versuch</td><td>unverändert</td></tr></tbody></table></div>
+<p>Download, Prüfung und Slot-Schreiben laufen ohne Unterbrechung im Betrieb; beeinträchtigt ist der Knoten erst ab dem Drain.</p>
+<h3 id="pruefung-und-schreiben">Prüfung und Schreiben<a class="anchor" href="#pruefung-und-schreiben" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Der Agent legt das Release in einem Staging-Bereich ab und beauftragt den privilegierten Hilfsdienst über ein festes, kleines Nachrichtenformat. Der Agent nennt dabei nur <strong>Version</strong> und <strong>Prüfzeitpunkt</strong>; Pfade, Dateinamen, Partitionen und Befehle legt der Hilfsdienst selbst fest.</p>
+<p>Der Hilfsdienst <strong>vertraut dem Agenten nicht</strong>: Er prüft die Signaturkette erneut gegen den Root im Image, prüft das Manifest mit den Release-Regeln (siehe <a href="release-signatur.html">Release-Signatur</a>) und kopiert nur die Artefakte seiner Architektur in eine eigene Quelle – mit Prüfung von Länge, SHA-256 und SHA-512 beim Kopieren. Spätere Änderungen im Staging wirken danach nicht mehr. Das eigentliche Schreiben übernimmt <code>systemd-sysupdate</code> mit dieser lokalen Quelle in einer eigenen, abgeschotteten Unit; es schützt die laufende Version und versieht das neue Boot-Image mit einem <strong>Bootzähler</strong>.</p>
+<h3 id="sicherheitsepoche-am-knoten">Sicherheitsepoche am Knoten<a class="anchor" href="#sicherheitsepoche-am-knoten" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Zusätzlich zur Manifest-Prüfung hält der Hilfsdienst je Version die geprüfte Sicherheitsepoche fest und als Untergrenze die höchste Epoche eines <strong>bestätigten</strong> Starts. Schreiben unter diese Untergrenze und Starten eines Slots darunter werden verweigert. Ein Rückfall auf den vorherigen Slot ist damit nur innerhalb derselben Epoche möglich.</p>
+<h2 id="health-gate">Health-Gate<a class="anchor" href="#health-gate" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Nach dem Neustart entscheidet das <strong>Health-Gate</strong>, ob der neue Slot bestätigt wird. Es nutzt das <em>Automatic Boot Assessment</em> von systemd: Erst wenn das Gate grün ist, wird der Bootzähler entfernt. Geprüft wird mit Zeitlimit (Standard zehn Minuten, Überschreitung gilt als rot):</p>
+<ol><li>Das verity-geschützte <code>/usr</code> ist eingehängt, alle Systemerweiterungen sind aktiv, der Zustandsbereich ist entsperrt.</li><li>Der Agent läuft, bedient seinen Watchdog und hat ein gültiges Zertifikat.</li><li>Das Underlay zu mindestens einem Seed steht, der Gossip-Beitritt ist erfolgt (siehe <a href="netzwerk.html">Netzwerk</a>).</li><li>Alle Rollen-Units sind aktiv, der Rollen-Reconcile läuft fehlerfrei.</li><li>Für Steuerungsknoten: Das Replikationslog ist zum Leader aufgeholt, der Knoten hat wieder seine vorherige Rolle.</li><li>Für Boot-Knoten: Boot-Daten geladen, Ports gebunden.</li></ol>
+<p>Der Agent schreibt dazu regelmäßig einen kleinen, atomar ersetzten Bericht mit Zeitstempel, laufender Version, Gesamtergebnis und Einzelprüfungen. Das Gate selbst läuft ohne Netz, verlangt einen frischen Bericht und prüft die Rollen-Units zusätzlich selbst.</p>
+<h2 id="abbruch-und-rueckfall">Abbruch und Rückfall<a class="anchor" href="#abbruch-und-rueckfall" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p><strong>Auf dem Knoten:</strong> Ist das Gate rot oder hängt der Start, löst der Watchdog einen Neustart aus. Der Bootzähler des neuen Slots ist dann verbraucht, und der Knoten startet automatisch den <strong>alten</strong> Slot. Auf Raspberry-Pi-Hardware übernimmt der einmalige <em>tryboot</em>-Mechanismus der Firmware dieselbe Aufgabe. Der Knoten meldet <code>RolledBack</code> mit dem Grund aus dem Journal des Fehlversuchs.</p>
+<p><strong>Im Controller:</strong> Meldet ein Knoten <code>RolledBack</code> oder <code>Failed</code>, oder läuft ein Schritt in eine Zeitüberschreitung, <strong>pausiert</strong> der Controller den Rollout: Er setzt die Bedingung <code>RolloutPaused</code>, erzeugt Audit-Eintrag und Alarm und gibt keine weiteren Knoten frei. Der betroffene Knoten versucht es nicht erneut. Ein Fehlschlag beim ersten Knoten stoppt so den gesamten Rollout, bevor er sich ausbreitet.</p>
+<p><strong>Durch den Betreiber:</strong> Ein Rückfall per Aktion <code>node:rollback</code> ist möglich, solange die Zielversion dieselbe Sicherheitsepoche hat und der vorherige Slot noch vorhanden ist; sonst nur mit privilegierter Freigabe. Weiter zurück geht es nur durch eine Neuinstallation des Knotens. Ein Knoten kann außerdem auf seiner Version festgehalten und wieder freigegeben werden.</p>
+<h2 id="ausbaustufen">Ausbaustufen<a class="anchor" href="#ausbaustufen" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Der aktuelle Kern umfasst Zielversion je Region und Knoten, rollend einen Knoten, Quorumschutz, Leader zuletzt, Rückfall über das Health-Gate, Pause bei Fehlern und den Betreiber-Rollback. Vorgesehen sind außerdem Update-Richtlinien mit <strong>Stufen</strong> – etwa ein einzelner Kanarienvogel-Knoten mit Beobachtungszeit, danach Arbeitsknoten mit begrenztem Anteil, Boot-Knoten einzeln, Steuerungsknoten einzeln mit Leader zuletzt –, <strong>Wartungsfenster</strong>, automatische Updates ab Werk mit der Möglichkeit, dringende Sicherheits-Patches auch außerhalb des Fensters einzuspielen, sowie eine Verteilung der Releases zwischen beliebigen Knoten (Peer-to-Peer). Wie Sicherheitsrelease und Rollout zusammenspielen, beschreibt <a href="schwachstellenmanagement.html">Schwachstellenmanagement</a>.</p></article><nav class="pager" aria-label="Weitere Seiten"><a rel="prev" href="os-image.html">← OS-Image (cpOS)</a><a rel="next" href="speicher.html">Speicher →</a></nav>
+</main>
+</div>
+<footer class="site-footer">
+  <div class="bar">
+    <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
+    <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
+    Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <p><a href="../mitmachen.html#lizenz">Lizenz</a> · <a href="../mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="../suche.html">Suche</a></p>
+  </div>
+</footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

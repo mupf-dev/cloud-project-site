@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API-first – API, Portal und MCP gleichwertig · cloud-project</title>
+<meta name="description" content="Warum jede Funktion zuerst eine API-Operation ist, wie Ressourcen und Operationen aufgebaut sind und wie Portal und MCP daraus abgeleitet und auf Parität geprüft werden.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html" aria-label="cloud-project – Startseite">
+      <img src="../assets/favicon.svg" alt="" width="28" height="28"><span>cloud-project</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="../index.html">Start</a></li><li><a href="../funktionen.html">Funktionen</a></li><li><a href="../architektur.html">Architektur</a></li><li><a href="../doku/index.html" aria-current="page">Dokumentation</a></li><li><a href="../roadmap.html">Status & Roadmap</a></li><li><a href="../mitmachen.html">Mitmachen</a></li></ul></nav>
+    <form class="search" role="search" action="../suche.html" method="get">
+      <label for="q" class="sr-only">Suche</label>
+      <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+    </form>
+  </div>
+</header>
+<div class="page with-toc">
+<nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#grundsatz">Grundsatz</a></li><li><a href="#ressourcenmodell">Ressourcenmodell</a></li><li><a href="#operationen">Operationen</a></li><li><a href="#protokolle-rest-openapi-nach-aussen-grpc-intern">Protokolle: REST/OpenAPI nach außen, gRPC intern</a></li><li><a href="#ableitung-von-portal-und-mcp-aus-dem-schema">Ableitung von Portal und MCP aus dem Schema</a></li><li><a href="#sonderfaelle-bootstrap-und-ausfallverhalten">Sonderfälle: Bootstrap und Ausfallverhalten</a></li><li><a href="#sicherheit">Sicherheit</a></li><li><a href="#paritaetsregel-und-ci-pruefung">Paritätsregel und CI-Prüfung</a></li><li><a href="#beispiel-knoten-adoptieren-in-drei-zugaengen">Beispiel: „Knoten adoptieren“ in drei Zugängen</a></li></ol></nav>
+<main id="inhalt" tabindex="-1">
+<nav class="crumbs" aria-label="Brotkrumen"><a href="../index.html">Start</a> › <a href="index.html">Dokumentation</a> › <span>API-first – API, Portal und MCP gleichwertig</span></nav><article class="doc"><h1>API-first – API, Portal und MCP gleichwertig</h1><p class="lead">Warum jede Funktion zuerst eine API-Operation ist, wie Ressourcen und Operationen aufgebaut sind und wie Portal und MCP daraus abgeleitet und auf Parität geprüft werden.</p><p class="meta">Aufbereitet aus: Konzept 04 (Prinzip API-first)</p><h2 id="grundsatz">Grundsatz<a class="anchor" href="#grundsatz" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<blockquote><p><strong>Jede Funktion der Plattform ist zuerst eine API-Operation. Portal und MCP sind zwei weitere Darstellungen derselben Operation – nie eigene Logik, nie eigener Zustand.</strong></p></blockquote>
+<p>Das gilt ausnahmslos auf jeder Ebene (siehe Glossar in der <a href="vision.html">Vision</a>):</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Bereich</th><th scope="col">Ebenen</th><th scope="col">Beispiele</th></tr></thead><tbody><tr><td>Betreiber</td><td>Plattform → Region → Zelle → Knoten</td><td>Ersteinrichtung, Adoption, Rollen zuweisen, Drain, Stilllegung, Updates, Zellen anlegen</td></tr><tr><td>Mandant</td><td>Mandant → Projekt → Ressource/Dienst</td><td>Nutzer, Rollen, Kontingente, VM, Volume, VPC, Bucket, Kubernetes-Cluster</td></tr><tr><td>Sonderfälle</td><td>Bootstrap, Adoption</td><td>erster Knoten ohne Identitätsdienst; Freigabe wartender Hardware</td></tr></tbody></table></div>
+<p><strong>Die API ist die einzige Quelle der Wahrheit:</strong></p>
+<ul><li>Der <em>gewünschte Zustand</em> jeder Ressource existiert nur in der API und wird in der Steuerungsgruppe der zuständigen Zelle bzw. Region gespeichert (siehe <a href="steuerungsebene.html">Steuerungsebene</a>). Portal und MCP halten außer Oberflächen- und Sitzungsdaten keinen eigenen Zustand.</li><li>Das <strong>API-Schema</strong> ist die einzige Definition von Ressourcen, Feldern, Validierung, Berechtigungen und Dokumentation. Portal-Formulare, MCP-Tools, CLI, SDKs und der spätere OpenTofu-Provider werden daraus abgeleitet.</li><li>Es gibt <strong>keinen Seitenkanal</strong>: keine Portal-only-Schalter, keine Konfigurationsdatei auf Knoten, die an der API vorbei wirkt, standardmäßig kein SSH. Auch Notfall- und Diagnosezugriffe sind API-Operationen mit besonderem Audit: befristete, begründete und aufgezeichnete Diagnosesitzungen sowie – nur für die höchste Betreiberstufe – SSH ausschließlich mit kurzlebigen Zertifikaten.</li></ul>
+<h3 id="begruendung">Begründung<a class="anchor" href="#begruendung" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<ol><li><strong>Parität ist sonst nicht haltbar.</strong> Drei handgepflegte Zugänge driften auseinander; aus einem Schema generierte nicht.</li><li><strong>Dezentralität.</strong> Ohne zentralen Controller muss jeder Knoten dieselbe Oberfläche ausliefern – das geht nur, wenn sie generisch aus dem Schema entsteht und im Agenten steckt.</li><li><strong>Compliance.</strong> Eine einzige Durchsetzungsstelle für Authentifizierung, Autorisierung, Validierung und Audit-Log (ISO 27001 A.8.15/A.8.16, BSI C5 OPS-10 ff., IT-Grundschutz OPS.1.1.5) statt dreier.</li><li><strong>Automatisierbarkeit.</strong> Infrastructure as Code, GitOps und KI-Agenten sind Bürger erster Klasse.</li><li><strong>Testbarkeit.</strong> Jede Funktion ist ohne Browser testbar; Portal- und MCP-Tests prüfen nur die Abbildung.</li></ol>
+<h2 id="ressourcenmodell">Ressourcenmodell<a class="anchor" href="#ressourcenmodell" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Das Modell lehnt sich an die Kubernetes API Conventions und die Google AIPs (ressourcenorientiertes Design) an – ohne Kubernetes als Fundament.</p>
+<h3 id="aufbau-einer-ressource">Aufbau einer Ressource<a class="anchor" href="#aufbau-einer-ressource" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Jede Ressource besteht aus drei Teilen:</p>
+<ul><li><strong><code>metadata</code></strong>: Name (vom Nutzer gewählt, eindeutig im Elternelement), unveränderliche <code>uid</code> (UUIDv7, nie wiederverwendet), URN, Elternelement, Labels (selektierbar) und Annotationen, <code>generation</code> (steigt bei jeder Änderung des Sollzustands), <code>resourceVersion</code> für optimistische Nebenläufigkeit, Zeitstempel, Finalizer und Eigentümer.</li><li><strong><code>spec</code></strong>: der gewünschte Zustand – schreibt der Nutzer.</li><li><strong><code>status</code></strong>: der tatsächliche Zustand – schreibt nur das System, über eine eigene Unterressource, die nur Reconcilern offensteht. <code>observedGeneration</code> und <code>conditions</code> zeigen, ob der Wunschzustand erreicht ist.</li></ul>
+<p>Ein verkürztes Beispiel:</p>
+<pre><span class="code-lang">yaml</span><code class="lang-yaml">apiVersion: compute.example.com/v1alpha1
+kind: VirtualMachine
+metadata:
+  name: web-01
+  urn: cp:eu-hl1:tenant/acme/project/shop/compute/vm/web-01
+  labels: { env: prod }
+  generation: 7
+spec:
+  machineType: small-2c-4g
+  arch: any            # arm64 | x86_64 | any
+  network: { vpc: default, subnet: web }
+status:
+  phase: Running
+  observedGeneration: 7
+  conditions:
+    - type: Ready
+      status: "True"</code></pre>
+<p>Felder werden im Schema <strong>klassifiziert</strong>: unveränderlich, nur Ausgabe, Pflicht, <em>sensitiv</em> (wird nie zurückgegeben oder protokolliert), personenbezogen (für das Löschkonzept), <em>nicht vertrauenswürdig</em> (frei befüllbar durch Mandanten oder Geräte – wird normalisiert und nie als Anweisung oder HTML behandelt) sowie die Datenklasse (Metadaten, Inhalt, IAM, Audit, Abrechnung).</p>
+<p>Betreiberobjekte (Knoten, Zelle, Rolle, Adoptionsregel) folgen demselben Aufbau wie Mandantenobjekte. Auch ein <strong>Knoten</strong> ist eine Ressource mit <code>spec</code> (Rollen, Labels, Wartungsflag) und <code>status</code> (Lebenszyklus-Phase, Hardware-Inventar, Gesundheit).</p>
+<h3 id="ebenen-und-ressourcennamen">Ebenen und Ressourcennamen<a class="anchor" href="#ebenen-und-ressourcennamen" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Jede Ressource hat genau ein Elternelement. Daraus ergeben sich ein hierarchischer Name und eine global eindeutige <strong>URN</strong>:</p>
+<pre><span class="code-lang">text</span><code class="lang-text">cp:global:platform
+cp:eu-hl1:region
+cp:eu-hl1:cell/c1
+cp:eu-hl1:node/n-17
+cp:eu-hl1:discovery/d-8c1f2a
+cp:global:tenant/acme/project/shop
+cp:eu-hl1:tenant/acme/project/shop/compute/vm/web-01</code></pre>
+<ul><li>In die URN gehört nur, was sich über die Lebensdauer nie ändert. Zelle, Rack oder Standort sind Eigenschaften, nicht Teil der URN; nur die Zelle selbst und untrennbar zellgebundene Objekte tragen <code>cell/&lt;c&gt;</code>.</li><li>Das zweite Segment (Region oder <code>global</code>) bestimmt das <strong>Routing</strong>: Jeder Knoten leitet daraus ab, welche Region bzw. Zelle zuständig ist.</li><li>Projekte sind global benannt, ihre Ressourcen liegen regional; der Datenstandort wird per Projekt-Richtlinie (erlaubte Regionen) gesteuert.</li><li>Der REST-Pfad ist direkt aus der URN abbildbar.</li><li>Namen folgen den Regeln für DNS-Labels (Kleinbuchstaben, Ziffern, Bindestrich, 1–63 Zeichen).</li><li><strong>Berechtigungs-Scopes sind dieselben Pfadpräfixe</strong>: Eine Rollenbindung auf ein Projekt gilt für alles darunter (siehe <a href="identitaet.html">Identität</a>).</li></ul>
+<h3 id="versionen">Versionen<a class="anchor" href="#versionen" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>API-Gruppen werden unabhängig versioniert. <strong>Bis zum MVP tragen alle Gruppen <code>v1alpha1</code></strong>; der Weg über <code>v1beta1</code> zu <code>v1</code> folgt danach. Änderungen am Sollzustand werden als Revisionen für Audit und Rollback vorgehalten (Standard 90 Tage).</p>
+<h2 id="operationen">Operationen<a class="anchor" href="#operationen" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<h3 id="standardmethoden">Standardmethoden<a class="anchor" href="#standardmethoden" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Methode</th><th scope="col">HTTP</th><th scope="col">Semantik</th></tr></thead><tbody><tr><td>Get</td><td><code>GET /v1/{name}</code></td><td>einzelne Ressource</td></tr><tr><td>List</td><td><code>GET /v1/{parent}/{kind}</code></td><td>Paginierung, Filter, Sortierung</td></tr><tr><td>Create</td><td><code>POST /v1/{parent}/{kind}?id={name}</code></td><td>Name vom Client, idempotent wiederholbar</td></tr><tr><td>Update</td><td><code>PATCH /v1/{name}</code></td><td>JSON Merge Patch mit <code>If-Match</code></td></tr><tr><td>Replace</td><td><code>PUT /v1/{name}</code></td><td>vollständiger Sollzustand (GitOps/OpenTofu)</td></tr><tr><td>Delete</td><td><code>DELETE /v1/{name}</code></td><td>asynchron mit Finalizern</td></tr></tbody></table></div>
+<h3 id="aktionen">Aktionen<a class="anchor" href="#aktionen" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Alles, was kein reines Setzen eines Feldes ist, ist eine <strong>Aktion</strong> mit eigenem Verb (<code>POST /v1/{name}:{verb}</code>), etwa <code>platform:initialize</code>, <code>discovery:adopt</code>, <code>node:drain</code>, <code>node:decommission</code>, <code>cell:split</code>, <code>region:rotateCa</code>, <code>tenant:suspend</code> oder <code>vm:start</code>. Aktionen sind, wo möglich, <strong>deklarativ unterlegt</strong>: <code>node:drain</code> setzt intern das Wartungsflag im Sollzustand – die Aktion ist eine bequeme, auditierbare Absichtserklärung, den Rest erledigt der Reconciler.</p>
+<h3 id="lang-laufende-operationen-watch-und-events">Lang laufende Operationen, Watch und Events<a class="anchor" href="#lang-laufende-operationen-watch-und-events" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<ul><li>Jede Mutation, die nicht sofort fertig ist, antwortet mit <code>202 Accepted</code> und einer <strong>Operation</strong>-Ressource mit Fortschritt und aktuellem Schritt. Sie lässt sich abfragen, abwarten und abbrechen und ist selbst auditierbar – im Portal als Aufgabenliste, im MCP als Task.</li><li><strong>Watch</strong> liefert einen Strom von Änderungen (extern als Server-Sent Events, intern als gRPC-Streaming) mit Wiederaufnahme ab einer bekannten Version.</li></ul>
+<h3 id="idempotenz-nebenlaeufigkeit-und-dry-run">Idempotenz, Nebenläufigkeit und Dry-Run<a class="anchor" href="#idempotenz-nebenlaeufigkeit-und-dry-run" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<ul><li>Alle mutierenden Aufrufe akzeptieren einen <code>Idempotency-Key</code>; Portal und MCP setzen ihn <strong>immer</strong> – wichtig bei KI-Agenten, die Aufrufe wiederholen.</li><li>Optimistische Nebenläufigkeit über <code>If-Match</code> → <code>412 Precondition Failed</code> bei Konflikt.</li><li><strong>Dry-Run für jede Mutation</strong> (<code>?validateOnly=true</code>): validiert, prüft Rechte und Kontingente, berechnet Auswirkungen („Drain verschiebt 4 VMs und 2 Volumes“) und ändert nichts.</li></ul>
+<h3 id="fehlerformat">Fehlerformat<a class="anchor" href="#fehlerformat" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Alle Fehler werden als <code>application/problem+json</code> nach RFC 9457 geliefert – mit stabilem, maschinenlesbarem Code, lokalisiertem Titel und Detail (Deutsch/Englisch), Trace-ID, feldgenauen Verstößen und einem Hinweis, ob ein Wiederholen sinnvoll ist. Das Portal zeigt Feldfehler am Formularfeld; MCP liefert das Problem-Objekt strukturiert zurück, damit ein KI-Agent sich selbst korrigieren kann. Interne Details wie Stacktraces gelangen nie in Fehlermeldungen.</p>
+<h2 id="protokolle-rest-openapi-nach-aussen-grpc-intern">Protokolle: REST/OpenAPI nach außen, gRPC intern<a class="anchor" href="#protokolle-rest-openapi-nach-aussen-grpc-intern" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th scope="col"></th><th scope="col">Extern (Nutzer, Portal, MCP, CLI, OpenTofu)</th><th scope="col">Intern (Agent ↔ Agent, Reconciler)</th></tr></thead><tbody><tr><td>Protokoll</td><td>HTTPS/JSON, Server-Sent Events für Watch</td><td>gRPC über mTLS im WireGuard-Underlay</td></tr><tr><td>Beschreibung</td><td>OpenAPI 3.1 + JSON Schema 2020-12</td><td>Protobuf</td></tr><tr><td>Authentifizierung</td><td>OIDC-Bearer-Token, API-Schlüssel, Setup-Token</td><td>Knotenzertifikate plus weitergereichtes Original-Token mit DPoP-Nachweis</td></tr></tbody></table></div>
+<p><strong>Eine Quelle:</strong> Die Ressourcentypen werden <strong>einmal als Rust-Typen</strong> definiert. Daraus entstehen OpenAPI, Portal-Formulare, MCP-Tools, CLI und SDKs. Protobuf dient <strong>nur</strong> der internen Knoten-zu-Knoten-Kommunikation; API-Objekte werden darin als versionierte Nutzlast transportiert, nicht als zweites Schema gepflegt. Verworfen wurde Protobuf als Quelle mit HTTP-Transcoding, weil die Werkzeugkette dafür in Rust schwach ist. Die REST-Fassade ist kein zweiter Codepfad: Validierung und Autorisierung laufen an genau einer Stelle (siehe <a href="rust-stack.html">Rust-Stack</a>).</p>
+<h3 id="versionierung-und-deprecation">Versionierung und Deprecation<a class="anchor" href="#versionierung-und-deprecation" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<ul><li><code>alpha</code> kann ohne Frist brechen und ist standardmäßig abgeschaltet; <code>beta</code> hat mindestens sechs Monate bzw. zwei Releases Vorlauf; <code>v1</code> erlaubt innerhalb der Hauptversion nur rückwärtskompatible Änderungen.</li><li>Für GA-Felder gilt eine <strong>Deprecation-Frist von mindestens 12 Monaten</strong>, angekündigt über <code>Deprecation</code>- und <code>Sunset</code>-Header, OpenAPI, Changelog, Portal-Banner und Hinweise im MCP.</li><li>Breaking Changes ohne Versionssprung lassen die CI scheitern.</li><li>Bei Rolling Updates wird eine neue API-Version erst aktiviert, wenn alle Mitglieder der Steuerungsgruppe sie unterstützen.</li></ul>
+<h2 id="ableitung-von-portal-und-mcp-aus-dem-schema">Ableitung von Portal und MCP aus dem Schema<a class="anchor" href="#ableitung-von-portal-und-mcp-aus-dem-schema" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Aus dem Schema werden OpenAPI und JSON Schema erzeugt; daraus wiederum Portal, MCP-Server, CLI, SDKs, OpenTofu-Provider, Dokumentation und der Paritäts-Check.</p>
+<h3 id="schema-annotationen">Schema-Annotationen<a class="anchor" href="#schema-annotationen" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Die API-Beschreibung trägt alle Informationen, die Portal und MCP brauchen – über projekteigene Schema-Erweiterungen: Ebene, Anzeigetexte (de/en), Eingabeart, <strong>Effekt</strong> (lesen, anlegen, ändern, destruktiv, irreversibel), benötigte Berechtigung, lang laufend ja/nein, Tool-Zuordnung, Kennzeichnung nicht vertrauenswürdiger Felder, Datenklasse sowie Step-up- und Bestätigungspflicht. Daraus ergeben sich Navigation, Formularelemente, Bestätigungsdialoge und sichtbare Schaltflächen im Portal ebenso wie Tool-Beschreibungen, Tool-Hinweise und Bestätigungspflichten im MCP. Ausnahmen von der Ableitung sind nur mit Begründung zulässig; sicherheitsrelevante Annotationen werden per Lint erzwungen.</p>
+<h3 id="portal">Portal<a class="anchor" href="#portal" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<ul><li><strong>Generischer Kern:</strong> Liste, Detail, Formular und Aktionsdialoge werden zur Laufzeit aus OpenAPI und JSON Schema gerendert. Eine neue Ressource erscheint dadurch automatisch im Portal – mit Validierung, Hilfetexten, Rechteprüfung und Dry-Run-Vorschau.</li><li><strong>Kuratiert, wo sinnvoll:</strong> Für zentrale Abläufe (Ersteinrichtung, Adoption, VPC-Topologie, Knotenkarte) gibt es handgebaute Ansichten. Sie rufen ausschließlich die öffentliche API auf – sie dürfen schöner sein, aber nichts können, was die API nicht kann.</li><li>Das Portal ist eine statische Single-Page-App, im Agenten eingebettet und von <strong>jedem</strong> Knoten ausgeliefert, ohne Backend mit Sonderrechten (Technologie siehe <a href="portal.html">Portal</a>).</li></ul>
+<h3 id="mcp-server">MCP-Server<a class="anchor" href="#mcp-server" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Der MCP-Server ist im Agenten eingebaut und auf jedem Knoten über Streamable HTTP erreichbar (zustandslos nach aktueller MCP-Spezifikation); lokal zusätzlich per stdio über die CLI.</p>
+<p><strong>Tool-Schnitt – nicht jeder Endpunkt ein Tool.</strong> Hunderte feingranulare Tools überfordern Sprachmodelle. Stattdessen werden Tools aus den Annotationen gruppiert:</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Tool (Beispiel)</th><th scope="col">Bündelt</th></tr></thead><tbody><tr><td><code>cp_get</code>, <code>cp_list</code>, <code>cp_search</code></td><td>alle Lesezugriffe aller Arten</td></tr><tr><td><code>cp_describe_schema</code></td><td>Schema einer Ressourcenart</td></tr><tr><td><code>cp_apply</code></td><td>Anlegen, Ändern, Ersetzen beliebiger Arten (mit Dry-Run)</td></tr><tr><td><code>cp_delete</code></td><td>Löschen (mit Bestätigung)</td></tr><tr><td><code>node_lifecycle</code></td><td>adoptieren, ablehnen, drainen, stilllegen, neu starten</td></tr><tr><td><code>cluster_topology</code></td><td>Zelle, Region, Steuerungsgruppe</td></tr><tr><td><code>tenant_admin</code></td><td>Mandant, Projekt, Nutzer, Rollen, Kontingente</td></tr><tr><td><code>operation_wait</code></td><td>lang laufende Operationen verfolgen</td></tr></tbody></table></div>
+<ul><li>Jedes Tool hat Ein- und Ausgabeschema und liefert strukturierte Daten plus kurze Textzusammenfassung.</li><li>Die Tool-Liste ist <strong>dynamisch</strong>: Sie enthält nur Tools, für die das Token Rechte hat; ein Mandanten-Token sieht keine Knoten-Tools.</li><li><strong>MCP-Ressourcen</strong> machen Objekte, Events, Inventar und Audit-Log lesend einbindbar; <strong>MCP-Prompts</strong> entsprechen den Portal-Assistenten (z. B. Erstinstallation, Knoten aufnehmen, Projekt anlegen, Störung analysieren).</li><li>Rückfragen und Bestätigungen laufen über Elicitation. Destruktive und irreversible Aktionen, privilegierte IAM-Änderungen und Adoption verlangen eine <strong>Bestätigung auf einer Plattformseite außerhalb des KI-Clients</strong> (Out-of-band).</li></ul>
+<h2 id="sonderfaelle-bootstrap-und-ausfallverhalten">Sonderfälle: Bootstrap und Ausfallverhalten<a class="anchor" href="#sonderfaelle-bootstrap-und-ausfallverhalten" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<h3 id="der-erste-knoten">Der erste Knoten<a class="anchor" href="#der-erste-knoten" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Beim ersten Knoten gibt es weder Identitätsdienst noch Steuerungsgruppe – trotzdem muss die Einrichtung über alle drei Zugänge funktionieren.</p>
+<ol><li>Der Knoten startet vom USB-Stick im Zustand <strong>nicht initialisiert</strong> und bietet nur eine Bootstrap-Teilmenge der API an (Plattformstatus, Initialisierung inkl. Dry-Run, Hardware-Info, Netzwerktest).</li><li>Ein <strong>Einmal-Setup-Token</strong> (128 Bit, 24 h gültig, einmal verwendbar) wird bevorzugt auf lokaler Konsole bzw. HDMI angezeigt. Eine Token-Datei auf dem Stick entsteht erst nach einer lokalen Aktion. Zusätzlich zeigt der Knoten den Fingerabdruck seines vorläufigen TLS-Zertifikats an.</li><li>Die Initialisierung ist per API, Portal oder MCP mit diesem Token möglich.</li><li>Sie legt Plattform, Region, Zelle, interne CA, den ersten Betreiber-Admin und einen Wiederherstellungsschlüssel an. Abgesichert wird der Einrichtungskanal über Setup-Token und einen Bestätigungscode. Am Ende entsteht ein einmaliger, kurz gültiger <strong>Admin-Einladungslink</strong>, mit dem unter der endgültigen Portal-Adresse der erste Passkey registriert wird. Anlegen und Einlösen der Einladung sind über MCP ausgeschlossen.</li><li>Danach ist das Token verbraucht und der Bootstrap-Modus endet unwiderruflich. Der gesamte Vorgang steht als erste Einträge im Audit-Log.</li></ol>
+<h3 id="adoption-neuer-hardware">Adoption neuer Hardware<a class="anchor" href="#adoption-neuer-hardware" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Entdeckte Hardware erscheint als <code>Discovery</code>-Ressource mit Inventar (Architektur, CPU, RAM, Disks, NICs, Seriennummer, TPM- und Secure-Boot-Status). Adoption ist die Aktion <code>:adopt</code> bzw. eine Adoptionsregel – beides normale API-Objekte. <strong>Auto-Adopt ist ab Werk aus</strong>; dauerhafte Regeln sind nur mit attestierter Hardware zulässig. Details zum Ablauf beschreibt <a href="boot-adoption.html">Boot &amp; Adoption</a>.</p>
+<h3 id="jeder-knoten-ist-eingang">Jeder Knoten ist Eingang<a class="anchor" href="#jeder-knoten-ist-eingang" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<ul><li><strong>Jeder</strong> Knoten liefert API, Portal und MCP aus. Der DNS-Name der Region zeigt auf mehrere Knoten; im Homelab hilft zusätzlich mDNS.</li><li>Der empfangende Knoten authentifiziert die Anfrage, bestimmt anhand der URN die zuständige Zelle und leitet sie per gRPC an den Raft-Leader (Schreiben) oder ein beliebiges Mitglied (eventuell konsistentes Lesen) weiter. Dabei reicht er das <strong>Original-Token</strong> samt DPoP-Nachweis weiter; <strong>autorisiert wird am Zielort</strong>, nicht aufgrund des Weiterleiters.</li><li>Fällt die zuständige Zelle aus, liefern andere Knoten zwischengespeicherte Daten gekennzeichnet als veraltet und lehnen Schreibzugriffe mit <code>503</code> und <code>Retry-After</code> ab – nie stilles Verlieren.</li></ul>
+<h2 id="sicherheit">Sicherheit<a class="anchor" href="#sicherheit" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<h3 id="gleiche-pruefkette-fuer-alle-zugaenge">Gleiche Prüfkette für alle Zugänge<a class="anchor" href="#gleiche-pruefkette-fuer-alle-zugaenge" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Jeder Aufruf – REST aus dem Portal, REST aus einem Skript oder ein MCP-Tool – durchläuft dieselbe Kette: <strong>Authentifizierung → Autorisierung → Validierung → Kontingent → Audit → Ausführung</strong>. Identitäten sind Nutzer (OIDC, Passkeys), Dienstkonten, API-Schlüssel und Knoten (mTLS-Zertifikat). Der MCP-Server ist ein OAuth-2.1-geschützter Ressourcenserver; er akzeptiert nur Tokens mit seiner eigenen Audience (keine Token-Weitergabe). Das Portal hat keine Sonderrechte. Details: <a href="sicherheitsmodell.html">Sicherheitsmodell</a>.</p>
+<h3 id="mcp-spezifische-schutzmassnahmen">MCP-spezifische Schutzmaßnahmen<a class="anchor" href="#mcp-spezifische-schutzmassnahmen" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<div class="table-wrap"><table><thead><tr><th scope="col">Risiko</th><th scope="col">Maßnahme</th></tr></thead><tbody><tr><td>KI-Agent handelt mit vollen Nutzerrechten</td><td>Eingeschränkte MCP-Tokens, standardmäßig nur lesend, an Projekt/Mandant gebunden, kurze Laufzeit; Betreiberrechte explizit freizuschalten</td></tr><tr><td>Prompt-Injection über Daten</td><td>Fremdbefüllte Felder werden normalisiert und strikt als Daten markiert; Tool-Beschreibungen sind statisch im Binary</td></tr><tr><td>Destruktive Aktionen, Adoption, IAM-Änderungen</td><td>Pflicht-Dry-Run mit <strong>Bestätigungstoken</strong> (an Principal, Aktion, Ziel, Version und Hash aller Parameter gebunden, einmalig, 5 Minuten gültig) <strong>plus Out-of-band-Bestätigung durch einen Menschen</strong></td></tr><tr><td>Massenänderungen, Endlosschleifen</td><td>Rate-Limits je Token und Kanal, Obergrenzen je Aufruf, Löschschutz-Flag</td></tr><tr><td>Exfiltration</td><td>Ausgabefilter für sensitive Felder; Secrets sind über MCP nie lesbar, nur Referenzen</td></tr></tbody></table></div>
+<p>Die Bestätigungslogik ist eine <strong>API-Funktion</strong>, keine MCP-Sonderlogik: Portal (Dialog) und Skripte (Token) nutzen denselben Mechanismus. Richtlinien dürfen Bestätigungspflichten nur verschärfen; die Out-of-band-Bestätigung für destruktive Aktionen und Adoption ist <strong>nicht abschaltbar</strong>.</p>
+<p>Autonom handelnde KI-Agenten dürfen irreversible Aktionen, privilegierte IAM-Änderungen und Adoptionen grundsätzlich nicht ausführen; destruktive Aktionen nur über eine Freigabeanfrage an einen Menschen.</p>
+<h3 id="audit-log">Audit-Log<a class="anchor" href="#audit-log" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Jede Mutation (und jeder Lesezugriff auf sensible Arten) erzeugt einen unveränderlichen Audit-Eintrag mit Zeit, <strong>Principal</strong> (der Mensch) und getrennt davon <strong>Actor</strong> (z. B. ein KI-Client), Kanal (<code>api</code>, <code>portal</code>, <code>mcp</code>, <code>cli</code>, <code>system</code>, <code>bootstrap</code> – vom Eingang gesetzt, nicht fälschbar), Verb, Ziel, Bestätigungsart, Parameter-Hash, Ergebnis und Änderungsdiff. Die Speicherung ist manipulationssicher (Hash-Kette, Blocksignatur, regelmäßig außerhalb der Zelle verankert), je Mandant getrennt und exportierbar. Das Audit-Log ist selbst eine lesbare API-Ressource.</p>
+<h2 id="paritaetsregel-und-ci-pruefung">Paritätsregel und CI-Prüfung<a class="anchor" href="#paritaetsregel-und-ci-pruefung" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<blockquote><p><strong>Jede öffentliche API-Operation (Methode × Ressourcenart × Ebene) ist im Portal und im MCP erreichbar – oder explizit mit Begründung ausgenommen.</strong> Ziel für den MVP: null Ausnahmen bei Mutationen.</p></blockquote>
+<p>Die Prüfung erfolgt dreistufig:</p>
+<ol><li><strong>Statischer Abgleich bei jedem Änderungsantrag:</strong> Alle Operationen der erzeugten OpenAPI werden mit dem MCP- und dem Portal-Manifest verglichen. Jede Operation muss abgedeckt oder begründet ausgenommen sein, destruktive Operationen müssen im MCP korrekt markiert sein; Sicherheits- und Nachweisoperationen dürfen nie ausgenommen werden. Lücken lassen die CI scheitern.</li><li><strong>Laufzeit-Abgleich (nächtlich):</strong> In einem gemischten ARM64/x86-Testcluster wird jedes Szenario dreimal ausgeführt – per HTTP, per Portal-End-to-End-Test und per MCP-Client. Verglichen werden Ergebnis, Fehlercodes, Rechteverhalten und Audit-Eintrag (identisch bis auf den Kanal).</li><li><strong>Rechte-Parität:</strong> Für eine Rollenmatrix wird geprüft, dass sichtbare und ausführbare Operationen in allen drei Kanälen übereinstimmen – auch für KI-Agenten.</li></ol>
+<p>Ergänzend laufen OpenAPI-Lint, Breaking-Change-Prüfung und generierte Zwei-Mandanten-Isolationstests.</p>
+<h2 id="beispiel-knoten-adoptieren-in-drei-zugaengen">Beispiel: „Knoten adoptieren“ in drei Zugängen<a class="anchor" href="#beispiel-knoten-adoptieren-in-drei-zugaengen" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Ein Pi 5 wurde per Kabel angeschlossen, hat das Discovery-Image gebootet und wartet als <code>d-8c1f2a</code>. Ziel: Adoption in Zelle <code>c1</code> mit Rolle <code>storage-object</code>.</p>
+<h3 id="api">API<a class="anchor" href="#api" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Erst ein Dry-Run, dann die Ausführung mit dem erhaltenen Bestätigungstoken:</p>
+<pre><span class="code-lang">text</span><code class="lang-text">POST /v1/regions/eu-hl1/discoveries/d-8c1f2a:adopt?validateOnly=true
+Host: api.example.com
+Authorization: Bearer …
+
+{ "nodeName": "n-pi5-04", "cell": "c1", "roles": ["storage-object"],
+  "confirmationCode": "3817-5520" }
+
+→ 200 OK
+{ "valid": true,
+  "effects": [ "Knoten erhält Zertifikat der Zelle c1",
+               "OS-Image arm64 wird ausgerollt",
+               "Rolle storage-object: 512 GiB NVMe werden formatiert" ],
+  "confirmationToken": "ct_…" }</code></pre>
+<pre><span class="code-lang">text</span><code class="lang-text">POST /v1/regions/eu-hl1/discoveries/d-8c1f2a:adopt
+Idempotency-Key: 7f0c3a2e-…
+
+{ …gleiche Parameter…, "confirmationToken": "ct_…" }
+
+→ 202 Accepted
+Location: /v1/regions/eu-hl1/operations/op-0193f1c4</code></pre>
+<p>Anschließend wird die Operation abgewartet; Ergebnis ist die neue <code>Node</code>-Ressource. Adoption verlangt <strong>immer</strong> eine Bestätigung der Geräteidentität – etwa einen am Gerät abgelesenen Bestätigungscode, ein Einschreibe-Token, eine Vorab-Registrierung oder Attestierung –, über API/CLI zusätzlich Step-up.</p>
+<h3 id="portal-2">Portal<a class="anchor" href="#portal-2" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Ein Badge meldet live „1 neuer Knoten wartet“. Die Detailansicht zeigt Inventar und Hinweise wie „kein TPM“. „Adoptieren“ ist nur mit passendem Recht sichtbar und öffnet ein aus dem Schema erzeugtes Formular (Name, Zelle, passende Rollen, Bestätigungscode). Eine automatische Vorschau (Dry-Run) listet die Auswirkungen inklusive Formatierungswarnung; bestätigt wird per Passkey, danach zeigt eine Fortschrittsanzeige die Operation, bis der Knoten <em>Aktiv</em> ist.</p>
+<h3 id="mcp">MCP<a class="anchor" href="#mcp" aria-label="Link zu diesem Abschnitt">#</a></h3>
+<p>Nutzeranfrage im KI-Client: <em>„Nimm den neuen Pi 5 als Objektspeicher in Zelle c1 auf.“</em></p>
+<pre><span class="code-lang">yaml</span><code class="lang-yaml"># 1. wartende Hardware suchen
+tool: cp_list
+arguments: { kind: Discovery, parent: "cp:eu-hl1:region", filter: 'status.phase="Waiting"' }
+# 2. Adoption anstoßen (als destruktiv markiert wegen Formatierung)
+tool: node_lifecycle
+arguments: { action: adopt, target: "cp:eu-hl1:discovery/d-8c1f2a",
+             nodeName: n-pi5-04, cell: c1, roles: [storage-object] }
+# → Server macht Dry-Run und verlangt Bestätigung auf einer Plattformseite
+#   (URL-Elicitation); dort gibt der Mensch den Gerätecode ein und bestätigt per Passkey.
+# 3. Fortschritt verfolgen
+tool: operation_wait
+arguments: { operation: "cp:eu-hl1:operation/op-0193f1c4", timeout: 60 }</code></pre>
+<p>Der KI-Client sieht weder den Bestätigungscode noch die Bestätigung selbst. Alternativ führt der MCP-Prompt „Knoten aufnehmen“ geführt durch dieselben Schritte.</p>
+<p><strong>Ergebnis in allen drei Fällen:</strong> dieselbe Operation, dieselbe <code>Node</code>-Ressource und ein Audit-Eintrag, der sich nur im Kanal und gegebenenfalls im Actor unterscheidet.</p></article><nav class="pager" aria-label="Weitere Seiten"><a rel="prev" href="rust-stack.html">← Rust-Stack und Kern-Bibliotheken</a><a rel="next" href="steuerungsebene.html">Architektur der Steuerungsebene →</a></nav>
+</main>
+</div>
+<footer class="site-footer">
+  <div class="bar">
+    <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
+    <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
+    Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <p><a href="../mitmachen.html#lizenz">Lizenz</a> · <a href="../mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="../suche.html">Suche</a></p>
+  </div>
+</footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

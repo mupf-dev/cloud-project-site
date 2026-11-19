@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Funktionsumfang · cloud-project</title>
+<meta name="description" content="Welche Dienste, Rollen und Plattformfunktionen cloud-project bereitstellt – vom Knoten-Lebenszyklus über Netz, Speicher und Identität bis zur KI-Inferenz.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="index.html" aria-label="cloud-project – Startseite">
+      <img src="assets/favicon.svg" alt="" width="28" height="28"><span>cloud-project</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="index.html">Start</a></li><li><a href="funktionen.html" aria-current="page">Funktionen</a></li><li><a href="architektur.html">Architektur</a></li><li><a href="doku/index.html">Dokumentation</a></li><li><a href="roadmap.html">Status & Roadmap</a></li><li><a href="mitmachen.html">Mitmachen</a></li></ul></nav>
+    <form class="search" role="search" action="suche.html" method="get">
+      <label for="q" class="sr-only">Suche</label>
+      <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+    </form>
+  </div>
+</header>
+<div class="page with-toc">
+<nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#dienste-wie-bei-einem-hyperscaler">Dienste wie bei einem Hyperscaler</a></li><li><a href="#drei-gleichwertige-zugaenge">Drei gleichwertige Zugänge</a></li><li><a href="#rollen">Rollen</a></li><li><a href="#knoten-lebenszyklus">Knoten-Lebenszyklus</a></li><li><a href="#updates-und-releases">Updates und Releases</a></li><li><a href="#plattform-dns">Plattform-DNS</a></li><li><a href="#identitaet-und-mandanten">Identität und Mandanten</a></li><li><a href="#speicher">Speicher</a></li><li><a href="#netzwerk">Netzwerk</a></li><li><a href="#sicherheit-und-compliance">Sicherheit und Compliance</a></li><li><a href="#ki-native-plattform">KI-native Plattform</a></li></ol></nav>
+<main id="inhalt" tabindex="-1">
+<article class="doc"><h1>Funktionsumfang</h1><p class="lead">Welche Dienste, Rollen und Plattformfunktionen cloud-project bereitstellt – vom Knoten-Lebenszyklus über Netz, Speicher und Identität bis zur KI-Inferenz.</p><h2 id="dienste-wie-bei-einem-hyperscaler">Dienste wie bei einem Hyperscaler<a class="anchor" href="#dienste-wie-bei-einem-hyperscaler" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Die Plattform bietet Grunddienste, die sich an den bekannten öffentlichen Clouds orientieren. Alle Dienste sind Ressourcen derselben API und damit gleichermaßen über Portal, API und MCP nutzbar.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Kategorie</th><th scope="col">Dienst</th><th scope="col">Entspricht etwa</th></tr></thead><tbody><tr><td>Compute</td><td>Virtuelle Maschinen (Cloud Hypervisor/KVM)</td><td>AWS EC2 · Azure VMs · Compute Engine</td></tr><tr><td>Compute</td><td>Container Instances (MicroVM-isoliert)</td><td>Fargate · Azure Container Instances · Cloud Run</td></tr><tr><td>Compute</td><td>Managed Kubernetes</td><td>EKS · AKS · GKE</td></tr><tr><td>Speicher</td><td>Block-Volumes</td><td>EBS · Managed Disks · Persistent Disk</td></tr><tr><td>Speicher</td><td>Objektspeicher (S3-kompatibel)</td><td>S3 · Blob Storage · Cloud Storage</td></tr><tr><td>Speicher</td><td>Dateispeicher (NFS)</td><td>EFS · Azure Files · Filestore</td></tr><tr><td>Netzwerk</td><td>VPCs, Subnetze, Sicherheitsgruppen, Load Balancer, Floating IPs</td><td>VPC · VNet · VPC</td></tr><tr><td>Netzwerk</td><td>Plattform-DNS mit DNSSEC</td><td>Route 53 · Azure DNS · Cloud DNS</td></tr><tr><td>Identität</td><td>Mandanten, Projekte, Nutzer, Rollen, Dienstkonten, API-Schlüssel</td><td>IAM · Entra ID · Cloud IAM</td></tr><tr><td>Plattform</td><td>Registry, Schlüsselverwaltung (KMS), Monitoring, Audit-Log</td><td>ECR · Key Vault · CloudWatch · CloudTrail</td></tr><tr><td>KI</td><td>Modellkatalog, Inferenz-Endpunkte, AI-Gateway, Vektorsuche</td><td>Bedrock · Azure AI Foundry · Vertex AI</td></tr></tbody></table></div>
+<p>Weitere Dienste – Datenbanken, Secrets, Warteschlangen, Serverless-Funktionen, GPU/NPU-Pools – folgen in späteren Phasen. Eine detaillierte Gegenüberstellung mit AWS, Azure und Google Cloud steht in der <a href="doku/funktionsanalyse.html">Hyperscaler-Funktionsanalyse</a>.</p>
+<h2 id="drei-gleichwertige-zugaenge">Drei gleichwertige Zugänge<a class="anchor" href="#drei-gleichwertige-zugaenge" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Jede Funktion ist über <strong>REST-API (OpenAPI)</strong>, <strong>Web-Portal</strong> und <strong>MCP</strong> (Model Context Protocol, für KI-Assistenten und Agenten) verfügbar – auf jeder Ebene: Plattform, Mandant, Projekt, Ressource. Portal und MCP-Werkzeuge werden aus demselben API-Schema abgeleitet; eine CI-Prüfung verhindert, dass ein Zugang Funktionen bekommt, die den anderen fehlen. Dazu kommt das Kommandozeilenwerkzeug <code>cpctl</code>. Details: <a href="doku/api-first.html">API-first-Prinzip</a>.</p>
+<pre><span class="code-lang">yaml</span><code class="lang-yaml"># Beispiel einer Ressource (vereinfacht)
+apiVersion: compute.cloud-project.io/v1
+kind: VirtualMachine
+metadata:
+  name: web-01
+  parent: cp:global:tenant/acme/project/shop
+  labels: { env: prod }
+spec:                       # gewünschter Zustand
+  machineType: small-2c-4g
+  arch: any                 # arm64 | x86_64 | any
+  image: cp:global:image/debian-13
+  network: { vpc: default, subnet: web }
+status:                     # tatsächlicher Zustand, schreibt nur das System
+  phase: Running</code></pre>
+<h2 id="rollen">Rollen<a class="anchor" href="#rollen" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Jeder Knoten trägt den Agenten <code>cp-agent</code>. Weitere Aufgaben übernimmt er über <strong>Rollen</strong>, die manuell, per Regel (etwa „alle Knoten mit mindestens zwei Platten → <code>storage-block</code>“) oder auf Vorschlag des Planers zugewiesen werden.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Rolle</th><th scope="col">Aufgabe</th></tr></thead><tbody><tr><td><code>agent</code></td><td>implizit auf jedem Knoten: Lebenszyklus, lokale API, Portal und MCP, Weiterleitung</td></tr><tr><td><code>control</code></td><td>Steuerungsgruppe (Raft) einer Zelle</td></tr><tr><td><code>witness</code></td><td>reine Quorum-Stimme, z. B. auf einem kleinen Raspberry Pi</td></tr><tr><td><code>boot</code></td><td>Netzboot-Dienst: proxyDHCP, TFTP/HTTP-Boot, Image-Cache</td></tr><tr><td><code>dns</code></td><td>Plattform-DNS: autoritative Zonen, DNSSEC, virtuelle IPs</td></tr><tr><td><code>identity</code></td><td>OIDC-/OAuth-Autorisierungsserver, Nutzer, Mandanten, Föderation</td></tr><tr><td><code>kms</code></td><td>Schlüsselverwaltung, Mandantenschlüssel</td></tr><tr><td><code>network-gateway</code></td><td>Nord-Süd-Verkehr, NAT, Load Balancer, Floating IPs</td></tr><tr><td><code>compute-vm</code></td><td>virtuelle Maschinen</td></tr><tr><td><code>compute-container</code></td><td>Container Instances in MicroVMs</td></tr><tr><td><code>kubernetes</code></td><td>Managed Kubernetes für Mandanten</td></tr><tr><td><code>storage-block</code></td><td>Block-Volumes</td></tr><tr><td><code>storage-object</code></td><td>S3-kompatibler Objektspeicher</td></tr><tr><td><code>observability</code></td><td>Metriken, Logs, Traces</td></tr></tbody></table></div>
+<h2 id="knoten-lebenszyklus">Knoten-Lebenszyklus<a class="anchor" href="#knoten-lebenszyklus" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Ein Knoten durchläuft einen klar definierten Lebenszyklus. Unbekannte Hardware erhält <strong>nie automatisch</strong> Zugriff auf Mandantendaten – erst die Adoption vergibt eine Identität.</p>
+<figure class="diagram" role="group" aria-labelledby="lz-cap">
+<svg viewBox="0 0 860 330" role="img" aria-labelledby="lz-t lz-d">
+<title id="lz-t">Zustandsdiagramm des Knoten-Lebenszyklus</title>
+<desc id="lz-d">Entdeckt, Inventarisiert, Wartend, Adoptiert, Bereitgestellt, Aktiv. Von Aktiv in Wartung und zurück, in Gestört und durch Selbstheilung zurück. Aus jedem adoptierten Zustand in Quarantäne. Aus Wartung oder Quarantäne in Stillgelegt. Wartend kann auch Abgelehnt werden.</desc>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="box" x="10" y="40" width="110" height="44" rx="8"/><text x="65" y="67" text-anchor="middle">Entdeckt</text>
+<rect class="box" x="150" y="40" width="130" height="44" rx="8"/><text x="215" y="67" text-anchor="middle">Inventarisiert</text>
+<rect class="box4" x="310" y="40" width="110" height="44" rx="8"/><text x="365" y="67" text-anchor="middle">Wartend</text>
+<rect class="box2" x="450" y="40" width="110" height="44" rx="8"/><text x="505" y="67" text-anchor="middle">Adoptiert</text>
+<rect class="box2" x="590" y="40" width="140" height="44" rx="8"/><text x="660" y="67" text-anchor="middle">Bereitgestellt</text>
+<rect class="box3" x="590" y="150" width="140" height="44" rx="8"/><text x="660" y="177" text-anchor="middle" class="b">Aktiv</text>
+<rect class="box" x="760" y="150" width="90" height="44" rx="8"/><text x="805" y="177" text-anchor="middle">Wartung</text>
+<rect class="box" x="450" y="150" width="110" height="44" rx="8"/><text x="505" y="177" text-anchor="middle">Gestört</text>
+<rect class="box4" x="590" y="260" width="140" height="44" rx="8"/><text x="660" y="287" text-anchor="middle">Quarantäne</text>
+<rect class="box" x="760" y="260" width="90" height="44" rx="8"/><text x="805" y="287" text-anchor="middle">Stillgelegt</text>
+<rect class="box" x="310" y="150" width="110" height="44" rx="8"/><text x="365" y="177" text-anchor="middle">Abgelehnt</text>
+<path class="ln" d="M120 62 H148" marker-end="url(#ah)"/>
+<path class="ln" d="M280 62 H308" marker-end="url(#ah)"/>
+<path class="ln" d="M420 62 H448" marker-end="url(#ah)"/><text x="434" y="32" text-anchor="middle" class="s">Freigabe</text>
+<path class="ln dash" d="M215 40 V20 H505 V38" marker-end="url(#ah)"/><text x="360" y="15" text-anchor="middle" class="s">Auto-Adopt-Regel</text>
+<path class="ln" d="M560 62 H588" marker-end="url(#ah)"/>
+<path class="ln" d="M660 84 V148" marker-end="url(#ah)"/><text x="666" y="122" class="s">Rollen zugewiesen, gesund</text>
+<path class="ln" d="M730 165 H758" marker-end="url(#ah)"/><path class="ln" d="M758 182 H732" marker-end="url(#ah)"/>
+<path class="ln" d="M590 165 H562" marker-end="url(#ah)"/><path class="ln" d="M562 182 H588" marker-end="url(#ah)"/><text x="575" y="212" text-anchor="middle" class="s">Selbstheilung</text>
+<path class="ln" d="M365 84 V148" marker-end="url(#ah)"/><text x="371" y="122" class="s">Ablehnung</text>
+<path class="ln" d="M660 194 V258" marker-end="url(#ah)"/><text x="666" y="232" class="s">Integrität fraglich</text>
+<path class="ln dash" d="M505 194 V282 H588" marker-end="url(#ah)"/>
+<path class="ln" d="M730 282 H758" marker-end="url(#ah)"/>
+<path class="ln" d="M805 194 V258" marker-end="url(#ah)"/><text x="811" y="232" class="s">Drain</text>
+</svg>
+<figcaption id="lz-cap">Knoten-Lebenszyklus (vereinfacht). Quarantäne ist aus jedem adoptierten Zustand erreichbar; die Rückkehr erfordert frische Attestierung und menschliche Freigabe.</figcaption>
+</figure>
+<ul><li><strong>Entdecken:</strong> Ein neuer Knoten bootet per Netz (PXE/HTTP-Boot, Raspberry-Pi-Netzboot) oder vom USB-Stick in ein Discovery-System im Arbeitsspeicher. Es schreibt nichts auf Platten und meldet einen Hardware-Steckbrief.</li><li><strong>Adoptieren:</strong> Freigabe per Portal, API oder MCP – geschützt durch einen Bestätigungscode, ab höherer Ausbaustufe zusätzlich durch TPM-Attestierung. Der private Knotenschlüssel verlässt den Knoten nie.</li><li><strong>Bereitstellen:</strong> Installation des signierten OS-Images (oder Diskless-Betrieb), Ausstellung des Knotenzertifikats, Aufnahme in Underlay-Netz und Gossip.</li><li><strong>Betreiben:</strong> Rollen zuweisen, Wartung mit Drain, Selbstheilung bei Störungen.</li><li><strong>Stilllegen:</strong> nachweisbares Löschen, Widerruf des Zertifikats, Rotation der Gossip-Schlüssel – mit Löschnachweis für die Compliance.</li></ul>
+<p>Mehr: <a href="doku/boot-adoption.html">Boot und Adoption</a>.</p>
+<h2 id="updates-und-releases">Updates und Releases<a class="anchor" href="#updates-und-releases" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ul><li><strong>Unveränderliches OS-Image (cpOS):</strong> <code>/usr</code> ist schreibgeschützt und per dm-verity gesichert, <code>/</code> ist flüchtig, Zustand liegt in einer verschlüsselten Partition.</li><li><strong>A/B-Updates mit automatischem Rückfall:</strong> Das Update wird in den inaktiven Slot geschrieben. Erst wenn ein <strong>Health-Gate</strong> nach dem Neustart grün meldet, gilt der neue Stand; sonst fällt der Knoten nach wenigen Versuchen selbstständig auf den alten Slot zurück.</li><li><strong>Signierte Release-Bündel:</strong> Images, Erweiterungen und Agent werden als Bündel mit Manifest, Prüfsummen, SBOM und Signaturen ausgeliefert; Update-Metadaten folgen dem Prinzip von TUF (The Update Framework) mit Offline-Wurzelschlüsseln.</li><li><strong>Rollout-Controller:</strong> Updates laufen in Wellen mit Kanarienvogel-Stufe, Wartungsfenstern und <code>maxUnavailable</code>. Höchstens ein Voter je Zelle wird gleichzeitig aktualisiert, der Leader zuletzt. Schlägt ein Gate fehl, hält der Rollout an.</li></ul>
+<p>Mehr: <a href="doku/os-image.html">OS-Image</a> · <a href="doku/rollout.html">Rollout</a> · <a href="doku/release-buendel.html">Release-Bündel</a> · <a href="doku/release-signatur.html">Release-Signatur</a>.</p>
+<h2 id="plattform-dns">Plattform-DNS<a class="anchor" href="#plattform-dns" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Die Rolle <code>dns</code> (Dienst <code>cp-dnsd</code>) beantwortet die Namen der Plattform und der Mandanten autoritativ, signiert Zonen mit <strong>DNSSEC</strong>, vergibt <strong>virtuelle IP-Adressen (VIPs)</strong> für Plattformdienste wie Portal und API und schützt sich mit Ratenbegrenzung gegen Missbrauch. Innerhalb der Mandantennetze beantwortet jeder Host DNS, DHCP und Metadaten lokal – ohne zentralen Dienst im Datenpfad. Mehr: <a href="doku/dns.html">Plattform-DNS</a>.</p>
+<h2 id="identitaet-und-mandanten">Identität und Mandanten<a class="anchor" href="#identitaet-und-mandanten" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ul><li>Hierarchie <strong>Plattform → Mandant → Projekt → Ressource</strong>, optional Ordner innerhalb eines Mandanten.</li><li>Eigener, schlanker <strong>OIDC-/OAuth-2.1-Autorisierungsserver</strong> mit <strong>Passkeys zuerst</strong>, Föderation zu bestehenden Identitätsanbietern (OIDC/SAML).</li><li>Kurzlebige, sender-gebundene Tokens, die auf jedem Knoten lokal geprüft werden. Autorisierung über einen Beziehungsspeicher im Stil von Zanzibar plus <strong>Cedar</strong>-Richtlinien für Bedingungen und Leitplanken.</li><li>Strikte Trennung zwischen Betreiber und Mandanteninhalten: Betreiber sehen Metadaten, Inhalte nur über einen begründeten, befristeten und protokollierten Zugriffsantrag.</li><li>KI-Agenten sind ein eigener Akteurstyp; sie handeln mit der Schnittmenge aus Nutzerrechten, Token-Umfang und Agenten-Leitplanken.</li><li>Mandanten-Löschung mit <strong>Krypto-Löschung</strong> und signiertem Löschnachweis.</li></ul>
+<p>Mehr: <a href="doku/identitaet.html">Mandanten, Identität und Rechte</a>.</p>
+<h2 id="speicher">Speicher<a class="anchor" href="#speicher" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ul><li><strong>Block-Volumes</strong> über einen eigenen Rust-Datenpfad: lokal (dm-thin + dm-crypt) und repliziert (zwei bis drei Kopien) – derselbe Pfad von 2 bis zu tausenden Knoten.</li><li>Metadaten in der vorhandenen Raft-Gruppe der Zelle, Nutzdaten nie im Konsens.</li><li><strong>Mandantenverschlüsselung am Compute-Knoten:</strong> Speicherknoten sehen nur Chiffrat.</li><li><strong>Objektspeicher</strong> S3-kompatibel hinter einem eigenen S3-Frontend mit Rechteprüfung und Quoten.</li><li><strong>Dateispeicher</strong> per NFS auf replizierten Volumes, im Netz des jeweiligen VPC.</li><li>Platzierung über Fehlerdomänen, Reife-Gate vor dem Einsatz replizierter Volumes für Mandantendaten.</li></ul>
+<p>Mehr: <a href="doku/speicher.html">Speicherkonzept</a>.</p>
+<h2 id="netzwerk">Netzwerk<a class="anchor" href="#netzwerk" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ul><li><strong>Underlay:</strong> ein WireGuard-Interface je Knoten, innen IPv6-only; Peers kommen ausschließlich aus dem replizierten Zustand. Zusätzlich ein Pre-Shared-Key aus einem Post-Quanten-Verfahren.</li><li><strong>Mandanten-Overlay <code>cp-vnet</code>:</strong> eigene Steuerung im Agenten, Linux-Kernel-Datenpfad (VRF je VPC, VXLAN im WireGuard-Tunnel, nftables) – keine zweite Konsensdatenbank.</li><li><strong>Sicherheitsgruppen</strong> zustandsbehaftet, eingehend standardmäßig gesperrt.</li><li><strong>Nord-Süd-Verkehr</strong> über die Rolle <code>network-gateway</code>: NAT, Floating IPs, L4-Load-Balancer; im Homelab per Layer-2-Bekanntgabe, im Rechenzentrum per BGP.</li><li>Drei Ausbaustufen: <code>flat</code> (ein LAN), <code>vlan</code>, <code>routed</code> (L3 bis zum Host).</li></ul>
+<p>Mehr: <a href="doku/netzwerk.html">Netzwerkarchitektur</a>.</p>
+<h2 id="sicherheit-und-compliance">Sicherheit und Compliance<a class="anchor" href="#sicherheit-und-compliance" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ul><li><strong>Vertrauenskette</strong> vom Secure Boot mit eigenen Schlüsseln der Installation über Measured Boot und TPM-gebundene Plattenverschlüsselung bis zu mTLS zwischen allen Diensten.</li><li><strong>Knotenidentität</strong> mit kurzlebigen Zertifikaten aus einer internen PKI, Vertrauensstufen T0–T4, Remote Attestation.</li><li><strong>Kryptografie nach BSI TR-02102</strong>, Krypto-Agilität und Fahrplan für Post-Quanten-Verfahren.</li><li><strong>Lückenloses Audit</strong> jeder Änderung, Break-Glass-Verfahren mit Protokollierung.</li><li><strong>Compliance-by-Design:</strong> 36 Architekturleitlinien, Anforderungskatalog aus ISO 27001, BSI IT-Grundschutz, BSI C5, DSGVO, NIS2 und Cyber Resilience Act; Nachweise werden exportierbar.</li><li><strong>Lieferkette:</strong> reproduzierbare Builds, SBOM je Artefakt, signierte Releases, VEX für Schwachstellenbewertungen.</li></ul>
+<p>Mehr: <a href="doku/sicherheitsmodell.html">Sicherheitsmodell</a> · <a href="doku/kryptografie.html">Kryptografie</a> · <a href="doku/compliance-by-design.html">Compliance-by-Design</a>.</p>
+<h2 id="ki-native-plattform">KI-native Plattform<a class="anchor" href="#ki-native-plattform" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ul><li>Eigene API-Gruppe für <strong>Modelle, Modellversionen, Inferenz-Endpunkte, AI-Gateways, Budgets, Guardrails, Vektorindizes</strong> und Wissensbasen.</li><li>Inferenz-Engines (zunächst llama.cpp, dann vLLM) laufen als signierte Container hinter einem einheitlichen Adapter; dedizierte Endpunkte in MicroVMs mit durchgereichtem Beschleuniger.</li><li>Zwei Betriebsmodelle: <strong>dediziert</strong> je Mandant oder <strong>geteilt/serverless</strong> mit Abrechnung je Token – ohne mandantenübergreifenden Cache.</li><li>Beschleuniger (GPU, NPU) als Scheduler-Ressource, Scale-to-zero mit lokalem Modell-Cache, Modelle als signierte OCI-Artefakte mit Cache je Zelle.</li><li>Die Plattform selbst ist per <strong>MCP</strong> steuerbar; Agenten der Mandanten nutzen Plattform-Werkzeuge mit eingeschränkten Rechten.</li><li>KI-Compliance als Querschnitt: Modellkarten, Herkunft, Kennzeichnung, Protokollierung nach EU AI Act, Abbildung auf BSI AIC4.</li></ul>
+<p>Mehr: <a href="doku/ki-plattform.html">KI-native Plattform</a>.</p></article>
+</main>
+</div>
+<footer class="site-footer">
+  <div class="bar">
+    <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
+    <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
+    Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <p><a href="mitmachen.html#lizenz">Lizenz</a> · <a href="mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="suche.html">Suche</a></p>
+  </div>
+</footer>
+<script src="assets/site.js" defer></script>
+</body>
+</html>

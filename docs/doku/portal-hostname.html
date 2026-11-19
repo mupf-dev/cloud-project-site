@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portal-Hostname ändern · cloud-project</title>
+<meta name="description" content="Runbook für den Wechsel der Portal-Adresse – was mit OIDC-Aussteller, WebAuthn-RP-ID und registrierten Passkeys passiert und wie der Zugang erhalten bleibt.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<header class="site-header">
+  <div class="bar">
+    <a class="brand" href="../index.html" aria-label="cloud-project – Startseite">
+      <img src="../assets/favicon.svg" alt="" width="28" height="28"><span>cloud-project</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnav">Menü</button>
+    <nav id="hauptnav" class="mainnav" aria-label="Hauptnavigation"><ul><li><a href="../index.html">Start</a></li><li><a href="../funktionen.html">Funktionen</a></li><li><a href="../architektur.html">Architektur</a></li><li><a href="../doku/index.html" aria-current="page">Dokumentation</a></li><li><a href="../roadmap.html">Status & Roadmap</a></li><li><a href="../mitmachen.html">Mitmachen</a></li></ul></nav>
+    <form class="search" role="search" action="../suche.html" method="get">
+      <label for="q" class="sr-only">Suche</label>
+      <input id="q" name="q" type="search" placeholder="Suchen …" autocomplete="off">
+    </form>
+  </div>
+</header>
+<div class="page with-toc">
+<nav class="toc" aria-label="Inhalt dieser Seite"><p class="toc-title">Auf dieser Seite</p><ol><li><a href="#hintergrund">Hintergrund</a></li><li><a href="#was-passiert">Was passiert</a></li><li><a href="#geplanter-hostname-wechsel">Geplanter Hostname-Wechsel</a></li><li><a href="#ungeplanter-wechsel">Ungeplanter Wechsel</a></li><li><a href="#pruefungen-nach-dem-wechsel">Prüfungen nach dem Wechsel</a></li><li><a href="#hinweise">Hinweise</a></li></ol></nav>
+<main id="inhalt" tabindex="-1">
+<nav class="crumbs" aria-label="Brotkrumen"><a href="../index.html">Start</a> › <a href="index.html">Dokumentation</a> › <span>Portal-Hostname ändern</span></nav><article class="doc"><h1>Portal-Hostname ändern</h1><p class="lead">Runbook für den Wechsel der Portal-Adresse – was mit OIDC-Aussteller, WebAuthn-RP-ID und registrierten Passkeys passiert und wie der Zugang erhalten bleibt.</p><p class="meta">Aufbereitet aus: Runbook Portal-Hostname</p><h2 id="hintergrund">Hintergrund<a class="anchor" href="#hintergrund" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Die <strong>Portal-Adresse</strong> einer Region ist mehr als nur eine URL. Sie ist zugleich:</p>
+<ul><li>der <strong>OIDC-Aussteller</strong> (<code>iss</code>) aller Tokens, die die Plattform ausstellt, und</li><li>die Grundlage der <strong>WebAuthn-RP-ID</strong> – das ist der Hostname der Adresse.</li></ul>
+<p>Passkeys sind nach dem WebAuthn-Standard fest an die RP-ID gebunden. Ein Wechsel des Hostnamens hat deshalb Folgen für jede Person, die sich per Passkey anmeldet. Dieses Runbook beschreibt, wie ein solcher Wechsel geplant durchgeführt wird und was bei einem ungeplanten Wechsel zu tun ist. Hintergründe zu Identitäten, Passkeys und Notfallzugang stehen in <a href="identitaet.html">Identität</a>.</p>
+<h2 id="was-passiert">Was passiert<a class="anchor" href="#was-passiert" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<div class="table-wrap"><table><thead><tr><th scope="col">Änderung</th><th scope="col">Wirkung</th></tr></thead><tbody><tr><td>nur der <strong>Port</strong> (<code>https://cloud.example.org:8443</code> → <code>https://cloud.example.org</code>)</td><td>Die RP-ID bleibt gleich, Passkeys gelten weiter. Der Aussteller ändert sich: Access-Tokens des bisherigen Ausstellers bleiben bis zu ihrem Ablauf (10 Minuten) gültig, ein Refresh liefert Tokens mit dem neuen Aussteller. Kommandozeilen- und MCP-Clients müssen den Endpunkt neu eintragen.</td></tr><tr><td>der <strong>Hostname</strong> (<code>cloud.example.org</code> → <code>portal.example.org</code>)</td><td><strong>Neue RP-ID – alle registrierten Passkeys werden unbrauchbar.</strong> Der Browser bietet sie für die neue Domain nicht an, und der Server lehnt Assertions mit fremdem RP-ID-Hash ab. Ohne Gegenmaßnahme kann sich niemand mehr per Passkey anmelden.</td></tr></tbody></table></div>
+<p>Der Verlust der Passkeys ist fachlich unvermeidbar – er ist gerade die Schutzwirkung von WebAuthn gegen Phishing. Das Runbook sorgt dafür, dass der Wechsel trotzdem kontrolliert und ohne Aussperren gelingt.</p>
+<h2 id="geplanter-hostname-wechsel">Geplanter Hostname-Wechsel<a class="anchor" href="#geplanter-hostname-wechsel" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ol><li><strong>Vorbereiten (noch unter der alten Adresse):</strong> Für jede Person mit Passkey eine Admin-Einladung vorbereiten – noch <strong>nicht anlegen</strong>, nur die Liste der betroffenen Personen festhalten. Bestehende Einladungen und Sitzungen lassen sich über die Kommandozeile oder das Portal auflisten.</li><li><strong>Notfallzugang sicherstellen:</strong> Auf einem Steuerungsknoten lokal und als Administrator den zeitlich begrenzten Notfallzugang einschalten, etwa für eine Stunde. Er ist nur lokal aktivierbar und wird vollständig auditiert. Damit bleibt die Kommandozeile mit einem Notfall-Token handlungsfähig, falls die Umstellung hakt.</li><li><strong>DNS und Adresse umstellen:</strong> Den DNS-Eintrag für den neuen Namen anlegen (bei Nutzung der Plattform-DNS-Rolle über eine eigene Zone, siehe <a href="dns.html">DNS</a>) und anschließend die Portal-Adresse auf <code>https://portal.example.org</code> setzen. Das Portal-Zertifikat wird neu ausgestellt; der gemeinsame Aussteller wird über die replizierte Steuerungsebene innerhalb weniger Sekunden auf allen Identitätsknoten übernommen (siehe <a href="steuerungsebene.html">Steuerungsebene</a>).</li><li><strong>Neue Einladungen anlegen:</strong> Mit dem Notfallzugang neue Admin-Einladungen erstellen. Die Einladungslinks enthalten bereits die neue Adresse. Die Personen lösen sie im Browser auf der neuen Domain ein und registrieren dabei einen neuen Passkey.</li><li><strong>Notfallzugang beenden:</strong> Nach der ersten erfolgreichen Passkey-Anmeldung wird der Notfall-Token automatisch wieder deaktiviert; zusätzlich den Notfallzugang ausdrücklich abschalten.</li><li><strong>Aufräumen:</strong> Alte Sitzungen widerrufen (Kommandozeile oder Portal, Bereich „Sitzungen“). Alte Passkey-Einträge bleiben wirkungslos stehen, bis sie bereinigt werden.</li><li><strong>Clients anpassen:</strong> Nutzer der Kommandozeile tragen den neuen Endpunkt in ihrer Konfiguration ein und melden sich neu an; MCP-Clients ebenso.</li></ol>
+<h2 id="ungeplanter-wechsel">Ungeplanter Wechsel<a class="anchor" href="#ungeplanter-wechsel" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<p>Ist der Hostname bereits geändert und sind die Passkeys damit ungültig, entfällt die Vorbereitung. Es genügen Schritt 2 (Notfallzugang lokal am Knoten) und anschließend die Schritte 4 bis 7.</p>
+<p>Ohne administrativen Zugang zu einem Steuerungsknoten bleibt nur der Break-Glass-Ablauf aus dem Identitätskonzept (siehe <a href="identitaet.html">Identität</a>).</p>
+<h2 id="pruefungen-nach-dem-wechsel">Prüfungen nach dem Wechsel<a class="anchor" href="#pruefungen-nach-dem-wechsel" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ul><li>Die OIDC-Discovery unter der neuen Adresse (<code>https://portal.example.org/.well-known/openid-configuration</code>) nennt als <code>issuer</code> die neue Adresse.</li><li>Im Agenten-Log erscheint je Knoten ein Ereignis über den geänderten Aussteller und das neu geladene Portal-Zertifikat.</li><li>Das Audit-Log enthält die Reaktivierung des Notfallzugangs, die angelegten Einladungen und die erste Anmeldung unter der neuen Adresse.</li></ul>
+<h2 id="hinweise">Hinweise<a class="anchor" href="#hinweise" aria-label="Link zu diesem Abschnitt">#</a></h2>
+<ul><li>Ein <strong>reiner Portwechsel</strong> ist unkritisch und braucht nur die Anpassung der Clients.</li><li>Den Hostnamen deshalb bei der Einrichtung bewusst wählen: Die Portal-Adresse ist bei der Initialisierung einer Region Pflicht und muss ein DNS-Name sein (siehe <a href="os-image.html">OS-Image</a>).</li><li>Der Notfallzugang ist ein bewusst eng begrenztes Werkzeug: lokal, befristet, auditiert und mit automatischer Abschaltung nach der ersten regulären Anmeldung (siehe <a href="sicherheitsmodell.html">Sicherheitsmodell</a>).</li></ul></article><nav class="pager" aria-label="Weitere Seiten"><a rel="prev" href="schwachstellenmanagement.html">← Schwachstellenmanagement</a></nav>
+</main>
+</div>
+<footer class="site-footer">
+  <div class="bar">
+    <p>cloud-project – quelloffene, dezentrale Cloud-Plattform. Dokumentation unter
+    <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license noopener">CC BY 4.0</a>,
+    Code unter AGPL-3.0-or-later. Keine Cookies, kein Tracking, keine externen Ressourcen.</p>
+    <p><a href="../mitmachen.html#lizenz">Lizenz</a> · <a href="../mitmachen.html#sicherheit">Sicherheitslücke melden</a> · <a href="../suche.html">Suche</a></p>
+  </div>
+</footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
