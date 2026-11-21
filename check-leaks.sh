@@ -5,5 +5,5 @@
 set -eu
 cd "$(dirname "$0")"
 python3 build.py
-# Ausgabe, Quellen und Generator prüfen (das Prüfskript selbst enthält die Muster und bleibt außen vor)
-exec python3 check-leaks.py docs content tools static build.py check-leaks.sh README.md "$@"
+# Ausgabe, Quellen und Generator prüfen (die Prüfskripte check-leaks.py und kit/leakcheck.py enthalten die Muster und bleiben außen vor)
+exec python3 check-leaks.py docs content tools static build.py check-leaks.sh README.md sitekit.json kit/sitekit.py kit/style.css kit/site.js kit/theme.css kit/README.md "$@"

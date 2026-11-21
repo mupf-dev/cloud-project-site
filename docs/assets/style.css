@@ -1,9 +1,11 @@
-/* SPDX-FileCopyrightText: 2026 cloud-project contributors
+/* SPDX-FileCopyrightText: 2026 site-kit contributors
    SPDX-License-Identifier: AGPL-3.0-or-later
-   Stylesheet der Website von BYOC (Build Your Own Cloud). Farben, Radien, Schatten und Typografie-Charakter
-   folgen den Design-Tokens des Portals (Variante C „Technisch“: Petrol-Akzent, Monospace-Akzente,
+   site-kit – gemeinsamer Stylesheet-Kern aller Projekt-Websites (Variante C „Technisch“: Monospace-Akzente,
    dunkle Flächen auch im Hellmodus). Nur Systemschriften, keine externen Ressourcen.
-   Hell/dunkel per prefers-color-scheme; Bewegung entfällt bei prefers-reduced-motion. */
+   Hell/dunkel per prefers-color-scheme; Bewegung entfällt bei prefers-reduced-motion.
+   NICHT in den Website-Repos bearbeiten: Quelle ist das Repo site-kit (sync.py kopiert nach kit/).
+   Akzentfarben kommen aus kit/theme.css (themes/<projekt>.css), die Umbruchstellen der Kopfzeile
+   (nav_compact, nav_tight, nav_menu) setzt der Generator aus NAV_BREAKPOINTS der Website. */
 
 :root {
   color-scheme: light;
@@ -26,13 +28,7 @@
   --line-strong: #7b8592;
   --fg: #101418;
   --fg-muted: #505965;
-  --accent: #0f6f68;
-  --accent-hover: #0b5853;
-  --on-accent: #ffffff;
-  --accent-text: #0d6761;
-  --accent-soft: #e0f3f0;
-  --accent-soft-fg: #0b5853;
-  --focus: #0f6f68;
+  /* Akzent-Tokens (--accent …, --focus): kit/theme.css */
   --ok-bg: #e5f4ea; --ok-fg: #17652f;
   --warn-bg: #fdf1dc; --warn-fg: #834500;
   --info-bg: #e7effd; --info-fg: #1d4d99;
@@ -51,11 +47,7 @@
   --h-line: #242a32;
   --h-fg: #e1e6eb;
   --h-muted: #98a2ae;
-  --h-accent: #2fd2bb;
-  --h-accent-text: #5ee6d1;
-  --h-on-accent: #03201c;
-  --h-soft: #0e2b28;
-  --h-soft-fg: #7cefdc;
+  /* --h-accent …, --h-soft …, --h-glow: kit/theme.css */
 
   /* Diagramme */
   --d-fill: var(--surface-2);
@@ -76,13 +68,6 @@
     --line-strong: #66717e;
     --fg: #e1e6eb;
     --fg-muted: #98a2ae;
-    --accent: #2fd2bb;
-    --accent-hover: #5ee6d1;
-    --on-accent: #03201c;
-    --accent-text: #5ee6d1;
-    --accent-soft: #0e2b28;
-    --accent-soft-fg: #7cefdc;
-    --focus: #5ee6d1;
     --ok-bg: #143120; --ok-fg: #86dba0;
     --warn-bg: #3a2b0e; --warn-fg: #f3c56f;
     --info-bg: #172a4a; --info-fg: #a3c3ff;
@@ -139,7 +124,8 @@ code, kbd, .mono { font-family: var(--mono); }
 .lang-switch .lang-long { font-family: var(--font); font-weight: 500; letter-spacing: 0; }
 .nav-toggle { display: none; font: inherit; font-weight: 500; background: var(--surface); color: var(--fg); border: 1px solid var(--line-strong);
   border-radius: var(--radius-md); min-height: 2.25rem; padding: 0 .8rem; margin-left: auto; cursor: pointer; }
-/* Kopfzeile bleibt einzeilig: Suchfeld schmal, Sprachschalter kurz, Navigation enger (sieben Einträge) */
+/* Kopfzeile bleibt einzeilig: Suchfeld schmal, Sprachschalter kurz, Navigation enger. Die Umbruchstellen hängen
+   von der Länge der Navigation ab und kommen aus NAV_BREAKPOINTS der Website (siehe kit/sitekit.py). */
 .search input { width: 8rem; }
 .mainnav a { padding: .4rem .55rem; }
 @media (max-width: 1180px) {
@@ -327,10 +313,10 @@ svg .arrowhead { fill: var(--d-line); }
   background-size: 32px 32px; opacity: .55; mask-image: radial-gradient(ellipse 80% 70% at 70% 45%, #000 20%, transparent 75%);
   -webkit-mask-image: radial-gradient(ellipse 80% 70% at 70% 45%, #000 20%, transparent 75%); }
 .hero::after { content: ""; position: absolute; width: 46rem; height: 46rem; right: -14rem; top: -18rem; pointer-events: none;
-  background: radial-gradient(circle, rgb(47 210 187 / 0.16), transparent 62%); }
+  background: radial-gradient(circle, rgb(var(--h-glow) / 0.16), transparent 62%); }
 .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 2.5rem; align-items: center; padding-top: 4rem; padding-bottom: 4.5rem; }
 .hero .eyebrow { color: var(--h-accent-text); }
-.hero .eyebrow::before { background: var(--h-accent); box-shadow: 0 0 0 4px rgb(47 210 187 / 0.18); }
+.hero .eyebrow::before { background: var(--h-accent); box-shadow: 0 0 0 4px rgb(var(--h-glow) / 0.18); }
 .hero h1 { font-size: clamp(2.3rem, 6vw, 4rem); line-height: 1.04; letter-spacing: -0.03em; font-weight: 700; margin: 1rem 0 1.2rem; }
 .hero h1 .hl { color: var(--h-accent-text); }
 .hero .lead { color: var(--h-muted); font-size: clamp(1.05rem, 2vw, 1.22rem); max-width: 38rem; margin: 0 0 1.6rem; }
@@ -484,7 +470,7 @@ figure.art-card { margin: 0; }
 
 /* Abschluss / CTA */
 .cta { background: var(--h-bg); color: var(--h-fg); position: relative; overflow: hidden; }
-.cta::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 60% 120% at 85% 50%, rgb(47 210 187 / 0.14), transparent 60%); }
+.cta::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 60% 120% at 85% 50%, rgb(var(--h-glow) / 0.14), transparent 60%); }
 .cta .wrap { position: relative; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 2rem; align-items: center; }
 .cta h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); line-height: 1.15; letter-spacing: -0.015em; margin: .35rem 0 .7rem; }
 .cta p { color: var(--h-muted); margin: 0 0 1rem; }
@@ -573,3 +559,34 @@ figure.art-card { margin: 0; }
 @media (max-width: 900px) { .shot-grid { grid-template-columns: minmax(0, 1fr); } }
 .art-card.real img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius-md); }
 .art-card.real figcaption a { color: inherit; }
+
+/* ------------------------------------------------------------------ Akzent (kit/theme.css) */
+/* SPDX-FileCopyrightText: 2026 site-kit contributors
+   SPDX-License-Identifier: AGPL-3.0-or-later
+   Akzent BYOC (cloud-project): Petrol wie die Design-Tokens des Portals. Prüfen: python3 tools/contrast.py */
+:root {
+  --accent: #0f6f68;
+  --accent-hover: #0b5853;
+  --on-accent: #ffffff;
+  --accent-text: #0d6761;
+  --accent-soft: #e0f3f0;
+  --accent-soft-fg: #0b5853;
+  --focus: #0f6f68;
+  --h-accent: #2fd2bb;
+  --h-accent-text: #5ee6d1;
+  --h-on-accent: #03201c;
+  --h-soft: #0e2b28;
+  --h-soft-fg: #7cefdc;
+  --h-glow: 47 210 187;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #2fd2bb;
+    --accent-hover: #5ee6d1;
+    --on-accent: #03201c;
+    --accent-text: #5ee6d1;
+    --accent-soft: #0e2b28;
+    --accent-soft-fg: #7cefdc;
+    --focus: #5ee6d1;
+  }
+}

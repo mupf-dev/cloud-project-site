@@ -1,0 +1,29 @@
+/* SPDX-FileCopyrightText: 2026 site-kit contributors
+   SPDX-License-Identifier: AGPL-3.0-or-later
+   Akzent BYOC (cloud-project): Petrol wie die Design-Tokens des Portals. Prüfen: python3 tools/contrast.py */
+:root {
+  --accent: #0f6f68;
+  --accent-hover: #0b5853;
+  --on-accent: #ffffff;
+  --accent-text: #0d6761;
+  --accent-soft: #e0f3f0;
+  --accent-soft-fg: #0b5853;
+  --focus: #0f6f68;
+  --h-accent: #2fd2bb;
+  --h-accent-text: #5ee6d1;
+  --h-on-accent: #03201c;
+  --h-soft: #0e2b28;
+  --h-soft-fg: #7cefdc;
+  --h-glow: 47 210 187;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #2fd2bb;
+    --accent-hover: #5ee6d1;
+    --on-accent: #03201c;
+    --accent-text: #5ee6d1;
+    --accent-soft: #0e2b28;
+    --accent-soft-fg: #7cefdc;
+    --focus: #5ee6d1;
+  }
+}

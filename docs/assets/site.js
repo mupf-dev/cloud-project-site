@@ -1,6 +1,7 @@
-/* SPDX-FileCopyrightText: 2026 cloud-project contributors
+/* SPDX-FileCopyrightText: 2026 site-kit contributors
    SPDX-License-Identifier: AGPL-3.0-or-later
-   Menü-Umschalter und clientseitige Suche (DE/EN, Index je Sprache). Keine externen Ressourcen. */
+   site-kit – Menü-Umschalter und clientseitige Suche (DE/EN, Index je Sprache). Keine externen Ressourcen.
+   NICHT in den Website-Repos bearbeiten: Quelle ist das Repo site-kit. */
 (function () {
   "use strict";
   document.documentElement.classList.add("js");
