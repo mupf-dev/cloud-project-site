@@ -397,6 +397,7 @@ für Racks. Die API-Gruppen gehen nach dem MVP von `v1alpha1` über `v1beta1` zu
 | E7 | Paritätsprüfung zu 100 % erfüllt – Ziel: keine Ausnahmen bei ändernden Operationen |
 | E8 | Kein Single Point of Failure ab drei Knoten: Boot, API, Portal und MCP überleben einen Knotenausfall |
 | E9 | Nachweise exportierbar (Kontrollmatrix für BSI C5, ISO 27001, IT-Grundschutz) |
+| E10 | Einzelknotenbetrieb: Ein Mini-PC oder Notebook mit allen Rollen stellt VMs und Container bereit – Updates mit Wartungsfenster, Backup nach extern, später wachsen ohne Neuinstallation |
 
 ## Nicht-Ziele {#nicht-ziele}
 

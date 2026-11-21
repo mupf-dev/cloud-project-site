@@ -394,6 +394,7 @@ After the MVP, the API groups move from `v1alpha1` via `v1beta1` to `v1`.
 | E7 | Parity check 100% fulfilled – goal: no exceptions for mutating operations |
 | E8 | No single point of failure from three nodes up: boot, API, portal and MCP survive a node failure |
 | E9 | Evidence exportable (control matrix for BSI C5, ISO 27001, BSI IT-Grundschutz) |
+| E10 | Single-node operation: one mini PC or notebook with all roles runs VMs and containers – updates with a maintenance window, external backup, grow later without reinstalling |
 
 ## Non-goals {#non-goals}
 
